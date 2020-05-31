@@ -17,9 +17,11 @@ fun main()
     println("Age : $age")
     println("Adult : ${age>18}")
 
-    /*will through null pointer exception. This is called null safety. We are forcing that this variable
-    must have a value not null*/
-//    println("Department : ${department!!}")
+    /*will throw null pointer exception. This is called null safety. We are forcing that this variable
+    must have a value not null
+    !! indicates the value should not be null. If null then exception will be thrown
+    */
+    //println("Department : ${department!!}")
 
     //not null safe. That is the variable value can be null.
     println("Department : $department")
