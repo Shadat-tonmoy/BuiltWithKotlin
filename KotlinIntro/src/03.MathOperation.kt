@@ -1,5 +1,11 @@
 fun main()
 {
+
+    var number = 5
+    println("Number Before Increment : $number")
+    number++
+    println("Number after increment : $number")
+
     print("How Many Operations : ")
     val n = readLine()!!.toInt()
     for(i in 1..n)
