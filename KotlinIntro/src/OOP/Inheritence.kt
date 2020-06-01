@@ -13,7 +13,8 @@ open class Vehicle
         this.milesRun = milesRun
     }
 
-    fun showCarDetails()
+    //only the open method can be overriden
+    open fun showCarDetails()
     {
         println("====Car Details====")
         println("Name : $name\nPrice : $price\nMiles Run : $milesRun")
@@ -27,15 +28,17 @@ class Truck : Vehicle
         println("Calling Child Class Constructor")
     }
 
-    fun showTruckDetails()
+    //override keyword is required. We can override only open method from super class
+    override fun showCarDetails()
     {
         println("====Truck Details====")
         println("Name : $name\nPrice : $price\nMiles Run : $milesRun")
+        super.showCarDetails()
     }
 }
 
 fun main()
 {
     var truck = Truck("Toyota",12345.0,120)
-    truck.showTruckDetails()
+    truck.showCarDetails()
 }
