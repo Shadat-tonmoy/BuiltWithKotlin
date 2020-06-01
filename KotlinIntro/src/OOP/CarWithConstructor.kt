@@ -1,5 +1,9 @@
 package OOP
 
+fun CarWithConstructor.isCheap() : Boolean{
+    return this.price!! > 10
+}
+
 class CarWithConstructor
 {
     var name:String?=null
@@ -25,7 +29,7 @@ class CarWithConstructor
     fun showCarDetails()
     {
         println("====Car Details====")
-        println("Name : $name\nPrice : $price\nMiles Run : $milesRun")
+        println("Name : $name\nPrice : $price\nMiles Run : $milesRun ${isCheap()}")
     }
 
 }
@@ -34,6 +38,7 @@ fun main()
 {
     var carWithConstructor = CarWithConstructor(name = "Toyota",price = 1256.0)
     carWithConstructor.showCarDetails()
+
 
 
 }
