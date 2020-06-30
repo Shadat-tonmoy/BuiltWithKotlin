@@ -2,9 +2,9 @@ package OOP_Again
 
 fun main()
 {
-    val cat = Cat()
-    val dog = Dog()
-    val animal = Animal()
+    val cat = Cat("MyCat")
+    val dog = Dog("MyDog","Black",12)
+    val animal = Animal("MyAnimal")
 
     cat.color = "White"
     cat.age = 10
@@ -20,10 +20,6 @@ fun main()
     cat.eat()
     dog.eat()
 
-
-
-
-
 }
 
 /**
@@ -36,7 +32,7 @@ fun main()
  * then while calling the super class method we need to specify the exact super class using the following syntax
  * super<className>.methodName(). For example : super<Animal>.eat(), super<Mammal>.eat()
  * */
-open class Animal
+open class Animal(var name:String)
 {
     open var color = "Default animal color"
     open var age = -1
@@ -49,11 +45,16 @@ open class Animal
 
 }
 
-class Dog : Animal()
+class Dog(name:String) : Animal(name)
 {
-
     override var color: String = "Black"
     override var age: Int = 13
+
+    constructor(name: String,color:String, age:Int) : this(name)
+    {
+        this.color = color
+        this.age  = age
+    }
 
     fun bark()
     {
@@ -62,7 +63,7 @@ class Dog : Animal()
 
     fun showInfo()
     {
-        println("Showing Dog Info color : $color, age : $age")
+        println("Showing Dog Info name : $name, color : $color, age : $age")
     }
 
     override fun eat() {
@@ -71,7 +72,7 @@ class Dog : Animal()
 
 }
 
-class Cat : Animal()
+class Cat(name: String) : Animal(name)
 {
 
     override var color: String
@@ -90,7 +91,7 @@ class Cat : Animal()
 
     fun showInfo()
     {
-        println("Showing Cat Info color : $color, age : $age")
+        println("Showing Cat Info name : $name, color : $color, age : $age")
     }
 
     override fun eat() {
