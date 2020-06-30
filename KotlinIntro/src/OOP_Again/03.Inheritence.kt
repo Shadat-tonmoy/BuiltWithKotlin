@@ -31,11 +31,15 @@ fun main()
  * For this we need to make a class open by using the open keyword.
  * This public final thing is also true for method and member variable too. That is method and member variable can
  * not be directly overridden. In order to override them they should be open as well
+ * We can call the super class method from the sub class method using the super keyword while overriding
+ * If we inherit multiple class or interfaces and a same named method is present in more then one super class
+ * then while calling the super class method we need to specify the exact super class using the following syntax
+ * super<className>.methodName(). For example : super<Animal>.eat(), super<Mammal>.eat()
  * */
 open class Animal
 {
-    var color = "Default animal color"
-    var age = -1
+    open var color = "Default animal color"
+    open var age = -1
 
     open fun eat()
     {
@@ -48,6 +52,8 @@ open class Animal
 class Dog : Animal()
 {
 
+    override var color: String = "Black"
+    override var age: Int = 13
 
     fun bark()
     {
@@ -67,6 +73,16 @@ class Dog : Animal()
 
 class Cat : Animal()
 {
+
+    override var color: String
+        get() = "Milky"
+        set(value) {}
+
+    override var age: Int
+        get() = 5
+        set(value) {}
+
+
     fun meow()
     {
         println("cat is mewing")
@@ -78,6 +94,7 @@ class Cat : Animal()
     }
 
     override fun eat() {
+        //super<Animal>.eat()
         println("Cat is eating....")
     }
 }
