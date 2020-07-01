@@ -12,6 +12,8 @@ fun main()
 
     val adder : (Int,Int) -> Unit = {a,b -> println("Summation of $a and $b is ${a+b}")}
     button.addToNumber(5,10,adder)
+    button.addToNumber(1,2, {a,b -> println("Summation of $a and $b is ${a+b}")})
+    button.addToNumber(3,4) { a, b -> println("Summation of $a and $b is ${a+b}")}
 
 
     //lambda function without defining any type
