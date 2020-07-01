@@ -7,6 +7,9 @@ fun main()
         override fun onClick() { println("Clicked On Button") }
     })
 
+    val listener = {m:String -> println(m)}
+    button.interact(listener)
+
 
     //lambda function without defining any type
     val testWithoutType = { n:String -> n.length > 10 }
@@ -27,11 +30,15 @@ fun main()
     test(5)
 }
 
-class Button
-{
-    fun interact(listener: Listener)
-    {
+class Button {
+    fun interact(listener: Listener) {
         listener.onClick()
+    }
+
+    fun interact(lambda: (String) -> Unit)
+    {
+        val message = "ButtonWasClicked"
+        lambda(message)
     }
 
 }
