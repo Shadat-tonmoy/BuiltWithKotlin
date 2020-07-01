@@ -10,6 +10,9 @@ fun main()
     val listener = {m:String -> println(m)}
     button.interact(listener)
 
+    val adder : (Int,Int) -> Unit = {a,b -> println("Summation of $a and $b is ${a+b}")}
+    button.addToNumber(5,10,adder)
+
 
     //lambda function without defining any type
     val testWithoutType = { n:String -> n.length > 10 }
@@ -39,6 +42,11 @@ class Button {
     {
         val message = "ButtonWasClicked"
         lambda(message)
+    }
+
+    fun addToNumber(a:Int, b:Int, adder : (Int, Int) -> Unit)
+    {
+        adder(a,b)
     }
 
 }
