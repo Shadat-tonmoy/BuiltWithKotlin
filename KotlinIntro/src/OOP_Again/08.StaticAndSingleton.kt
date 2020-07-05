@@ -19,6 +19,7 @@ fun main()
     Student.showInfo()
     Student.lastName = "Tommy"
     Student.showInfo()
+    println("Constant Tag from Static Field : ${Constants.TAG}")
 
 }
 
