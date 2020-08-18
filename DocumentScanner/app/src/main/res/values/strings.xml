@@ -2,4 +2,7 @@
     <string name="app_name">DocumentScanner</string>
     <string name="open_camera">Open Camera</string>
     <string name="capture_image">Capture Image</string>
+    <string name="single">Single</string>
+    <string name="multiple">" Multiple"</string>
+    <string name="flash">Flash</string>
 </resources>
