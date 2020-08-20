@@ -56,23 +56,23 @@ class MainActivity : AppCompatActivity()
     {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        initOrientation()
-        initClickListener()
+        /*initOrientation()
+        initClickListener()*/
     }
 
     override fun onResume() {
         super.onResume()
-        startBackgroundThread()
+        /*startBackgroundThread()
         if (textureView.isAvailable) openCamera() else textureView.surfaceTextureListener =
-            textureListener
+            textureListener*/
     }
 
     override fun onPause() {
-        stopBackgroundThread()
+//        stopBackgroundThread()
         super.onPause()
     }
 
-    private fun initOrientation()
+   /* private fun initOrientation()
     {
         orientation.append(Surface.ROTATION_0,90)
         orientation.append(Surface.ROTATION_90,0)
@@ -101,10 +101,10 @@ class MainActivity : AppCompatActivity()
             //Capture image with custom size
             var width = 1280
             var height = 960
-            /*if (jpegSizes != null && jpegSizes.size > 0) {
+            *//*if (jpegSizes != null && jpegSizes.size > 0) {
                 width = jpegSizes[0].width
                 height = jpegSizes[0].height
-            }*/
+            }*//*
             Log.e(TAG, "takePicture: Width : $width and Height : $height")
             val reader =
                 ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
@@ -196,9 +196,9 @@ class MainActivity : AppCompatActivity()
         intent.putExtra("image",savedImageFile.absolutePath)
         startActivity(intent)
 
-    }
+    }*/
 
-    private fun openCamera()
+    /*private fun openCamera()
     {
         val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
@@ -311,7 +311,7 @@ class MainActivity : AppCompatActivity()
         override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean { return false }
 
         override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {}
-    }
+    }*/
 
 
 }
