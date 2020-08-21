@@ -14,11 +14,13 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.HandlerThread
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.Size
 import android.util.SparseIntArray
 import android.view.Surface
 import android.view.TextureView
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
@@ -200,7 +202,8 @@ class CameraActivity : AppCompatActivity() {
             cameraID = manager.cameraIdList[0]
             val characteristics = manager.getCameraCharacteristics(cameraID)
             val map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)!!
-            imageDimension = map!!.getOutputSizes(SurfaceTexture::class.java)[0]
+            imageDimension = map.getOutputSizes(SurfaceTexture::class.java)[0]
+            setAspectRatioTextureView(imageDimension.height,imageDimension.width)
             //Check realtime permission if run higher API 23
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)
             {
@@ -307,5 +310,32 @@ class CameraActivity : AppCompatActivity() {
         override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean { return false }
 
         override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {}
+    }
+
+    private fun setAspectRatioTextureView(ResolutionWidth: Int, ResolutionHeight: Int)
+    {
+        val displayMetrics = DisplayMetrics()
+        windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val displayHeight = displayMetrics.heightPixels
+        val displayWidth = displayMetrics.widthPixels
+        Log.e(TAG, "setAspectRatioTextureView: displayWidth : $displayWidth, displayHeight : $displayHeight")
+
+        if (ResolutionWidth > ResolutionHeight)
+        {
+            val newWidth: Int = displayWidth
+            val newHeight: Int = ((displayWidth * ResolutionWidth)/ResolutionHeight)
+            updateTextureViewSize(newWidth, newHeight)
+        }
+        else
+        {
+            val newWidth: Int = displayWidth
+            val newHeight: Int = ((displayWidth * ResolutionHeight)/ResolutionWidth);
+            updateTextureViewSize(newWidth, newHeight)
+        }
+    }
+
+    private fun updateTextureViewSize(viewWidth: Int, viewHeight: Int) {
+        Log.e(TAG, "TextureView Width : $viewWidth TextureView Height : $viewHeight")
+        textureView.layoutParams = FrameLayout.LayoutParams(viewWidth, viewHeight)
     }
 }

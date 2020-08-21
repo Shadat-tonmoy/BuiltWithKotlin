@@ -7,14 +7,25 @@
     android:layout_height="match_parent"
     tools:context=".camera.CameraActivity">
 
-    <TextureView
-        android:id="@+id/textureView"
+    <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonPanel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextureView
+            android:id="@+id/textureView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </FrameLayout>
 
 
     <TextView
@@ -29,75 +40,90 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/captureImageButton"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/buttonPanel"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle_primary_color"
-        android:padding="@dimen/dimen_16"
-        android:layout_margin="@dimen/dimen_16"
+        android:background="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/openCameraButton"
-        app:layout_constraintStart_toStartOf="@+id/openCameraButton"
-        app:srcCompat="@drawable/camera_white_32" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/singleImageButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/single_image_primary_24"
-        android:drawablePadding="@dimen/dimen_8"
-        android:gravity="center"
-        android:text="@string/single"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/openCameraButton"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/captureImageButton"
-        app:layout_constraintWidth_percent="0.2" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/multipleImageButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/multiple_image_primary_color_24"
-        android:drawablePadding="@dimen/dimen_8"
-        android:gravity="center"
-        android:text="@string/multiple"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/openCameraButton"
-        app:layout_constraintEnd_toStartOf="@+id/singleImageButton"
-        app:layout_constraintStart_toEndOf="@+id/captureImageButton"
-        app:layout_constraintTop_toTopOf="@+id/captureImageButton"
-        app:layout_constraintWidth_percent="0.2" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/flashButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/flash_on_primary_color_24"
-        android:drawablePadding="@dimen/dimen_8"
-        android:gravity="center"
-        android:text="@string/flash"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/openCameraButton"
-        app:layout_constraintStart_toEndOf="@+id/galleryButton"
-        app:layout_constraintEnd_toStartOf="@id/captureImageButton"
-        app:layout_constraintTop_toTopOf="@+id/captureImageButton"
-        app:layout_constraintWidth_percent="0.2" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/galleryButton"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/image_primary_color_24"
-        android:drawablePadding="@dimen/dimen_8"
-        android:gravity="center"
-        android:text="@string/flash"
-        android:textColor="@color/colorPrimary"
-        app:layout_constraintBottom_toTopOf="@+id/openCameraButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/captureImageButton"
-        app:layout_constraintWidth_percent="0.2" />
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/captureImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/circle_primary_color"
+            android:padding="@dimen/dimen_16"
+            android:layout_margin="@dimen/dimen_16"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/camera_white_32" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/singleImageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/single_image_white_24"
+            android:drawablePadding="@dimen/dimen_8"
+            android:gravity="center"
+            android:text="@string/single"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/captureImageButton"
+            app:layout_constraintWidth_percent="0.2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/multipleImageButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/multiple_image_white_24"
+            android:drawablePadding="@dimen/dimen_8"
+            android:gravity="center"
+            android:text="@string/multiple"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/singleImageButton"
+            app:layout_constraintStart_toEndOf="@+id/captureImageButton"
+            app:layout_constraintTop_toTopOf="@+id/captureImageButton"
+            app:layout_constraintWidth_percent="0.2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/flashButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/flash_on_primary_color_24"
+            android:drawablePadding="@dimen/dimen_8"
+            android:gravity="center"
+            android:text="@string/flash"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/galleryButton"
+            app:layout_constraintEnd_toStartOf="@id/captureImageButton"
+            app:layout_constraintTop_toTopOf="@+id/captureImageButton"
+            app:layout_constraintWidth_percent="0.2" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/galleryButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/image_white_24"
+            android:drawablePadding="@dimen/dimen_8"
+            android:gravity="center"
+            android:text="@string/gallery"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/captureImageButton"
+            app:layout_constraintWidth_percent="0.2" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 
 
 
