@@ -25,13 +25,13 @@ import android.widget.Toast
 import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import com.stcodesapp.documentscanner.R
+import com.stcodesapp.documentscanner.constants.RequestCode.Companion.REQUEST_CAMERA_PERMISSION
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.*
 import java.util.*
 
 class CameraActivity : AppCompatActivity() {
     companion object{
-        const val REQUEST_CAMERA_PERMISSION = 1
         private const val TAG = "MainActivity"
     }
 
