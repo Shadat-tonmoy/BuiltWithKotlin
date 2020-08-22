@@ -2,8 +2,11 @@ package com.stcodesapp.documentscanner.di.activity.modules
 
 import android.app.Activity
 import android.view.LayoutInflater
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
+import com.stcodesapp.documentscanner.R
+import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
@@ -61,6 +64,14 @@ class ActivityModule(private val activity: Activity)
     fun provideDialogHelper(activity: Activity) : DialogHelper
     {
         return DialogHelper(activity)
+    }
+
+    @Provides
+    fun provideMainActivityBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : ActivityMainBinding
+    {
+        val dataBinding : ActivityMainBinding = DataBindingUtil.inflate(inflater, R.layout.activity_main,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
     }
 
 
