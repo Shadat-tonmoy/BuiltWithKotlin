@@ -4,6 +4,7 @@ import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.google.android.material.appbar.MaterialToolbar
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.models.DocumentPage
 import java.io.File
@@ -40,6 +41,12 @@ fun loadRoundedImage(view: AppCompatImageView, url: String?)
         .load(url)
         .apply(imageRequestOption)
         .into(view)
+}
+
+@BindingAdapter("onBackPressed")
+fun onToolbarBackPressed(toolbar: MaterialToolbar, activityNavigator: ActivityNavigator)
+{
+    toolbar.setNavigationOnClickListener { activityNavigator.closeScreen() }
 }
 
 fun getRandomCarImage() : String

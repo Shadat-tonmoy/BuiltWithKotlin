@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:onBackPressed="http://schemas.android.com/tools">
 
     <data>
         <variable
@@ -17,9 +18,11 @@
         android:id="@+id/appToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/back_white"
+        app:navigationIcon="@drawable/arrow_back_24"
         android:elevation="@{addElevation ? 2 : 0}"
-        app:title="@{title}"/>
+        app:title="@{title}"
+        onBackPressed="@{navigator}"
+        />
 
 
 </layout>
