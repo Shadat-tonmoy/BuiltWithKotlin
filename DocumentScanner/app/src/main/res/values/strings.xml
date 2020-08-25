@@ -7,4 +7,8 @@
     <string name="flash">Flash</string>
     <string name="gallery">Gallery</string>
     <string name="create_document">Create Document</string>
+    <string name="rotate">Rotate</string>
+    <string name="crop">Crop</string>
+    <string name="filter">Filter</string>
+    <string name="delete">Delete</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.databinding.DocumentPagesLayoutBinding
+import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
@@ -79,6 +80,14 @@ class ActivityModule(private val activity: Activity)
     fun provideDocumentPagesBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : DocumentPagesLayoutBinding
     {
         val dataBinding : DocumentPagesLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.document_pages_layout,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
+    }
+
+    @Provides
+    fun provideImagePreviewBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : ImagePreviewLayoutBinding
+    {
+        val dataBinding : ImagePreviewLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.image_preview_layout,null,false)
         dataBinding.activityNavigator = activityNavigator
         return dataBinding
     }
