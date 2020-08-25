@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="title"
+            type="String" />
+        <variable
+            name="addElevation"
+            type="Boolean" />
+        <variable
+            name="navigator"
+            type="com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator" />
+    </data>
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/appToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:navigationIcon="@drawable/back_white"
+        android:elevation="@{addElevation ? 2 : 0}"
+        app:title="@{title}"/>
+
+
+</layout>

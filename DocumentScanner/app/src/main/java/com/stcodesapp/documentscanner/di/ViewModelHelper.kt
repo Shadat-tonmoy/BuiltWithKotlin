@@ -2,7 +2,7 @@ package com.stcodesapp.documentscanner.di
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.stcodesapp.documentscanner.ui.MainViewModel
+import com.stcodesapp.documentscanner.ui.main.MainViewModel
 import dagger.Binds
 import dagger.MapKey
 import dagger.Module

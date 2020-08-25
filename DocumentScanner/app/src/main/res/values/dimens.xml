@@ -5,4 +5,5 @@
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_32">32dp</dimen>
+    <dimen name="document_page_dimen">150dp</dimen>
 </resources>

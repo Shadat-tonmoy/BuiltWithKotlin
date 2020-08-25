@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+        <variable
+            name="documentPage"
+            type="com.stcodesapp.documentscanner.models.DocumentPage" />
+        <import type="com.stcodesapp.documentscanner.ui.helpers.UIHelperKt"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_8">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/documentPageImage"
+            android:layout_width="@dimen/document_page_dimen"
+            android:layout_height="@dimen/document_page_dimen"
+            android:scaleType="centerCrop"
+            imageUrl="@{documentPage.imagePath}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/pageImageTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/black"
+            android:padding="@dimen/dimen_4"
+            android:textColor="@color/white"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{UIHelperKt.getFileNameFromPath(documentPage.imagePath)}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -1,4 +1,4 @@
-package com.stcodesapp.documentscanner.ui
+package com.stcodesapp.documentscanner.ui.main
 
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import javax.inject.Inject

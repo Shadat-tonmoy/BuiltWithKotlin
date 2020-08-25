@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
+import com.stcodesapp.documentscanner.databinding.DocumentPagesLayoutBinding
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
@@ -70,6 +71,14 @@ class ActivityModule(private val activity: Activity)
     fun provideMainActivityBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : ActivityMainBinding
     {
         val dataBinding : ActivityMainBinding = DataBindingUtil.inflate(inflater, R.layout.activity_main,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
+    }
+
+    @Provides
+    fun provideDocumentPagesBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : DocumentPagesLayoutBinding
+    {
+        val dataBinding : DocumentPagesLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.document_pages_layout,null,false)
         dataBinding.activityNavigator = activityNavigator
         return dataBinding
     }
