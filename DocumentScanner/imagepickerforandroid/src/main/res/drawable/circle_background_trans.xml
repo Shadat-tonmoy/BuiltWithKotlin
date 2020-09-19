@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+
+    <stroke
+        android:color="@color/white"
+        android:width="3dp"/>
+
+    <solid
+        android:color="@color/transparent"/>
+
+    <padding
+        android:left="@dimen/selection_circle_padding"
+        android:top="@dimen/selection_circle_padding"
+        android:right="@dimen/selection_circle_padding"
+        android:bottom="@dimen/selection_circle_padding" />
+
+    <size
+        android:width="24dp"
+        android:height="24dp"/>
+</shape>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="select_all">Select All</string>
+    <string name="selected">Selected (%d)</string>
+    <string name="total_selected_image">Selected (%d)</string>
+    <string name="done">Done</string>
+    <string name="fetching_image_message">Please wait until the image list is fetched</string>
+    <string name="no_file_found">No File Found!!</string>
+    <string name="folder_title">Folder Title</string>
+    <string name="folder_path">Folder Path</string>
+    <string name="search">Search</string>
+    <string name="sort">Sort</string>
+    <string name="select_none">Select None</string>
+    <string name="no_image_selected">No image is selected!!</string>
+    <string name="all_images">All Images</string>
+    <string name="folders">Folders</string>
+    <string name="pick_image">Pick Image</string>
+    <string name="all">All</string>
+</resources>

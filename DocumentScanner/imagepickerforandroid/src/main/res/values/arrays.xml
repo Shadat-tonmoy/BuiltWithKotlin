@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="image_filepicker_options">
+        <item>@string/all_images</item>
+        <item>@string/folders</item>
+    </string-array>
+
+</resources>

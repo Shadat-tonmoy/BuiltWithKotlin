@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="defaultMargin2x">16dp</dimen>
+    <dimen name="defaultMargin">8dp</dimen>
+    <dimen name="selection_circle_padding">4dp</dimen>
+    <dimen name="halfMarginPadding">4dp</dimen>
+</resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!--<item
+        android:id="@+id/search_menu"
+        android:icon="@drawable/back_white"
+        android:title="@string/search"
+        app:actionViewClass="android.widget.SearchView"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/sort_type_menu"
+        app:showAsAction="always"
+        android:title="@string/sort"
+        android:icon="@drawable/sort_arrow_up_white"/>-->
+
+
+    <item
+        android:id="@+id/select_all_menu"
+        app:showAsAction="always"
+        android:title="@string/all"/>
+
+</menu>
