@@ -14,7 +14,6 @@
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/black"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".ui.imageEdit.ImagePreviewActivity">
@@ -30,41 +29,56 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/rotateButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/rotate_left_white_24"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="@string/rotate"
-            />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/cropButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/crop_white_24"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toEndOf="@id/rotateButton"
-            android:text="@string/crop"
-            />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/filterButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/filter_white_24"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toEndOf="@id/cropButton"
-            android:text="@string/filter"
-            />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/deleteButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/delete_white_24"
-            android:text="@string/delete"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/transparentBlack"
+            android:orientation="horizontal"
+            android:padding="@dimen/dimen_16"
             app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/rotateButton"
+                style="@style/imagePreviewButtonStyle"
+                android:drawableTop="@drawable/rotate_left_white_24"
+                app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/rotate"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/cropButton"
+                style="@style/imagePreviewButtonStyle"
+                android:drawableTop="@drawable/crop_white_24"
+                app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+                app:layout_constraintStart_toEndOf="@id/rotateButton"
+                android:text="@string/crop"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/filterButton"
+                style="@style/imagePreviewButtonStyle"
+                android:drawableTop="@drawable/filter_white_24"
+                app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+                app:layout_constraintStart_toEndOf="@id/cropButton"
+                android:text="@string/filter"
+                />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/deleteButton"
+                style="@style/imagePreviewButtonStyle"
+                android:drawableTop="@drawable/delete_white_24"
+                android:text="@string/delete"
+                app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/filterButton" />
+
+
+        </LinearLayout>
+
+
 
 
 

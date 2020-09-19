@@ -40,8 +40,6 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
             .batchMode(true)
             .batchImageSelectionListener (this)
             .singleImageSelectionListener (this )
-            .toolbarColor(getImagePickerColor())
-            .statusBarColor(getImagePickerColor())
             .navigationIcon(R.drawable.back_white)
             .build()
         imagePickerForAndroid.openImagePicker()

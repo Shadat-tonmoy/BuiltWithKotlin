@@ -1,2 +1,3 @@
+include ':imagepickerforandroid'
 include ':app'
 rootProject.name = "DocumentScanner"

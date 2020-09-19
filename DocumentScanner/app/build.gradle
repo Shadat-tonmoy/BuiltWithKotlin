@@ -69,7 +69,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
 
     //android image picker
-    implementation 'com.github.Shadat-tonmoy:ImagePickerForAndroid:1.0.3'
+    implementation project(path: ':imagepickerforandroid')
 
 
     testImplementation 'junit:junit:4.12'

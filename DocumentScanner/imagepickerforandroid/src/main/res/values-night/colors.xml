@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="toolbarBackButton">#FFF</color>
+    <color name="themeColor">#000</color>
+</resources>
