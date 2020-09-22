@@ -3,12 +3,14 @@ package com.stcodesapp.documentscanner.ui.main
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
+import com.stcodesapp.documentscanner.ui.helpers.showToast
 import kotlinx.android.synthetic.main.activity_main.view.*
 import javax.inject.Inject
 
@@ -53,16 +55,22 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
         )
     }
 
-    override fun onSingleImageSelected(p0: String?)
+    override fun onSingleImageSelected(selectedImage: String?)
     {
         val intent = Intent(this,DocumentPagesActivity::class.java)
         startActivity(intent)
 
     }
 
-    override fun onBatchImageSelected(p0: MutableList<String>?) {
-        val intent = Intent(this,DocumentPagesActivity::class.java)
-        startActivity(intent)
+    override fun onBatchImageSelected(selectedImages: MutableList<String>?)
+    {
+        Log.e(TAG, "onBatchImageSelected: SelectedImages $selectedImages")
+        if(selectedImages!=null && selectedImages.size>0)
+        {
+            val intent = Intent(this,DocumentPagesActivity::class.java)
+            startActivity(intent)
+        }
+        else this.showToast("No image selected!")
     }
 
 

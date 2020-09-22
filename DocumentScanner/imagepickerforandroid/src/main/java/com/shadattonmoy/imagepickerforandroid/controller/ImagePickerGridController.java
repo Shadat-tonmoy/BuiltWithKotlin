@@ -2,10 +2,12 @@ package com.shadattonmoy.imagepickerforandroid.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import com.shadattonmoy.imagepickerforandroid.R;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerType;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerTags;
 import com.shadattonmoy.imagepickerforandroid.tasks.ImageFileFetchingTask;
@@ -135,5 +137,18 @@ public class ImagePickerGridController implements ImagePickerGridScreen.Listener
     public void bindSelectionBundle(Bundle bundle)
     {
         uiUpdateTask.bindSelectionBundle(bundle);
+    }
+
+    public void onOptionsItemSelected(MenuItem item)
+    {
+        if(item.getItemId() == R.id.select_all_menu)
+        {
+            onSelectAllButtonClicked();
+            if(selectAll) item.setTitle("None");
+            else item.setTitle("All");
+
+        }
+
+
     }
 }

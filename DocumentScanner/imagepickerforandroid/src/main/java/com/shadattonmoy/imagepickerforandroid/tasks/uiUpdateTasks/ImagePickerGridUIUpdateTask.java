@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.List;
 
 import com.shadattonmoy.imagepickerforandroid.R;
@@ -57,6 +59,7 @@ public class ImagePickerGridUIUpdateTask
     {
         int totalSelectedImage = screenView.getImagePickerGridAdapter().getTotalSelectedImages();
         TextView doneButton = screenView.getDoneButton();
+        ((AppCompatActivity)activity).getSupportActionBar().setSubtitle(totalSelectedImage+" Selected");
         String selectedText = activity.getString(R.string.total_selected_image,totalSelectedImage);
         screenView.getSelectedText().setText(selectedText);
         if(totalSelectedImage>0)

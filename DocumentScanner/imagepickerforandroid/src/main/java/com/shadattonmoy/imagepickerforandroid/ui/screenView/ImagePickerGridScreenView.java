@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.shadattonmoy.imagepickerforandroid.R;
 import com.shadattonmoy.imagepickerforandroid.constants.EventType;
 import com.shadattonmoy.imagepickerforandroid.ui.adapters.ImagePickerGridAdapter;
@@ -25,6 +26,7 @@ public class ImagePickerGridScreenView extends BaseScreenView<ImagePickerGridScr
     private TextView doneButton, selectAllButton, selectedText;
     private LinearLayout buttonPanel;
     private RelativeLayout loadingView;
+    private FloatingActionButton forwardButton;
 
     public ImagePickerGridScreenView(LayoutInflater layoutInflater, @Nullable ViewGroup parent)
     {
@@ -50,6 +52,7 @@ public class ImagePickerGridScreenView extends BaseScreenView<ImagePickerGridScr
         });
         setClickListener(doneButton, EventType.DONE_BUTTON_CLICKED);
         setClickListener(selectAllButton,EventType.SELECT_ALL_BUTTON_CLICKED);
+        setClickListener(forwardButton,EventType.DONE_BUTTON_CLICKED);
 
 
     }
@@ -80,6 +83,7 @@ public class ImagePickerGridScreenView extends BaseScreenView<ImagePickerGridScr
     {
         imageGridView = findViewById(R.id.image_grid_view);
         doneButton = findViewById(R.id.done_button);
+        forwardButton = findViewById(R.id.forward_fab);
         selectAllButton = findViewById(R.id.select_all_button);
         selectedText = findViewById(R.id.total_selected_text);
         imageGridView.setAdapter(imagePickerGridAdapter);
