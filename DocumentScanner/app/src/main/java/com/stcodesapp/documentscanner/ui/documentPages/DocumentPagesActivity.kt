@@ -35,6 +35,7 @@ class DocumentPagesActivity : BaseActivity()
         documentPagesList.layoutManager = GridLayoutManager(this,2)
         documentPagesList.adapter = adapter
         adapter.setDocumentPages(getDummyDocumentPages())
+        viewModel.showInfo()
     }
 
     private fun onDocumentPageClicked(documentPage : DocumentPage)

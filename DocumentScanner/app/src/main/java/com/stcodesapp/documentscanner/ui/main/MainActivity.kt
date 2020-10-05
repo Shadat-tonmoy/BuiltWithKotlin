@@ -18,6 +18,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
 {
     @Inject lateinit var activityNavigator: ActivityNavigator
     @Inject lateinit var dataBinding : ActivityMainBinding
+    @Inject lateinit var viewModel: MainViewModel
 
     companion object{
         private const val TAG = "MainActivity"
@@ -65,6 +66,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
     override fun onBatchImageSelected(selectedImages: MutableList<String>?)
     {
         Log.e(TAG, "onBatchImageSelected: SelectedImages $selectedImages")
+        viewModel.copySelectedImages(selectedImages)
         if(selectedImages!=null && selectedImages.size>0)
         {
             val intent = Intent(this,DocumentPagesActivity::class.java)

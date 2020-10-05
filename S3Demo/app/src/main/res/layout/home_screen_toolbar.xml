@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.MaterialToolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appScreenToolbarWithAvatar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:contentInsetStartWithNavigation="0dp"
+    app:contentInsetStart="0dp"
+    app:contentInsetLeft="0dp"
+    android:elevation="0.5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:id="@+id/editButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="start|center_vertical"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_marginStart="8dp"
+            android:textSize="18sp"
+            android:text="@string/edit" />
+
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</com.google.android.material.appbar.MaterialToolbar>
