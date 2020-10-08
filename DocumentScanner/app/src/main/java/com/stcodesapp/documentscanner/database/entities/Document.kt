@@ -7,5 +7,6 @@ import androidx.room.PrimaryKey
 data class Document (
     @PrimaryKey val id : Long,
     val path : String,
+    val title : String,
     val thumbPath : String,
     val lastModified : Long)

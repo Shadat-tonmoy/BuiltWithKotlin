@@ -28,8 +28,10 @@ class ApplicationModule(private val context: Context)
     @Singleton
     fun provideAppDB(context: Context) : AppDatabase
     {
-        val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB").build();
+        val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB").build()
         return db
     }
+
+
 
 }
