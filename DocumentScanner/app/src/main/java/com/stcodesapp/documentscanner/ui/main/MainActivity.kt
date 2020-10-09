@@ -69,7 +69,6 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
     override fun onBatchImageSelected(selectedImages: MutableList<String>?)
     {
         Log.e(TAG, "onBatchImageSelected: SelectedImages $selectedImages")
-        viewModel.copySelectedImages(selectedImages)
         if(selectedImages!=null && selectedImages.size>0)
         {
             copySelectedImages(selectedImages)
@@ -88,6 +87,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
             if(it!=null && it.isNotEmpty())
             {
                 progressDialog.updateMessage("Processing image (${it.size}/$totalImage)")
+                if(it.size == totalImage) progressDialog.hideDialog()
             }
         })
     }

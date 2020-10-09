@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "document")
 data class Document (
-    @PrimaryKey val id : Long,
+    @PrimaryKey(autoGenerate = true) var id : Long = 0,
     val path : String,
     val title : String,
-    val thumbPath : String,
+    val thumbPath : String = "",
     val lastModified : Long)

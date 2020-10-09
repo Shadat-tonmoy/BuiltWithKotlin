@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.database.AppDatabase
+import com.stcodesapp.documentscanner.database.managers.DocumentManager
+import com.stcodesapp.documentscanner.database.managers.ImageManager
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -30,6 +32,18 @@ class ApplicationModule(private val context: Context)
     {
         val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB").build()
         return db
+    }
+
+    @Provides
+    fun provideDocumentManager(context: Context, db : AppDatabase) : DocumentManager
+    {
+        return DocumentManager(context,db.documentDao())
+    }
+
+    @Provides
+    fun provideImageManager(context: Context, db : AppDatabase) : ImageManager
+    {
+        return ImageManager(context,db.imageDao())
     }
 
 

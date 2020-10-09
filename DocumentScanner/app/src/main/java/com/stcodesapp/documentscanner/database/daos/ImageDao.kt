@@ -11,12 +11,15 @@ interface ImageDao
     fun getAllImageLiveDataForDocument(documentId : Long) : LiveData<List<Image>>
 
     @Insert (onConflict = OnConflictStrategy.IGNORE)
-    fun insertImage(image: Image)
+    suspend fun insertImage(image: Image) : Long
 
     @Update
-    fun updateImage(image: Image)
+    suspend fun updateImage(image: Image) : Int
 
     @Delete
-    fun deleteImage(image: Image)
+    suspend fun deleteImage(image: Image)
+
+    @Query("SELECT * FROM image WHERE id = :id")
+    suspend fun getImageById(id : Long) : Image?
 
 }

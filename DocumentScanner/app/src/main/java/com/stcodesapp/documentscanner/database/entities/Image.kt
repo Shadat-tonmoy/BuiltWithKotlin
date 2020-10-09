@@ -7,9 +7,9 @@ import com.stcodesapp.documentscanner.models.CropArea
 
 @Entity(tableName = "image")
 data class Image(
-    @PrimaryKey val id : Long,
+    @PrimaryKey(autoGenerate = true) var id : Long = 0,
     val path : String,
     val position : Int,
     val docId : Long,
-    val rotationAngle : Double,
-    @Embedded val cropArea: CropArea)
+    val rotationAngle : Double = 0.0,
+    @Embedded val cropArea: CropArea? = null)

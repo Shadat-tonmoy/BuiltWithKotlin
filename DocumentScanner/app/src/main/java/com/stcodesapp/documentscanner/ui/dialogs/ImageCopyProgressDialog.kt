@@ -21,6 +21,7 @@ class ImageCopyProgressDialog(private val context: Context)
         binding.progressMessage = message
         dialog = MaterialAlertDialogBuilder(context)
             .setView(binding.root)
+            .setCancelable(false)
             .create()
         dialog?.show()
 

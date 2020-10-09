@@ -4,9 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
-import com.stcodesapp.documentscanner.database.AppDatabase
+import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.database.entities.Document
+import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.database.managers.DocumentManager
+import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.database.managers.getNewDocument
+import com.stcodesapp.documentscanner.database.managers.getNewImage
 import com.stcodesapp.documentscanner.helpers.ImageHelper
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.*
 import javax.inject.Inject
@@ -14,36 +19,54 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
-    @Inject lateinit var appDB : AppDatabase
+    @Inject lateinit var documentManager : DocumentManager
+    @Inject lateinit var imageManager: ImageManager
 
     companion object{
         private const val TAG = "MainViewModel"
     }
 
-    fun copySelectedImages(selectedImages: MutableList<String>?) : LiveData<List<String>>
+    fun copySelectedImages(selectedImages: MutableList<String>?) : LiveData<List<Image>>
     {
-        val copiedImageLiveData = MutableLiveData<List<String>>()
-        val copiedImageList = mutableListOf<String>()
+        val copiedImageLiveData = MutableLiveData<List<Image>>()
+        val copiedImageList = mutableListOf<Image>()
         val imageHelper = ImageHelper()
         ioCoroutine.launch {
             if(selectedImages!=null)
             {
-                val outputDirPath = getOutputImageDir()
+                val newDocument = createNewDocument()
+                val outputDirPath = newDocument.path
+                var position = 1
                 for(imagePath in selectedImages)
                 {
-//                    val outputImagePath = getOutputImagePath(outputDirPath)
-//                    val result = imageHelper.copyImage(imagePath,outputImagePath)
-                    delay(1000)
-                    val result = true
+                    val outputImagePath = getOutputImagePath(outputDirPath)
+                    val result = imageHelper.copyImage(imagePath,outputImagePath)
                     if(result)
                     {
-                        copiedImageList.add("outputImagePath")
+                        val newImage = createNewImage(outputImagePath,position++, newDocument.id)
+                        copiedImageList.add(newImage)
                         copiedImageLiveData.postValue(copiedImageList)
                     }
                 }
             }
         }
         return copiedImageLiveData
+    }
+
+    private suspend fun createNewDocument() : Document
+    {
+        val newDocument = getNewDocument(getOutputImageDir())
+        val docId = documentManager.createOrUpdateDocument(newDocument)
+        val newDocumentDir = File(newDocument.path)
+        if(!newDocumentDir.exists()) { newDocumentDir.mkdirs() }
+        return newDocument.apply { id = docId }
+    }
+
+    private suspend fun createNewImage(path : String, position : Int, docId : Long) : Image
+    {
+        val newImage = getNewImage(path,position,docId)
+        val imageId = imageManager.createOrUpdateImage(newImage)
+        return newImage.apply { id = imageId }
     }
 
     private fun getOutputImageDir(): String
@@ -54,7 +77,7 @@ class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
     }
 
     private fun getOutputImagePath(outputDirPath: String): String {
-        val outputImageTitle = System.currentTimeMillis()
+        val outputImageTitle = "${System.currentTimeMillis()}${ConstValues.PNG_EXTENSION}"
         return outputDirPath + File.separator + outputImageTitle
     }
 
