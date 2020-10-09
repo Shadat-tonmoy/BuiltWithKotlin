@@ -65,7 +65,7 @@
                 app:fab_colorPressed="@color/colorPrimary"
                 fab:fab_label="Camera"
                 fab:fab_size="mini"
-                android:onClick="@{() -> activityNavigator.openCameraToCreateDocument()}"
+                android:onClick="@{() -> activityNavigator.openCameraToCreateDocument(menu)}"
                 />
 
             <com.github.clans.fab.FloatingActionButton

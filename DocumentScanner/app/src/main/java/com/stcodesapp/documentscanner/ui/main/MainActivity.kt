@@ -4,10 +4,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.Observer
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
+import com.stcodesapp.documentscanner.ui.dialogs.ImageCopyProgressDialog
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.showToast
@@ -39,6 +41,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
 
     private fun openImagePicker()
     {
+        dataBinding.root.menu.toggle(true)
         val imagePickerForAndroid = ImagePickerForAndroid.Builder(this)
             .batchMode(true)
             .batchImageSelectionListener (this)
@@ -69,10 +72,24 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
         viewModel.copySelectedImages(selectedImages)
         if(selectedImages!=null && selectedImages.size>0)
         {
-            val intent = Intent(this,DocumentPagesActivity::class.java)
-            startActivity(intent)
+            copySelectedImages(selectedImages)
+//            val intent = Intent(this,DocumentPagesActivity::class.java)
+//            startActivity(intent)
         }
         else this.showToast("No image selected!")
+    }
+
+    private fun copySelectedImages(selectedImages: MutableList<String>)
+    {
+        val progressDialog = ImageCopyProgressDialog(this)
+        progressDialog.showDialog()
+        val totalImage = selectedImages.size
+        viewModel.copySelectedImages(selectedImages).observe(this, Observer {
+            if(it!=null && it.isNotEmpty())
+            {
+                progressDialog.updateMessage("Processing image (${it.size}/$totalImage)")
+            }
+        })
     }
 
 

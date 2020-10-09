@@ -5,7 +5,7 @@ import kotlin.math.min
 
 class ImageHelper
 {
-    private fun copyImage(source : String, destination : String) : Boolean
+    fun copyImage(source : String, destination : String) : Boolean
     {
         val outputFile = File(destination)
         outputFile.deleteOnExit()

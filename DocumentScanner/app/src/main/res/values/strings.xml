@@ -11,4 +11,5 @@
     <string name="crop">Crop</string>
     <string name="filter">Filter</string>
     <string name="delete">Delete</string>
+    <string name="processing">Processing…</string>
 </resources>
