@@ -5,7 +5,7 @@
     <data>
         <variable
             name="documentPage"
-            type="com.stcodesapp.documentscanner.models.DocumentPage" />
+            type="com.stcodesapp.documentscanner.database.entities.Image" />
         <import type="com.stcodesapp.documentscanner.ui.helpers.UIHelperKt"/>
     </data>
 
@@ -19,7 +19,7 @@
             android:layout_width="@dimen/document_page_dimen"
             android:layout_height="@dimen/document_page_dimen"
             android:scaleType="centerCrop"
-            imageUrl="@{documentPage.imagePath}"
+            imageUrl="@{documentPage.path}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,7 @@
             android:textColor="@color/white"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@{UIHelperKt.getFileNameFromPath(documentPage.imagePath)}"
+            android:text="@{UIHelperKt.getFileNameFromPath(documentPage.path)}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"

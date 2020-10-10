@@ -1,9 +1,15 @@
 package com.stcodesapp.documentscanner.ui.documentPages
 
+import android.content.Intent
 import android.util.Log
+import androidx.lifecycle.LiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
+import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.AppDatabase
+import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.database.managers.DocumentManager
+import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.ui.main.MainViewModel
 import javax.inject.Inject
 
@@ -16,11 +22,18 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
     }
 
     @Inject lateinit var appDB : AppDatabase
+    @Inject lateinit var documentManager: DocumentManager
+    @Inject lateinit var imageManager: ImageManager
+    private var documentId : Long = 0
 
-    fun showInfo()
+    fun bindValueFromIntent(intent: Intent)
     {
-        Log.e(TAG, "DB: $appDB" )
+        if(intent.hasExtra(Tags.DOCUMENT_ID)) documentId = intent.getLongExtra(Tags.DOCUMENT_ID,0L)
+    }
 
+    fun fetchDocumentPages() : LiveData<List<Image>>
+    {
+        return imageManager.getDocumentPagesLiveData(documentId)
     }
 
 }

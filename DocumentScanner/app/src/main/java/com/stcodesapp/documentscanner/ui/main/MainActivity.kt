@@ -95,7 +95,12 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
             if(it!=null && it.isNotEmpty())
             {
                 progressDialog.updateMessage("Processing image (${it.size}/$totalImage)")
-                if(it.size == totalImage) progressDialog.hideDialog()
+                if(it.size == totalImage)
+                {
+                    progressDialog.hideDialog()
+                    activityNavigator.toDocumentPagesScreen(it[0].docId)
+
+                }
             }
         })
     }

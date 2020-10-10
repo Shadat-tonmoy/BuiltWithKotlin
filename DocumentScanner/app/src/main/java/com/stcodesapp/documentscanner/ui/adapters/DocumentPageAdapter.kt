@@ -7,12 +7,13 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stcodesapp.documentscanner.R
+import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.databinding.DocumentPageItemLayoutBinding
 import com.stcodesapp.documentscanner.models.DocumentPage
 
-class DocumentPageAdapter (val context : Context, val onItemClickListener : (DocumentPage) -> Unit) : RecyclerView.Adapter<DocumentPageAdapter.DocumentPageViewHolder>()
+class DocumentPageAdapter (val context : Context, val onItemClickListener : (Image) -> Unit) : RecyclerView.Adapter<DocumentPageAdapter.DocumentPageViewHolder>()
 {
-    private var documentPages = ArrayList<DocumentPage>()
+    private var documentPages = ArrayList<Image>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DocumentPageViewHolder {
         val inflater = LayoutInflater.from(context)
@@ -32,9 +33,9 @@ class DocumentPageAdapter (val context : Context, val onItemClickListener : (Doc
         holder.dataBinding.root.setOnClickListener { onItemClickListener(documentPage) }
     }
 
-    fun setDocumentPages(documentPages : List<DocumentPage>)
+    fun setDocumentPages(documentPages : List<Image>)
     {
-        this.documentPages = documentPages as ArrayList<DocumentPage>
+        this.documentPages = documentPages as ArrayList<Image>
         notifyDataSetChanged()
     }
 
@@ -42,7 +43,7 @@ class DocumentPageAdapter (val context : Context, val onItemClickListener : (Doc
 
     inner class DocumentPageViewHolder(val dataBinding : DocumentPageItemLayoutBinding) : RecyclerView.ViewHolder(dataBinding.root)
     {
-        fun bind(documentPage: DocumentPage)
+        fun bind(documentPage: Image)
         {
             dataBinding.documentPage = documentPage
             dataBinding.executePendingBindings()

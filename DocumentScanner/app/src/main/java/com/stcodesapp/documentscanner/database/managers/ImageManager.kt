@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.database.managers
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import com.stcodesapp.documentscanner.database.daos.ImageDao
 import com.stcodesapp.documentscanner.database.entities.Image
 
@@ -15,5 +16,10 @@ class ImageManager(private val context: Context, private val dao : ImageDao)
             dao.updateImage(image)
             image.id
         }
+    }
+
+    fun getDocumentPagesLiveData(docId : Long) : LiveData<List<Image>>
+    {
+        return dao.getAllImageLiveDataForDocument(docId)
     }
 }
