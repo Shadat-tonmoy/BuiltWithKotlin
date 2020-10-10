@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.main
 
 import android.content.Intent
+import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -8,7 +9,9 @@ import androidx.lifecycle.Observer
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
+import com.stcodesapp.documentscanner.constants.RequestCode
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
+import com.stcodesapp.documentscanner.helpers.PermissionHelper
 import com.stcodesapp.documentscanner.ui.dialogs.ImageCopyProgressDialog
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
@@ -21,6 +24,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
     @Inject lateinit var activityNavigator: ActivityNavigator
     @Inject lateinit var dataBinding : ActivityMainBinding
     @Inject lateinit var viewModel: MainViewModel
+    @Inject lateinit var permissionHelper: PermissionHelper
 
     companion object{
         private const val TAG = "MainActivity"
@@ -31,6 +35,20 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         initUI()
+        observeDocumentListLiveData()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
+    {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if(grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED)
+        {
+            when(requestCode)
+            {
+                RequestCode.REQUEST_STORAGE_WRITE_PERMISSION -> openImagePicker()
+                RequestCode.REQUEST_CAMERA_PERMISSION -> activityNavigator.openCameraToCreateDocument()
+            }
+        }
     }
 
     private fun initUI()
@@ -41,6 +59,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
 
     private fun openImagePicker()
     {
+        if(!permissionHelper.isWriteStoragePermissionGranted()) return
         dataBinding.root.menu.toggle(true)
         val imagePickerForAndroid = ImagePickerForAndroid.Builder(this)
             .batchMode(true)
@@ -49,14 +68,6 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
             .navigationIcon(R.drawable.back_white)
             .build()
         imagePickerForAndroid.openImagePicker()
-    }
-
-    private fun getImagePickerColor() : Int
-    {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) resources.getColor(
-            R.color.colorPrimary,theme) else resources.getColor(
-            R.color.colorPrimary
-        )
     }
 
     override fun onSingleImageSelected(selectedImage: String?)
@@ -68,12 +79,9 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
 
     override fun onBatchImageSelected(selectedImages: MutableList<String>?)
     {
-        Log.e(TAG, "onBatchImageSelected: SelectedImages $selectedImages")
         if(selectedImages!=null && selectedImages.size>0)
         {
             copySelectedImages(selectedImages)
-//            val intent = Intent(this,DocumentPagesActivity::class.java)
-//            startActivity(intent)
         }
         else this.showToast("No image selected!")
     }
@@ -89,6 +97,13 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
                 progressDialog.updateMessage("Processing image (${it.size}/$totalImage)")
                 if(it.size == totalImage) progressDialog.hideDialog()
             }
+        })
+    }
+
+    private fun observeDocumentListLiveData()
+    {
+        viewModel.fetchDocumentListLiveData().observe(this, Observer {
+            Log.e(TAG, "observeDocumentListLiveData: Data : $it")
         })
     }
 

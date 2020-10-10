@@ -13,9 +13,9 @@ class ActivityNavigator(private val activity:Activity)
         activity.finish()
     }
 
-    fun openCameraToCreateDocument(floatingActionMenu: FloatingActionMenu)
+    fun openCameraToCreateDocument(floatingActionMenu: FloatingActionMenu?=null)
     {
-        floatingActionMenu.toggle(true)
+        floatingActionMenu?.toggle(true)
         val intent = Intent(activity,CameraActivity::class.java)
         activity.startActivity(intent)
     }

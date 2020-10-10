@@ -1,7 +1,8 @@
 package com.stcodesapp.documentscanner.database.managers
 
 import android.content.Context
-import com.stcodesapp.documentscanner.database.AppDatabase
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.stcodesapp.documentscanner.database.daos.DocumentDao
 import com.stcodesapp.documentscanner.database.entities.Document
 
@@ -16,5 +17,10 @@ class DocumentManager(private val context: Context, private val dao : DocumentDa
             dao.updateDocument(document)
             document.id
         }
+    }
+
+    fun getDocumentListLiveData() : LiveData<List<Document>>
+    {
+        return dao.getDocumentListLiveData()
     }
 }

@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.database.daos
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.*
 import com.stcodesapp.documentscanner.database.entities.Document
 
@@ -8,7 +9,7 @@ import com.stcodesapp.documentscanner.database.entities.Document
 interface DocumentDao
 {
     @Query("SELECT * FROM document")
-    fun getAllDocumentLiveData() : LiveData<List<Document>>
+    fun getDocumentListLiveData() : LiveData<List<Document>>
 
     @Insert
     suspend fun insertDocument(document: Document) : Long

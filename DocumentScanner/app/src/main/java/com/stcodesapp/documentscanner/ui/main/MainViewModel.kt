@@ -26,6 +26,11 @@ class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
         private const val TAG = "MainViewModel"
     }
 
+    fun fetchDocumentListLiveData() : LiveData<List<Document>>
+    {
+        return documentManager.getDocumentListLiveData()
+    }
+
     fun copySelectedImages(selectedImages: MutableList<String>?) : LiveData<List<Image>>
     {
         val copiedImageLiveData = MutableLiveData<List<Image>>()
