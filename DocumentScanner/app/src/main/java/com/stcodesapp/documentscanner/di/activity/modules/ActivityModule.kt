@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.databinding.DocumentPagesLayoutBinding
+import com.stcodesapp.documentscanner.databinding.HomeLayoutBinding
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
@@ -96,6 +97,14 @@ class ActivityModule(private val activity: Activity)
     fun provideImagePreviewBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : ImagePreviewLayoutBinding
     {
         val dataBinding : ImagePreviewLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.image_preview_layout,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
+    }
+
+    @Provides
+    fun provideHomeLayoutBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : HomeLayoutBinding
+    {
+        val dataBinding : HomeLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.home_layout,null,false)
         dataBinding.activityNavigator = activityNavigator
         return dataBinding
     }

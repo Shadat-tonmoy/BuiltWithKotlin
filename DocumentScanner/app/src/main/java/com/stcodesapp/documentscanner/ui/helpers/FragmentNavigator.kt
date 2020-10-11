@@ -4,14 +4,24 @@ import android.view.Gravity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.transition.Slide
+import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.ui.home.HomeFragment
 
 
 class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
                         private val fragmentManager: FragmentManager?) {
 
+    private var homeFragment : HomeFragment? = null
 
     companion object{
         private const val TAG = "FragmentNavigator"
+    }
+
+    fun loadHomeFragment()
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.HOME_FRAGMENT) return }
+        if(homeFragment == null) homeFragment = HomeFragment.newInstance()
+        replaceFragmentAndClearBackStack(homeFragment!!,Tags.HOME_FRAGMENT)
     }
 
     private fun replaceFragment(newFragment: Fragment, tag: String)

@@ -12,4 +12,7 @@
     <string name="filter">Filter</string>
     <string name="delete">Delete</string>
     <string name="processing">Processing…</string>
+    <string name="home">Home</string>
+    <string name="saved_files">Saved Files</string>
+    <string name="more">More</string>
 </resources>

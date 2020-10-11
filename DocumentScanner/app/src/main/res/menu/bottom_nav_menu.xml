@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/home_menu"
+        android:icon="@drawable/home_24_white"
+        android:title="@string/home" />
+
+    <item
+        android:id="@+id/saved_file_menu"
+        android:icon="@drawable/file_white_24"
+        android:title="@string/saved_files" />
+
+    <item
+        android:id="@+id/more_menu"
+        android:icon="@drawable/more_horizontal_white_24"
+        android:title="@string/more" />
+
+</menu>

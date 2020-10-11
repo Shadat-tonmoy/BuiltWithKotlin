@@ -5,26 +5,40 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.FrameLayout
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.RequestCode
+import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
+import com.stcodesapp.documentscanner.ui.adapters.DocumentListAdapter
+import com.stcodesapp.documentscanner.ui.adapters.DocumentPageAdapter
 import com.stcodesapp.documentscanner.ui.dialogs.ImageCopyProgressDialog
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
+import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
+import com.stcodesapp.documentscanner.ui.helpers.FragmentNavigator
 import com.stcodesapp.documentscanner.ui.helpers.showToast
+import com.stcodesapp.documentscanner.ui.home.HomeFragment
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.document_pages_layout.*
 import javax.inject.Inject
 
-class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionListener, ImagePickerForAndroid.BatchImageSelectionListener
+class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionListener, ImagePickerForAndroid.BatchImageSelectionListener, DocumentListAdapter.Listener, FragmentFrameWrapper
 {
     @Inject lateinit var activityNavigator: ActivityNavigator
+    @Inject lateinit var fragmentNavigator: FragmentNavigator
     @Inject lateinit var dataBinding : ActivityMainBinding
     @Inject lateinit var viewModel: MainViewModel
     @Inject lateinit var permissionHelper: PermissionHelper
+    lateinit var adapter : DocumentListAdapter
+
 
     companion object{
         private const val TAG = "MainActivity"
@@ -35,7 +49,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         initUI()
-        observeDocumentListLiveData()
+//        observeDocumentListLiveData()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
@@ -54,12 +68,35 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
     private fun initUI()
     {
         setContentView(dataBinding.root)
-        dataBinding.root.galleryMenu.setOnClickListener { openImagePicker() }
+        /*dataBinding.root.galleryMenu.setOnClickListener { openImagePicker() }
+        adapter = DocumentListAdapter(this,this)
+        documentList.layoutManager = LinearLayoutManager(this)
+        documentList.adapter = adapter*/
+        fragmentNavigator.loadHomeFragment()
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when (it.itemId) {
+                R.id.home_menu -> {
+                    fragmentNavigator.loadHomeFragment()
+                    true
+                }
+
+                R.id.saved_file_menu -> {
+                    true
+                }
+
+                R.id.more_menu -> {
+                    true
+                }
+                else -> {
+                    false
+                }
+            }
+        }
     }
 
     private fun openImagePicker()
     {
-        if(!permissionHelper.isWriteStoragePermissionGranted()) return
+        /*if(!permissionHelper.isWriteStoragePermissionGranted()) return
         dataBinding.root.menu.toggle(true)
         val imagePickerForAndroid = ImagePickerForAndroid.Builder(this)
             .batchMode(true)
@@ -67,7 +104,7 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
             .singleImageSelectionListener (this )
             .navigationIcon(R.drawable.back_white)
             .build()
-        imagePickerForAndroid.openImagePicker()
+        imagePickerForAndroid.openImagePicker()*/
     }
 
     override fun onSingleImageSelected(selectedImage: String?)
@@ -108,8 +145,20 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
     private fun observeDocumentListLiveData()
     {
         viewModel.fetchDocumentListLiveData().observe(this, Observer {
-            Log.e(TAG, "observeDocumentListLiveData: Data : $it")
+            if(it != null && it.isNotEmpty())
+            {
+                adapter.setDocuments(it)
+            }
         })
+    }
+
+    override fun onItemClick(document: Document)
+    {
+
+    }
+
+    override fun getFragmentFrame(): FrameLayout? {
+        return fragmentContainer
     }
 
 

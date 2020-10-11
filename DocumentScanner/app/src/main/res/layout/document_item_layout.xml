@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <data>
+        <variable
+            name="document"
+            type="com.stcodesapp.documentscanner.database.entities.Document" />
+        <import type="com.stcodesapp.documentscanner.ui.helpers.UIHelperKt"/>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_8">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/documentIcon"
+            imageUrl="@{document.thumbPath}"
+            android:layout_width="@dimen/document_icon_dimen"
+            android:layout_height="@dimen/document_icon_dimen"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/documentTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="@{UIHelperKt.getFileNameFromPath(document.path)}"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/documentIcon"
+            app:layout_constraintTop_toTopOf="@+id/documentIcon" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/documentLastModified"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="@{UIHelperKt.getFormattedTime(document.lastModified)}"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/documentIcon"
+            app:layout_constraintTop_toBottomOf="@+id/documentTitle" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

@@ -69,3 +69,8 @@ fun getFileNameFromPath(path:String) : String
 {
     return File(path).name
 }
+
+fun getFormattedTime(timeStamp : Long) : String
+{
+    return "$timeStamp"
+}
