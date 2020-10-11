@@ -15,4 +15,5 @@
     <string name="home">Home</string>
     <string name="saved_files">Saved Files</string>
     <string name="more">More</string>
+    <string name="image_preview">Image Preview</string>
 </resources>
