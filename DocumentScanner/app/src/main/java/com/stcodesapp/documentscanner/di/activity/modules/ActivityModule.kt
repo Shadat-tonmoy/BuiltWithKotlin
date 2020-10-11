@@ -7,10 +7,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import com.stcodesapp.documentscanner.R
-import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
-import com.stcodesapp.documentscanner.databinding.DocumentPagesLayoutBinding
-import com.stcodesapp.documentscanner.databinding.HomeLayoutBinding
-import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
+import com.stcodesapp.documentscanner.databinding.*
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
@@ -105,6 +102,22 @@ class ActivityModule(private val activity: Activity)
     fun provideHomeLayoutBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : HomeLayoutBinding
     {
         val dataBinding : HomeLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.home_layout,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
+    }
+
+    @Provides
+    fun provideSavedFilesLayoutBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : SavedFilesLayoutBinding
+    {
+        val dataBinding : SavedFilesLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.saved_files_layout,null,false)
+        dataBinding.activityNavigator = activityNavigator
+        return dataBinding
+    }
+
+    @Provides
+    fun provideMoreLayoutBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : MoreLayoutBinding
+    {
+        val dataBinding : MoreLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.more_layout,null,false)
         dataBinding.activityNavigator = activityNavigator
         return dataBinding
     }

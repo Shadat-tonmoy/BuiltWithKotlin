@@ -81,10 +81,12 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
                 }
 
                 R.id.saved_file_menu -> {
+                    fragmentNavigator.loadSavedFilesFragment()
                     true
                 }
 
                 R.id.more_menu -> {
+                    fragmentNavigator.loadMoreFragment()
                     true
                 }
                 else -> {
@@ -92,6 +94,24 @@ class MainActivity : BaseActivity(), ImagePickerForAndroid.SingleImageSelectionL
                 }
             }
         }
+    }
+
+    override fun onBackPressed()
+    {
+        super.onBackPressed()
+        highlightBottomNavMenu()
+
+    }
+
+    private fun highlightBottomNavMenu()
+    {
+        when
+        {
+            fragmentNavigator.isHomeFragmentLoaded() -> bottomNavigationView.menu.findItem(R.id.home_menu).isChecked = true
+            fragmentNavigator.isSavedFilesFragmentLoaded() -> bottomNavigationView.menu.findItem(R.id.saved_file_menu).isChecked = true
+            fragmentNavigator.isMoreFragmentLoaded() -> bottomNavigationView.menu.findItem(R.id.more_menu).isChecked = true
+        }
+
     }
 
     private fun openImagePicker()

@@ -6,12 +6,16 @@ import androidx.fragment.app.FragmentManager
 import androidx.transition.Slide
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
+import com.stcodesapp.documentscanner.ui.more.MoreFragment
+import com.stcodesapp.documentscanner.ui.savedFiles.SavedFilesFragment
 
 
 class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
                         private val fragmentManager: FragmentManager?) {
 
     private var homeFragment : HomeFragment? = null
+    private var savedFilesFragment : SavedFilesFragment? = null
+    private var moreFragment : MoreFragment? = null
 
     companion object{
         private const val TAG = "FragmentNavigator"
@@ -22,6 +26,38 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         getCurrentFragment()?.let { if(it.tag == Tags.HOME_FRAGMENT) return }
         if(homeFragment == null) homeFragment = HomeFragment.newInstance()
         replaceFragmentAndClearBackStack(homeFragment!!,Tags.HOME_FRAGMENT)
+    }
+
+    fun loadSavedFilesFragment()
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.SAVED_FILES_FRAGMENT) return }
+        if(savedFilesFragment == null) savedFilesFragment = SavedFilesFragment.newInstance()
+        replaceFragment(savedFilesFragment!!,Tags.SAVED_FILES_FRAGMENT)
+    }
+
+    fun loadMoreFragment()
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.MORE_FRAGMENT) return }
+        if(moreFragment == null) moreFragment = MoreFragment.newInstance()
+        replaceFragment(moreFragment!!,Tags.MORE_FRAGMENT)
+    }
+
+    fun isHomeFragmentLoaded() : Boolean
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.HOME_FRAGMENT) return true}
+        return false
+    }
+
+    fun isSavedFilesFragmentLoaded() : Boolean
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.SAVED_FILES_FRAGMENT) return true}
+        return false
+    }
+
+    fun isMoreFragmentLoaded() : Boolean
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.MORE_FRAGMENT) return true}
+        return false
     }
 
     private fun replaceFragment(newFragment: Fragment, tag: String)

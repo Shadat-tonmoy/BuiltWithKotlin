@@ -6,6 +6,8 @@ import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
+import com.stcodesapp.documentscanner.ui.more.MoreFragment
+import com.stcodesapp.documentscanner.ui.savedFiles.SavedFilesFragment
 import dagger.Subcomponent
 
 @Subcomponent(modules = [ActivityModule::class])
@@ -15,5 +17,7 @@ interface ActivityComponent
     fun inject(mainActivity: DocumentPagesActivity)
     fun inject(imagePreviewActivity: ImagePreviewActivity)
     fun inject(homeFragment: HomeFragment)
+    fun inject(savedFilesFragment: SavedFilesFragment)
+    fun inject(moreFragment: MoreFragment)
 
 }
