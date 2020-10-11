@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.database.AppDatabase
 import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.database.managers.getNewDocument
 import com.stcodesapp.documentscanner.database.managers.getNewImage
-import com.stcodesapp.documentscanner.helpers.ImageHelper
+import com.stcodesapp.documentscanner.helpers.FileHelper
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
@@ -20,6 +21,7 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
 {
     @Inject lateinit var documentManager : DocumentManager
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var appDatabase: AppDatabase
 
     companion object{
         private const val TAG = "HomeViewModel"
@@ -34,7 +36,7 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
     {
         val copiedImageLiveData = MutableLiveData<List<Image>>()
         val copiedImageList = mutableListOf<Image>()
-        val imageHelper = ImageHelper()
+        val imageHelper = FileHelper()
         ioCoroutine.launch {
             if(selectedImages!=null)
             {
@@ -44,7 +46,7 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
                 for(imagePath in selectedImages)
                 {
                     val outputImagePath = getOutputImagePath(outputDirPath)
-                    val result = imageHelper.copyImage(imagePath,outputImagePath)
+                    val result = imageHelper.copyFile(imagePath,outputImagePath)
                     if(result)
                     {
                         val newImage = createNewImage(outputImagePath,position++, newDocument.id)

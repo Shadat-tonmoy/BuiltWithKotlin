@@ -3,9 +3,9 @@ package com.stcodesapp.documentscanner.helpers
 import java.io.*
 import kotlin.math.min
 
-class ImageHelper
+class FileHelper
 {
-    fun copyImage(source : String, destination : String) : Boolean
+    fun copyFile(source : String, destination : String) : Boolean
     {
         val outputFile = File(destination)
         outputFile.deleteOnExit()

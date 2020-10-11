@@ -1,5 +1,6 @@
 package com.tigerit.pothghat.di.application
 
+import com.stcodesapp.documentscanner.database.AppDatabase
 import com.stcodesapp.documentscanner.di.ViewModelModule
 import com.stcodesapp.documentscanner.di.activity.ActivityComponent
 import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
@@ -11,4 +12,6 @@ import javax.inject.Singleton
 interface ApplicationComponent
 {
     fun getActivityComponent(activityModule: ActivityModule): ActivityComponent
+
+    fun getAppDB() : AppDatabase
 }
