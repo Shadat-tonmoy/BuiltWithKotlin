@@ -6,8 +6,11 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.stcodesapp.documentscanner.R
+import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.models.DocumentPage
 import java.io.File
+import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.random.Random
 
 
@@ -70,7 +73,24 @@ fun getFileNameFromPath(path:String) : String
     return File(path).name
 }
 
-fun getFormattedTime(timeStamp : Long) : String
+fun getFormattedTime(timeInMillis : Long, showFullLength: Boolean = true) : String
 {
-    return "$timeStamp"
+    if(timeInMillis == 0L) return "N/A"
+    val calendar = Calendar.getInstance()
+    calendar.timeInMillis = timeInMillis
+    val date = calendar[Calendar.DAY_OF_MONTH]
+    val month = calendar[Calendar.MONTH]
+    val year = calendar[Calendar.YEAR]
+    val day = calendar[Calendar.DAY_OF_WEEK]
+    var hours = calendar[Calendar.HOUR]
+    val minutes = calendar[Calendar.MINUTE]
+    val seconds = calendar[Calendar.SECOND]
+    val ampm = calendar[Calendar.AM_PM]
+    hours = if (hours == 0) 12 else hours
+
+    return if (showFullLength) ConstValues.DAYS_OF_WEEK[day - 1] + " , " + addLeadingZero(date) + " " + ConstValues.FULL_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + seconds + " " + ConstValues.AM_PM[ampm] else ConstValues.TRIMMED_DAYS_OF_WEEK[day - 1]+" , " + addLeadingZero(date) + " " + ConstValues.TRIMMED_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + seconds + " " + ConstValues.AM_PM[ampm]
+}
+
+fun addLeadingZero(n: Int): String? {
+    return if (n < 10) "0$n" else n.toString() + ""
 }

@@ -19,6 +19,12 @@ class DocumentManager(private val context: Context, private val dao : DocumentDa
         }
     }
 
+    suspend fun updateDocument(document: Document) : Long
+    {
+        dao.updateDocument(document)
+        return document.id
+    }
+
     fun getDocumentListLiveData() : LiveData<List<Document>>
     {
         return dao.getDocumentListLiveData()

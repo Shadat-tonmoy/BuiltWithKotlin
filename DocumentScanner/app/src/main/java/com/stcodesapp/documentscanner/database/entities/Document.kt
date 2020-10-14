@@ -8,5 +8,5 @@ data class Document (
     @PrimaryKey(autoGenerate = true) var id : Long = 0,
     val path : String,
     val title : String,
-    val thumbPath : String = "",
+    var thumbPath : String = "",
     val lastModified : Long)

@@ -48,6 +48,7 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
                     if(result)
                     {
                         val newImage = createNewImage(outputImagePath,position++, newDocument.id)
+                        updateNewDocumentThumb(newDocument,newImage.path)
                         copiedImageList.add(newImage)
                         copiedImageLiveData.postValue(copiedImageList)
                     }
@@ -55,6 +56,12 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
             }
         }
         return copiedImageLiveData
+    }
+
+    private suspend fun updateNewDocumentThumb(document: Document, thumbPath : String)
+    {
+        document.thumbPath = thumbPath
+        documentManager.updateDocument(document)
     }
 
     private suspend fun createNewDocument() : Document
