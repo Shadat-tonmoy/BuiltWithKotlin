@@ -74,7 +74,7 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         addFragment(newFragment, true, true, tag)
     }
 
-    private fun getCurrentFragment(): Fragment?
+    fun getCurrentFragment(): Fragment?
     {
         return fragmentManager!!.findFragmentById(getFragmentFrameId())
     }
