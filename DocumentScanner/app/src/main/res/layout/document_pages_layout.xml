@@ -22,6 +22,7 @@
         <include layout="@layout/app_toolbar"
             bind:title="@{@string/create_document}"
             bind:addElevation="@{Boolean.TRUE}"
+            bind:showBackIcon="@{Boolean.TRUE}"
             bind:navigator="@{activityNavigator}"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

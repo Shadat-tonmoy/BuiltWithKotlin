@@ -11,6 +11,9 @@
             name="addElevation"
             type="Boolean" />
         <variable
+            name="showBackIcon"
+            type="Boolean" />
+        <variable
             name="navigator"
             type="com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator" />
     </data>
@@ -18,7 +21,7 @@
         android:id="@+id/appToolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/arrow_back_24"
+        app:navigationIcon="@{showBackIcon ? @drawable/arrow_back_24 : null}"
         android:elevation="@{addElevation ? 2 : 0}"
         app:title="@{title}"
         onBackPressed="@{navigator}"

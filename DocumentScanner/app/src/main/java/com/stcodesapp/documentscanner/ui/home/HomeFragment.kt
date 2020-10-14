@@ -158,7 +158,8 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
         })
     }
 
-    override fun onItemClick(document: Document) {
-
+    override fun onItemClick(document: Document)
+    {
+        activityNavigator.toDocumentPagesScreen(document.id)
     }
 }
