@@ -47,5 +47,7 @@ class ConstValues
             arrayOf("Sun", "Mon", "Tue", "Wed", "Thr", "Fri", "Sat")
         var AM_PM = arrayOf("AM", "PM")
 
+        const val MIN_IMAGE_DIMEN = 512
+
     }
 }

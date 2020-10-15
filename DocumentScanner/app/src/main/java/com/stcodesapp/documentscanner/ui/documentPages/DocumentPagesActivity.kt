@@ -33,6 +33,7 @@ class DocumentPagesActivity : BaseActivity()
     {
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
+        saveFab.isIconAnimated = false
         adapter = DocumentPageAdapter(this){onDocumentPageClicked(it)}
         documentPagesList.layoutManager = GridLayoutManager(this,2)
         documentPagesList.adapter = adapter

@@ -5,7 +5,7 @@
     <dimen name="dimen_16">16dp</dimen>
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_32">32dp</dimen>
-    <dimen name="document_page_dimen">150dp</dimen>
+    <dimen name="document_page_dimen">160dp</dimen>
     <dimen name="document_icon_dimen">64dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
 </resources>
