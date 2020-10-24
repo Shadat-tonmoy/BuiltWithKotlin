@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.*
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
+import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
@@ -122,5 +123,11 @@ class ActivityModule(private val activity: Activity)
         return dataBinding
     }
 
+
+    @Provides
+    fun provideImageToPdfTask() : ImageToPdfTask
+    {
+        return ImageToPdfTask(activity)
+    }
 
 }

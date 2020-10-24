@@ -106,12 +106,12 @@ class BitmapUtil(private val context: Context)
         }
     }
 
-    fun getCroppedBitmap(src: Bitmap?, cropArea: CropArea): Bitmap? {
+    fun getCroppedBitmap(src: Bitmap, cropArea: CropArea): Bitmap {
         val x: Int = cropArea.left.toInt()
         val y: Int = cropArea.top.toInt()
         val width: Int = cropArea.right.toInt() - x
         val height: Int = cropArea.bottom.toInt() - y
-        return Bitmap.createBitmap(src!!, x, y, width, height)
+        return Bitmap.createBitmap(src, x, y, width, height)
     }
 
 }

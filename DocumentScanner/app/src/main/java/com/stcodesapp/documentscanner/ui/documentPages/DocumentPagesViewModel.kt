@@ -10,6 +10,7 @@ import com.stcodesapp.documentscanner.database.AppDatabase
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import com.stcodesapp.documentscanner.ui.main.MainViewModel
 import javax.inject.Inject
 
@@ -24,6 +25,12 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
     @Inject lateinit var appDB : AppDatabase
     @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var imageToPdfTask: ImageToPdfTask
+
+    var selectedImages : List<Image>? = null
+
+
+
     private var documentId : Long = 0
 
     fun bindValueFromIntent(intent: Intent)
@@ -34,6 +41,15 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
     fun fetchDocumentPages() : LiveData<List<Image>>
     {
         return imageManager.getDocumentPagesLiveData(documentId)
+    }
+
+    fun createPDF()
+    {
+        if(selectedImages != null)
+        {
+            imageToPdfTask.createPdf(selectedImages!!, "TestPDF")
+        }
+
     }
 
 }

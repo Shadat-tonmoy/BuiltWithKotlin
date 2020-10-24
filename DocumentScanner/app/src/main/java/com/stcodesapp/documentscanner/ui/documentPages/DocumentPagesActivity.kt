@@ -45,6 +45,7 @@ class DocumentPagesActivity : BaseActivity()
             if(it!=null && it.isNotEmpty())
             {
                 adapter.setDocumentPages(it)
+                viewModel.selectedImages = it
             }
         })
     }

@@ -80,25 +80,25 @@
             fab:menu_showShadow="true">
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/cameraMenu"
+                android:id="@+id/saveAsPDFMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/camera_white_16"
+                android:src="@drawable/pdf_white_16"
                 app:fab_colorNormal="@color/colorPrimary"
                 app:fab_colorPressed="@color/colorPrimary"
-                fab:fab_label="Camera"
+                fab:fab_label="@string/save_as_pdf"
                 fab:fab_size="mini"
-                android:onClick="@{() -> activityNavigator.openCameraToCreateDocument(saveFab)}"
+                android:onClick="@{() -> viewModel.createPDF()}"
                 />
 
             <com.github.clans.fab.FloatingActionButton
-                android:id="@+id/galleryMenu"
+                android:id="@+id/saveAsImageMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/image_white_16"
                 app:fab_colorNormal="@color/colorPrimary"
                 app:fab_colorPressed="@color/colorPrimary"
-                fab:fab_label="Gallery"
+                fab:fab_label="@string/save_as_image"
                 fab:fab_size="mini" />
 
         </com.github.clans.fab.FloatingActionMenu>

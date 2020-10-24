@@ -16,4 +16,6 @@
     <string name="saved_files">Saved Files</string>
     <string name="more">More</string>
     <string name="image_preview">Image Preview</string>
+    <string name="save_as_pdf">Save as PDF</string>
+    <string name="save_as_image">Save as Image</string>
 </resources>

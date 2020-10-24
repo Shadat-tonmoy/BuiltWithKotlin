@@ -259,7 +259,6 @@ files:
 feedback_link: https://www.coursera.org/learn/kotlin-for-java-developers/programming/vmwVT/mastermind-game/discussions
 status: Unchecked
 feedback:
-  message: <html>Submission successful, please <a href="https://www.coursera.org/learn/kotlin-for-java-developers/programming/vmwVT/mastermind-game/submission">check
-    the status on Coursera</a></html>
-  time: Thu, 08 Oct 2020 10:52:05 UTC
+  message: Invalid token or email
+  time: Sun, 18 Oct 2020 16:33:10 UTC
 record: -1
