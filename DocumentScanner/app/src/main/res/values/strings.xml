@@ -18,4 +18,6 @@
     <string name="image_preview">Image Preview</string>
     <string name="save_as_pdf">Save as PDF</string>
     <string name="save_as_image">Save as Image</string>
+    <string name="output_file_name">Output file name</string>
+    <string name="enter_name_here">Enter name here</string>
 </resources>

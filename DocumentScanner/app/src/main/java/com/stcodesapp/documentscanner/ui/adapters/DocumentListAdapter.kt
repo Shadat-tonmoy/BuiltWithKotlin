@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -11,6 +12,10 @@ import com.stcodesapp.documentscanner.databinding.DocumentItemLayoutBinding
 
 class DocumentListAdapter (private val context: Context, private val listener : Listener) : RecyclerView.Adapter<DocumentListAdapter.DocumentViewHolder>()
 {
+
+    companion object{
+        private const val TAG = "DocumentListAdapter"
+    }
     interface Listener
     {
         fun onItemClick(document: Document)
@@ -29,6 +34,7 @@ class DocumentListAdapter (private val context: Context, private val listener : 
     }
 
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
+        Log.e(TAG, "onBindViewHolder: Called")
         val document = documents[position]
         holder.bind(document)
         holder.dataBinding.root.setOnClickListener { listener.onItemClick(document) }

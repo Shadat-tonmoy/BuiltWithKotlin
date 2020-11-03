@@ -2,6 +2,7 @@ package com.stcodesapp.documentscanner.ui.documentPages
 
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import androidx.lifecycle.LiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
@@ -11,6 +12,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
+import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
 import com.stcodesapp.documentscanner.ui.main.MainViewModel
 import javax.inject.Inject
 
@@ -49,6 +51,13 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         {
             imageToPdfTask.createPdf(selectedImages!!, "TestPDF")
         }
+
+    }
+
+    fun showPDFNameDialog(view : View)
+    {
+        val dialog = ImageToPDFNameDialog(view.context)
+        dialog.showDialog()
 
     }
 
