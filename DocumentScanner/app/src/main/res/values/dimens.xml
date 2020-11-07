@@ -7,5 +7,6 @@
     <dimen name="dimen_32">32dp</dimen>
     <dimen name="document_page_dimen">160dp</dimen>
     <dimen name="document_icon_dimen">64dp</dimen>
+    <dimen name="saved_file_icon_dimen">48dp</dimen>
     <dimen name="dimen_10">10dp</dimen>
 </resources>
