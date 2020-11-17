@@ -34,7 +34,6 @@ class DocumentListAdapter (private val context: Context, private val listener : 
     }
 
     override fun onBindViewHolder(holder: DocumentViewHolder, position: Int) {
-        Log.e(TAG, "onBindViewHolder: Called")
         val document = documents[position]
         holder.bind(document)
         holder.dataBinding.root.setOnClickListener { listener.onItemClick(document) }

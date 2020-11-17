@@ -102,6 +102,7 @@
                 style="@style/imagePreviewButtonStyle"
                 android:drawableTop="@drawable/filter_white_24"
                 android:text="@string/filter"
+                android:onClick="@{() -> viewModel.toGrayScale()}"
                 app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
                 app:layout_constraintStart_toEndOf="@id/cropButton" />
 

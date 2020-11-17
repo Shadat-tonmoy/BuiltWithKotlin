@@ -11,8 +11,6 @@ import javax.inject.Inject
 
 class SavedFilesViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
-    private val context = app.applicationContext
-
     companion object{
         private const val TAG = "SavedFilesViewModel"
     }

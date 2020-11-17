@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
@@ -22,6 +23,7 @@ import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.showToast
 import kotlinx.android.synthetic.main.home_layout.*
 import kotlinx.android.synthetic.main.home_layout.view.*
+import org.opencv.android.OpenCVLoader
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionListener, ImagePickerForAndroid.BatchImageSelectionListener, DocumentListAdapter.Listener
@@ -41,11 +43,21 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
             fragment.arguments = args
             return fragment
         }
+
+        private const val TAG = "HomeFragment"
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        if(OpenCVLoader.initDebug())
+        {
+            Log.e(TAG, "onCreate: OpenCVLoadedSuccess")
+        }
+        else
+        {
+            Log.e(TAG, "onCreate: OpenCVLoadedFailed")
+        }
     }
 
     override fun onAttach(context: Context)
@@ -150,7 +162,7 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
     private fun observeDocumentListLiveData()
     {
         viewModel.fetchDocumentListLiveData().observe(viewLifecycleOwner, Observer {
-            Log.e("TAG", "observeDocumentListLiveData: Docs : $it")
+            // Log.e("TAG", "observeDocumentListLiveData: Docs : $it")
             if(it != null && it.isNotEmpty())
             {
                 adapter.setDocuments(it)
