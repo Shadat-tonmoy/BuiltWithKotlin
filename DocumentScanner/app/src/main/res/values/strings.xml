@@ -7,6 +7,7 @@
     <string name="flash">Flash</string>
     <string name="gallery">Gallery</string>
     <string name="create_document">Create Document</string>
+    <string name="edit_image">Edit Image</string>
     <string name="rotate">Rotate</string>
     <string name="crop">Crop</string>
     <string name="filter">Filter</string>
@@ -20,4 +21,5 @@
     <string name="save_as_image">Save as Image</string>
     <string name="output_file_name">Output file name</string>
     <string name="enter_name_here">Enter name here</string>
+    <string name="save">Save</string>
 </resources>

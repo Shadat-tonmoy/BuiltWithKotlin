@@ -12,5 +12,6 @@ open class BaseViewModel(app : DocumentScannerApp) : AndroidViewModel(app) {
     @Inject lateinit var resourceProvider: ResourceProvider
     val ioCoroutine = CoroutineScope(IO)
     val uiCoroutine = CoroutineScope(Main)
+    val context = app.applicationContext
 
 }

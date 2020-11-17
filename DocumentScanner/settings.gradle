@@ -1,3 +1,5 @@
+include ':openCVLibrary'
+include ':documentscanner'
 include ':imagepickerforandroid'
 include ':app'
 rootProject.name = "DocumentScanner"

@@ -70,6 +70,8 @@ dependencies {
 
     //android image picker
     implementation project(path: ':imagepickerforandroid')
+    implementation project(path: ':documentscanner')
+    implementation project(path: ':openCVLibrary')
 
     //room DB
     implementation "androidx.room:room-runtime:2.2.5"
