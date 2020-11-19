@@ -10,6 +10,10 @@
             type="com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator" />
 
         <variable
+            name="fragmentNavigator"
+            type="com.stcodesapp.documentscanner.ui.helpers.FragmentNavigator" />
+
+        <variable
             name="viewModel"
             type="com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewViewModel" />
     </data>
@@ -34,7 +38,7 @@
             android:layout_height="0dp"
             android:padding="@dimen/dimen_16"
             android:layout_gravity="center"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintBottom_toTopOf="@+id/imageOptionContainer"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appToolbar">
@@ -72,7 +76,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/linearLayout"
+            android:id="@+id/imageOptionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/black"
@@ -102,7 +106,7 @@
                 style="@style/imagePreviewButtonStyle"
                 android:drawableTop="@drawable/filter_white_24"
                 android:text="@string/filter"
-                android:onClick="@{() -> viewModel.toGrayScale()}"
+                android:onClick="@{() -> fragmentNavigator.loadFilterFragment()}"
                 app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
                 app:layout_constraintStart_toEndOf="@id/cropButton" />
 
@@ -111,6 +115,7 @@
                 style="@style/imagePreviewButtonStyle"
                 android:drawableTop="@drawable/delete_white_24"
                 android:text="@string/delete"
+                android:onClick="@{() -> viewModel.detectEdges()}"
                 app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/filterButton" />
@@ -126,6 +131,16 @@
 
 
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/filterOptionContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/imageOptionContainer"
+            android:padding="@dimen/dimen_8"/>
+
 
 
 

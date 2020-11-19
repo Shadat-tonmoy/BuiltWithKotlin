@@ -92,10 +92,11 @@ class ActivityModule(private val activity: Activity)
     }
 
     @Provides
-    fun provideImagePreviewBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator) : ImagePreviewLayoutBinding
+    fun provideImagePreviewBinding(inflater: LayoutInflater, activityNavigator: ActivityNavigator, fragmentNavigator: FragmentNavigator) : ImagePreviewLayoutBinding
     {
         val dataBinding : ImagePreviewLayoutBinding = DataBindingUtil.inflate(inflater, R.layout.image_preview_layout,null,false)
         dataBinding.activityNavigator = activityNavigator
+        dataBinding.fragmentNavigator = fragmentNavigator
         return dataBinding
     }
 

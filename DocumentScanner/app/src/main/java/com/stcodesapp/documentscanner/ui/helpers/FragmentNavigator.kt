@@ -1,10 +1,12 @@
 package com.stcodesapp.documentscanner.ui.helpers
 
+import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.transition.Slide
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.more.MoreFragment
 import com.stcodesapp.documentscanner.ui.savedFiles.SavedFilesFragment
@@ -40,6 +42,15 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         getCurrentFragment()?.let { if(it.tag == Tags.MORE_FRAGMENT) return }
         if(moreFragment == null) moreFragment = MoreFragment.newInstance()
         replaceFragment(moreFragment!!,Tags.MORE_FRAGMENT)
+    }
+
+    fun loadFilterFragment()
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
+            fragmentManager?.popBackStack()
+            return
+        }
+        addFragment(FilterOptionFragment.newInstance(),true, true, Tags.FILTER_OPTION_FRAGMENT)
     }
 
     fun isHomeFragmentLoaded() : Boolean

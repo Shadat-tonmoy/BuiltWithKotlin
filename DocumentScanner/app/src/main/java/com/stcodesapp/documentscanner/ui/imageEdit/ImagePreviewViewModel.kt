@@ -1,7 +1,8 @@
 package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.content.Intent
-import android.graphics.Bitmap
+import android.graphics.*
+import android.os.Environment
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,6 +15,10 @@ import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
+import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -61,6 +66,25 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
             Utils.matToBitmap(tmp, imageBitmap)
         }
 
+    }
+
+    fun detectEdges() {
+        Log.e(TAG, "detectEdges: Called")
+        val rgba = Mat()
+        Utils.bitmapToMat(imageBitmap, rgba)
+        val edges = Mat(rgba.size(), CvType.CV_8UC1)
+        Imgproc.cvtColor(rgba, edges, Imgproc.COLOR_RGB2GRAY, 4)
+        Imgproc.Canny(edges, edges, 80.0, 100.0)
+        Log.e(TAG, "detectEdges: edges : $edges")
+
+        // Don't do that at home or work it's for visualization purpose.
+        val resultBitmap = Bitmap.createBitmap(
+            edges.cols(),
+            edges.rows(),
+            Bitmap.Config.ARGB_8888
+        )
+        Utils.matToBitmap(edges, resultBitmap)
+        imageBitmapLiveData.postValue(resultBitmap)
     }
 
 

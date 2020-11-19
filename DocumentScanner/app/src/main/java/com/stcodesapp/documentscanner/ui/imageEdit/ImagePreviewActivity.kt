@@ -19,6 +19,7 @@ import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.di.activity.ActivityComponent
 import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
+import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
 import com.tigerit.pothghat.di.application.ApplicationComponent
 import kotlinx.android.synthetic.main.image_preview_layout.*
 import kotlinx.android.synthetic.main.progress_dialog_layout.*
@@ -26,7 +27,7 @@ import org.opencv.android.OpenCVLoader
 import javax.inject.Inject
 
 
-class ImagePreviewActivity : DocumentScanActivity() {
+class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
 
     @Inject lateinit var viewModel: ImagePreviewViewModel
     @Inject lateinit var dataBinding : ImagePreviewLayoutBinding
@@ -105,5 +106,9 @@ class ImagePreviewActivity : DocumentScanActivity() {
                 Toast.LENGTH_LONG
             ).show()
         }
+    }
+
+    override fun getFragmentFrame(): FrameLayout? {
+        return filterOptionContainer
     }
 }
