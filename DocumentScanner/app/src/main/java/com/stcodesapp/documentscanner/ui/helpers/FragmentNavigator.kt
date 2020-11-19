@@ -1,5 +1,6 @@
 package com.stcodesapp.documentscanner.ui.helpers
 
+import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
 import androidx.fragment.app.Fragment
@@ -44,13 +45,13 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         replaceFragment(moreFragment!!,Tags.MORE_FRAGMENT)
     }
 
-    fun loadFilterFragment()
+    fun loadFilterFragment(chosenImagePath : String)
     {
         getCurrentFragment()?.let { if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
             fragmentManager?.popBackStack()
             return
         }
-        addFragment(FilterOptionFragment.newInstance(),true, true, Tags.FILTER_OPTION_FRAGMENT)
+        addFragment(FilterOptionFragment.newInstance(Bundle().apply { putString(Tags.IMAGE_PATH, chosenImagePath) }),true, false, Tags.FILTER_OPTION_FRAGMENT)
     }
 
     fun isHomeFragmentLoaded() : Boolean
