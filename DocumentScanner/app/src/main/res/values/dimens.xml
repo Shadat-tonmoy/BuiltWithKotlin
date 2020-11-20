@@ -6,7 +6,7 @@
     <dimen name="dimen_24">24dp</dimen>
     <dimen name="dimen_32">32dp</dimen>
     <dimen name="document_page_dimen">160dp</dimen>
-    <dimen name="filter_preview_dimen">80dp</dimen>
+    <dimen name="filter_preview_height">100dp</dimen>
     <dimen name="filter_preview_width">120dp</dimen>
     <dimen name="document_icon_dimen">64dp</dimen>
     <dimen name="saved_file_icon_dimen">48dp</dimen>

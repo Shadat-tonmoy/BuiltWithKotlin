@@ -7,7 +7,9 @@ import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.DocumentPage
+import com.stcodesapp.documentscanner.models.Filter
 import java.io.File
 import java.util.*
 import kotlin.collections.ArrayList

@@ -3,10 +3,8 @@ package com.stcodesapp.documentscanner.ui.imageEdit
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.bumptech.glide.Glide
@@ -15,19 +13,18 @@ import com.labters.documentscanner.base.DocumentScanActivity
 import com.labters.documentscanner.helpers.ScannerConstants
 import com.labters.documentscanner.libraries.PolygonView
 import com.stcodesapp.documentscanner.DocumentScannerApp
-import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.di.activity.ActivityComponent
 import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
+import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
 import com.tigerit.pothghat.di.application.ApplicationComponent
 import kotlinx.android.synthetic.main.image_preview_layout.*
-import kotlinx.android.synthetic.main.progress_dialog_layout.*
-import org.opencv.android.OpenCVLoader
 import javax.inject.Inject
 
 
 class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
+
 
     @Inject lateinit var viewModel: ImagePreviewViewModel
     @Inject lateinit var dataBinding : ImagePreviewLayoutBinding
@@ -42,6 +39,9 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
 
     companion object{
         private const val TAG = "ImagePreviewActivity"
+        init {
+            System.loadLibrary("NativeImageProcessor")
+        }
     }
 
 
@@ -66,13 +66,12 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
 
     private fun observeImageBitmap()
     {
-
         viewModel.getImageBitmapLiveData().observe(this, Observer {
             if(it != null)
             {
 //                initializeImage()
                 Glide.with(this)
-                    .load(scaledBitmap(viewModel.imageBitmap, holderImageCrop?.width!!, holderImageCrop?.height!!))
+                    .load(scaledBitmap(it, holderImageCrop?.width!!, holderImageCrop?.height!!))
                     .into(dataBinding.imageView)
             }
         })
@@ -84,6 +83,11 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
             .load(croppedImage)
             .into(dataBinding.imageView)
         polygonView?.visibility = View.GONE
+    }
+
+    fun onFilterClicked(filter : Filter)
+    {
+        viewModel.applyFilter(filter)
     }
 
     override fun getHolderImageCrop(): FrameLayout? { return dataBinding.holderImageCrop }

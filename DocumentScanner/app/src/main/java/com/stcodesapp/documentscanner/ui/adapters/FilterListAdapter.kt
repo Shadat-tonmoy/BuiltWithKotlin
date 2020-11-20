@@ -5,9 +5,16 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.FilterItemLayoutBinding
+import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.ui.helpers.getGlideImageRequestOption
+import com.stcodesapp.documentscanner.utils.BitmapUtil
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class FilterListAdapter (private val context: Context, private val listener : Listener, private val sourceImagePath : String?) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>()
 {
@@ -21,6 +28,8 @@ class FilterListAdapter (private val context: Context, private val listener : Li
     }
 
     private var filters = ArrayList<Filter>()
+    private val ioCoroutine = CoroutineScope(Dispatchers.IO)
+    private val uiCoroutine = CoroutineScope(Dispatchers.Main)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FilterViewHolder {
         val inflater = LayoutInflater.from(context)
@@ -50,6 +59,29 @@ class FilterListAdapter (private val context: Context, private val listener : Li
         {
             dataBinding.filter = filter
             dataBinding.executePendingBindings()
+            applyFilter(filter)
+
+
+        }
+
+        private fun applyFilter(filter: Filter)
+        {
+            ioCoroutine.launch {
+                val bitmapFromImage = BitmapUtil(context).getBitmapFromPath(filter.imagepath, 100, 100)
+                if (bitmapFromImage != null) {
+                    val filteredBitmap = FilterHelper(context).applyFilter(bitmapFromImage, filter.type)
+                    val imageRequestOption = getGlideImageRequestOption(R.drawable.image_placeholder)
+                    uiCoroutine.launch {
+                        Glide.with(context)
+                            .load(filteredBitmap)
+                            .apply(imageRequestOption)
+                            .into(dataBinding.filterPreview)
+                    }
+//                    bitmapFromImage.recycle()
+
+                }
+            }
+
         }
     }
 }

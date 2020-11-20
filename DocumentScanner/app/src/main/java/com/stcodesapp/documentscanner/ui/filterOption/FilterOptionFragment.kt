@@ -14,6 +14,8 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.constants.enums.FilterType
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.adapters.FilterListAdapter
+import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
+import com.zomato.photofilters.FilterPack
 import kotlinx.android.synthetic.main.filter_option_fragment.*
 
 class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
@@ -46,15 +48,33 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
     override fun onFilterOptionClick(filter: Filter)
     {
+        (requireActivity() as ImagePreviewActivity).onFilterClicked(filter)
 
     }
 
     private fun getFilters(imagePath : String) : List<Filter>
     {
         val filters = ArrayList<Filter>()
-        filters.add(Filter("Grey Scale",imagePath,FilterType.GREYSCALE))
-        filters.add(Filter("Sepia",imagePath,FilterType.SEPIA))
-        filters.add(Filter("Sketch",imagePath,FilterType.SKETCH))
+        for(filter in FilterPack.getFilterPack(requireContext()))
+        {
+            filters.add(Filter(filter.name,imagePath,filter))
+        }
+        /*filters.add(Filter("Adele",imagePath,FilterPack.getAdeleFilter(requireContext())))
+        filters.add(Filter("Sepia",imagePath,FilterPack.getAmazonFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getAprilFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getAudreyFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getAweStruckVibeFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getBlueMessFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getClarendon(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getCruzFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getHaanFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getLimeStutterFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getMarsFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getMetropolis(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getNightWhisperFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getOldManFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getRiseFilter(requireContext())))
+        filters.add(Filter("Sketch",imagePath,FilterPack.getStarLitFilter(requireContext())))*/
         return filters
     }
 

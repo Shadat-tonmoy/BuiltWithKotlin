@@ -10,7 +10,10 @@ import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.helpers.FilterHelper
+import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.utils.BitmapUtil
+import kotlinx.coroutines.launch
 import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -85,6 +88,12 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         )
         Utils.matToBitmap(edges, resultBitmap)
         imageBitmapLiveData.postValue(resultBitmap)
+    }
+
+    fun applyFilter(filter: Filter) {
+        ioCoroutine.launch {
+            imageBitmapLiveData.postValue(FilterHelper(context).applyFilter(imageBitmap!!,filter.type))
+        }
     }
 
 
