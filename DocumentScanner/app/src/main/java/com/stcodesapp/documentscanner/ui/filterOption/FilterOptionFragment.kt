@@ -64,6 +64,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
         {
             filters.add(Filter(filter.name,imagePath,filter))
         }
+        filters.add(Filter("Default",imagePath,null))
         return filters.reversed()
     }
 

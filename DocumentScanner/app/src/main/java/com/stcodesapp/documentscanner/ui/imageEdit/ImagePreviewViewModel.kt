@@ -80,8 +80,11 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
 
     fun applyFilter(filter: Filter) {
         ioCoroutine.launch {
-            imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!,filter.type)
-            imageBitmapLiveData.postValue(imageBitmap)
+            if(filter.type != null) {
+                imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter.type!!)
+                imageBitmapLiveData.postValue(imageBitmap)
+            }
+            else imageBitmapLiveData.postValue(originalBitmap)
         }
     }
 
