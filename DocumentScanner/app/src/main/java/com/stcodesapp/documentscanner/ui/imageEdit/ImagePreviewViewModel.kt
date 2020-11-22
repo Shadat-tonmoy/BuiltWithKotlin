@@ -30,6 +30,7 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
     lateinit var chosenImagePath : String
     private val imageBitmapLiveData = MutableLiveData<Bitmap>()
     var imageBitmap : Bitmap? = null
+    var originalBitmap : Bitmap? = null
 
     companion object{
         private const val TAG = "ImagePreviewViewModel"
@@ -45,30 +46,17 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         }
     }
 
-    fun getBitmapFromPath()
+    private fun getBitmapFromPath()
     {
         val bitmapUtil = BitmapUtil(context)
         imageBitmap = bitmapUtil.getBitmapFromPath(chosenImagePath,ConstValues.MIN_IMAGE_DIMEN,ConstValues.MIN_IMAGE_DIMEN)
+        originalBitmap = imageBitmap?.copy(Bitmap.Config.ARGB_8888, true)
         imageBitmapLiveData.postValue(imageBitmap)
     }
 
     fun getImageBitmapLiveData() : LiveData<Bitmap>
     {
         return imageBitmapLiveData
-    }
-
-    fun toGrayScale()
-    {
-        if(imageBitmap != null)
-        {
-            Log.e(TAG, "toGrayScale: Called")
-            val tmp = Mat(imageBitmap!!.width, imageBitmap!!.height, CvType.CV_8UC1)
-            Utils.bitmapToMat(imageBitmap!!, tmp)
-            Imgproc.cvtColor(tmp, tmp, Imgproc.COLOR_RGB2GRAY)
-            imageBitmapLiveData.postValue(imageBitmap)
-            Utils.matToBitmap(tmp, imageBitmap)
-        }
-
     }
 
     fun detectEdges() {
@@ -92,7 +80,8 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
 
     fun applyFilter(filter: Filter) {
         ioCoroutine.launch {
-            imageBitmapLiveData.postValue(FilterHelper(context).applyFilter(imageBitmap!!,filter.type))
+            imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!,filter.type)
+            imageBitmapLiveData.postValue(imageBitmap)
         }
     }
 

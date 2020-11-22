@@ -59,8 +59,8 @@
 
             <com.labters.documentscanner.libraries.PolygonView
                 android:id="@+id/polygonView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:visibility="gone" />
         </FrameLayout>
@@ -136,10 +136,11 @@
             android:id="@+id/filterOptionContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/black"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toTopOf="@id/imageOptionContainer"
-            android:padding="@dimen/dimen_8"/>
+            />
 
 
 

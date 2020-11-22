@@ -131,28 +131,6 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
         }
     }
 
-    public void initializeImage() {
-        selectedImage = getBitmapImage();
-        Bitmap scaledBitmap = scaledBitmap(selectedImage, getHolderImageCrop().getWidth(), getHolderImageCrop().getHeight());
-        getImageView().setImageBitmap(scaledBitmap);
-
-        Bitmap tempBitmap = ((BitmapDrawable) getImageView().getDrawable()).getBitmap();
-        Map<Integer, PointF> pointFs = null;
-        try {
-            pointFs = getEdgePoints(tempBitmap);
-            getPolygonView().setPoints(pointFs);
-            getPolygonView().setVisibility(View.VISIBLE);
-
-            int padding = (int) getResources().getDimension(R.dimen.scanPadding);
-
-            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(tempBitmap.getWidth() + 2 * padding, tempBitmap.getHeight() + 2 * padding);
-            layoutParams.gravity = Gravity.CENTER;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     protected Bitmap getCroppedImage() {
         try {
             Map<Integer, PointF> points = getPolygonView().getPoints();

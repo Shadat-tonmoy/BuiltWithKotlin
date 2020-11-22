@@ -2,6 +2,7 @@ package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -69,9 +70,8 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         viewModel.getImageBitmapLiveData().observe(this, Observer {
             if(it != null)
             {
-//                initializeImage()
                 Glide.with(this)
-                    .load(scaledBitmap(it, holderImageCrop?.width!!, holderImageCrop?.height!!))
+                    .load(it)
                     .into(dataBinding.imageView)
             }
         })
@@ -88,6 +88,16 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
     fun onFilterClicked(filter : Filter)
     {
         viewModel.applyFilter(filter)
+    }
+
+    fun onFilterMenuLoad()
+    {
+        //will scale down image view
+    }
+
+    fun onFilterMenuClosed()
+    {
+        //will scale up image view
     }
 
     override fun getHolderImageCrop(): FrameLayout? { return dataBinding.holderImageCrop }
