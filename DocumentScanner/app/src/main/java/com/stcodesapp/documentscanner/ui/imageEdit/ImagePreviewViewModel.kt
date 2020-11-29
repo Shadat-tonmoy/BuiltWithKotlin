@@ -10,7 +10,9 @@ import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.FilterHelper
+import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.utils.BitmapUtil
 import kotlinx.coroutines.launch
@@ -28,9 +30,11 @@ import javax.inject.Inject
 class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : BaseViewModel(app)
 {
     lateinit var chosenImagePath : String
+    private var chosenImageId : Long = -1L
     private val imageBitmapLiveData = MutableLiveData<Bitmap>()
     var imageBitmap : Bitmap? = null
     var originalBitmap : Bitmap? = null
+    @Inject lateinit var imageManager: ImageManager
 
     companion object{
         private const val TAG = "ImagePreviewViewModel"
@@ -42,7 +46,9 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         if(intent.hasExtra(Tags.IMAGE_PATH))
         {
             chosenImagePath = intent.getStringExtra(Tags.IMAGE_PATH)!!
+            chosenImageId = intent.getLongExtra(Tags.IMAGE_ID,-1)
             getBitmapFromPath()
+            applySavedFilter()
         }
     }
 
@@ -82,9 +88,57 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         ioCoroutine.launch {
             if(filter.type != null) {
                 imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter.type!!)
+                updateFilterNameInDB(filter)
                 imageBitmapLiveData.postValue(imageBitmap)
             }
-            else imageBitmapLiveData.postValue(originalBitmap)
+            else {
+                updateFilterNameInDB(filter)
+                imageBitmapLiveData.postValue(originalBitmap)
+            }
+        }
+    }
+
+    private fun applySavedFilter()
+    {
+        ioCoroutine.launch {
+            applyFilterFromDB()
+        }
+    }
+
+    private suspend fun applyFilterFromDB()
+    {
+        val image = imageManager.getImageById(chosenImageId)
+        if(image != null)
+        {
+            val filterName = image.filterName
+            if(filterName.isNotEmpty())
+            {
+                imageBitmap = FilterHelper(context).applyFilterByName(originalBitmap!!, filterName)
+                imageBitmapLiveData.postValue(imageBitmap)
+            }
+
+        }
+    }
+
+    private suspend fun updateFilterNameInDB(filter: Filter)
+    {
+        val image = imageManager.getImageById(chosenImageId)
+        if (image != null) {
+            imageManager.updateImage(image.apply { filterName = filter.title })
+        }
+    }
+
+    private suspend fun updateCropAreaInDB(area: CropArea)
+    {
+        val image = imageManager.getImageById(chosenImageId)
+        if (image != null) {
+            imageManager.updateImage(image.apply { cropArea = area })
+        }
+    }
+
+    fun saveCropArea(cropArea: CropArea) {
+        ioCoroutine.launch {
+            updateCropAreaInDB(cropArea)
         }
     }
 

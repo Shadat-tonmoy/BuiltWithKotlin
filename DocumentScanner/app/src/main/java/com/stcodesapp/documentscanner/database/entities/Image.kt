@@ -1,5 +1,6 @@
 package com.stcodesapp.documentscanner.database.entities
 
+import android.graphics.PointF
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -12,4 +13,6 @@ data class Image(
     val position : Int,
     val docId : Long,
     val rotationAngle : Double = 0.0,
-    @Embedded val cropArea: CropArea? = null)
+    @Embedded var cropArea: CropArea? = null,
+    var croppingRatio : Double = 1.0,
+    var filterName : String = "")

@@ -54,6 +54,7 @@ class DocumentPagesActivity : BaseActivity()
     {
         val intent = Intent(this,ImagePreviewActivity::class.java)
         intent.putExtra(Tags.IMAGE_PATH,documentPage.path)
+        intent.putExtra(Tags.IMAGE_ID,documentPage.id)
         startActivity(intent)
     }
 }

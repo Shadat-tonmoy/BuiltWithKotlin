@@ -18,8 +18,19 @@ class ImageManager(private val context: Context, private val dao : ImageDao)
         }
     }
 
+    suspend fun updateImage(image: Image) : Long
+    {
+        dao.updateImage(image)
+        return image.id
+    }
+
     fun getDocumentPagesLiveData(docId : Long) : LiveData<List<Image>>
     {
         return dao.getAllImageLiveDataForDocument(docId)
+    }
+
+    suspend fun getImageById(id : Long) : Image?
+    {
+        return dao.getImageById(id)
     }
 }

@@ -25,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.labters.documentscanner.R;
 import com.labters.documentscanner.libraries.NativeClass;
 import com.labters.documentscanner.libraries.PolygonView;
+import com.labters.documentscanner.models.CropArea;
 
 import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
@@ -154,6 +155,25 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
             showError(CropperErrorType.CROP_ERROR);
             return null;
         }
+    }
+
+    public CropArea getCropArea()
+    {
+        Map<Integer, PointF> points = getPolygonView().getPoints();
+        Log.e("TAG", "getCroppedImage: Points : "+points);
+
+        float xRatio = (float) selectedImage.getWidth() / getImageView().getWidth();
+        float yRatio = (float) selectedImage.getHeight() / getImageView().getHeight();
+
+        float x1 = (Objects.requireNonNull(points.get(0)).x) * xRatio;
+        float x2 = (Objects.requireNonNull(points.get(1)).x) * xRatio;
+        float x3 = (Objects.requireNonNull(points.get(2)).x) * xRatio;
+        float x4 = (Objects.requireNonNull(points.get(3)).x) * xRatio;
+        float y1 = (Objects.requireNonNull(points.get(0)).y) * yRatio;
+        float y2 = (Objects.requireNonNull(points.get(1)).y) * yRatio;
+        float y3 = (Objects.requireNonNull(points.get(2)).y) * yRatio;
+        float y4 = (Objects.requireNonNull(points.get(3)).y) * yRatio;
+        return new CropArea(x1, y1, x2, y2, x3, y3, x4, y4);
     }
 
     protected Bitmap scaledBitmap(Bitmap bitmap, int width, int height) {

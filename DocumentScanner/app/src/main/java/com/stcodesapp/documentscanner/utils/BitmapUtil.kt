@@ -5,6 +5,7 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.net.Uri
+import com.labters.documentscanner.libraries.NativeClass
 import com.stcodesapp.documentscanner.models.CropArea
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -106,12 +107,9 @@ class BitmapUtil(private val context: Context)
         }
     }
 
-    fun getCroppedBitmap(src: Bitmap, cropArea: CropArea): Bitmap {
-        val x: Int = cropArea.left.toInt()
-        val y: Int = cropArea.top.toInt()
-        val width: Int = cropArea.right.toInt() - x
-        val height: Int = cropArea.bottom.toInt() - y
-        return Bitmap.createBitmap(src, x, y, width, height)
+    fun getCroppedBitmap(src: Bitmap, ca: CropArea): Bitmap {
+        return NativeClass().getScannedBitmap(src, ca.x1, ca.y1, ca.x2, ca.y2, ca.x3, ca.y3, ca.x4, ca.y4);
+
     }
 
 }

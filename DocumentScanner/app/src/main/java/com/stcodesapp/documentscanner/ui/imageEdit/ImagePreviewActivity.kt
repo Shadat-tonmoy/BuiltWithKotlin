@@ -17,6 +17,7 @@ import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.di.activity.ActivityComponent
 import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
+import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
 import com.tigerit.pothghat.di.application.ApplicationComponent
@@ -62,7 +63,10 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
         viewModel.setChosenImagePathFromIntent(intent)
-        cropButton.setOnClickListener { showCroppedImage() }
+        cropButton.setOnClickListener {
+            viewModel.saveCropArea(getCroppingArea())
+            showCroppedImage()
+        }
     }
 
     private fun observeImageBitmap()
@@ -83,6 +87,12 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
             .load(croppedImage)
             .into(dataBinding.imageView)
         polygonView?.visibility = View.GONE
+    }
+
+    private fun getCroppingArea() : CropArea
+    {
+        val p = getCropArea()
+        return CropArea(p.x1, p.y1, p.x2, p.y2, p.x3, p.y3, p.x4, p.y4)
     }
 
     fun onFilterClicked(filter : Filter)

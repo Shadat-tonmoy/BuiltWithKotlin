@@ -13,7 +13,6 @@ class FilterHelper(private val context: Context)
 {
     suspend fun applyFilter(oldBitmap : Bitmap, filter: Filter) : Bitmap
     {
-//        filter.clearSubFilters()
         // copying to newBitmap for manipulation
         var newBitmap: Bitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
@@ -22,27 +21,20 @@ class FilterHelper(private val context: Context)
         return newBitmap
     }
 
-    private fun sepiaFilter (rgbAValues: RGBAValue) : RGBAValue
+    suspend fun applyFilterByName(oldBitmap : Bitmap, filterName: String) : Bitmap
     {
-        val oldRed = rgbAValues.red
-        val oldGreen = rgbAValues.green
-        val oldBlue = rgbAValues.blue
+        // copying to newBitmap for manipulation
+        for(filter in FilterPack.getFilterPack(context))
+        {
+            if(filter.name == filterName)
+            {
+                var newBitmap: Bitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
-        val newRed = (0.393 * oldRed + 0.769 * oldGreen + 0.189 * oldBlue)
-        val newGreen = (0.349 * oldRed + 0.686 * oldGreen + 0.168 * oldBlue)
-        val newBlue = (0.272 * oldRed + 0.534 * oldGreen + 0.131 * oldBlue)
+                newBitmap = filter.processFilter(newBitmap)
 
-        return RGBAValue(newRed, newGreen, newBlue)
-    }
-
-    private fun greyFilter (rgbAValues: RGBAValue) : RGBAValue
-    {
-        val oldRed = rgbAValues.red
-        val oldGreen = rgbAValues.green
-        val oldBlue = rgbAValues.blue
-
-        val intensity = ((oldRed + oldBlue + oldGreen) / 3).toInt().toDouble()
-
-        return RGBAValue(intensity, intensity, intensity)
+                return newBitmap
+            }
+        }
+        return oldBitmap
     }
 }

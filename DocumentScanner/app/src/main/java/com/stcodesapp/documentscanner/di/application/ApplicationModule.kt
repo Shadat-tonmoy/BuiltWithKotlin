@@ -3,7 +3,8 @@ package com.tigerit.pothghat.di.application
 import android.content.Context
 import androidx.room.Room
 import com.stcodesapp.documentscanner.DocumentScannerApp
-import com.stcodesapp.documentscanner.database.AppDatabase
+import com.stcodesapp.documentscanner.database.core.AppDatabase
+import com.stcodesapp.documentscanner.database.core.migrationScripts
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import dagger.Module
@@ -30,7 +31,9 @@ class ApplicationModule(private val context: Context)
     @Singleton
     fun provideAppDB(context: Context) : AppDatabase
     {
-        val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB").build()
+        val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB")
+            .fallbackToDestructiveMigration()
+            .build()
         return db
     }
 

@@ -1,12 +1,16 @@
 package com.stcodesapp.documentscanner.models
 
 data class CropArea(
-    val left : Double = 0.0,
-    val right : Double = 0.0,
-    val top : Double = 0.0,
-    val bottom : Double = 0.0){
-    fun isEmpty(): Boolean { return left == 0.0
-            && right == 0.0
-            && top == 0.0
-            && bottom == 0.0 }
+    val x1 : Float = 0f,
+    val y1 : Float = 0f,
+    val x2 : Float = 0f,
+    val y2 : Float = 0f,
+    val x3 : Float = 0f,
+    val y3 : Float = 0f,
+    val x4 : Float = 0f,
+    val y4 : Float = 0f){
+    fun isEmpty() : Boolean
+    {
+        return x1 == 0f && y1 == 0f && x2 == 0f && y2 == 0f && x3 == 0f && y3 == 0f && x4 == 0f && y4 == 0f
+    }
 }

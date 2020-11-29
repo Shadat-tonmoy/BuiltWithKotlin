@@ -1,13 +1,16 @@
-package com.stcodesapp.documentscanner.database
+package com.stcodesapp.documentscanner.database.core
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import com.stcodesapp.documentscanner.database.converters.MapConverter
 import com.stcodesapp.documentscanner.database.daos.DocumentDao
 import com.stcodesapp.documentscanner.database.daos.ImageDao
 import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 
-@Database(entities = [Document::class, Image::class], version = 1)
+@Database(entities = [Document::class, Image::class], version = 4)
+@TypeConverters(MapConverter::class)
 abstract class AppDatabase : RoomDatabase()
 {
 

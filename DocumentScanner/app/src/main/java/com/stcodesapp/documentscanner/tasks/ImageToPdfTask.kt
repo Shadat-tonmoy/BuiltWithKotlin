@@ -40,8 +40,8 @@ class ImageToPdfTask(private val context : Context)
 
             val cropArea = image.cropArea
 
-            if (cropArea!=null && !image.cropArea.isEmpty()) {
-                bitmap = bitmapUtil.getCroppedBitmap(bitmap, image.cropArea)
+            if (cropArea!=null && !cropArea.isEmpty()) {
+                bitmap = bitmapUtil.getCroppedBitmap(bitmap, cropArea)
             }
 
             if (image.rotationAngle > 0f) {

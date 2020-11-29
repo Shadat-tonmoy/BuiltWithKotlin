@@ -1,19 +1,17 @@
 package com.stcodesapp.documentscanner.ui.documentPages
 
 import android.content.Intent
-import android.util.Log
 import android.view.View
 import androidx.lifecycle.LiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.Tags
-import com.stcodesapp.documentscanner.database.AppDatabase
+import com.stcodesapp.documentscanner.database.core.AppDatabase
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
-import com.stcodesapp.documentscanner.ui.main.MainViewModel
 import javax.inject.Inject
 
 class DocumentPagesViewModel @Inject constructor(private val app: DocumentScannerApp) : BaseViewModel(app)
@@ -45,18 +43,18 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         return imageManager.getDocumentPagesLiveData(documentId)
     }
 
-    fun createPDF()
+    fun createPDF(fileName: String)
     {
         if(selectedImages != null)
         {
-            imageToPdfTask.createPdf(selectedImages!!, "TestPDF")
+            imageToPdfTask.createPdf(selectedImages!!, fileName)
         }
 
     }
 
     fun showPDFNameDialog(view : View)
     {
-        val dialog = ImageToPDFNameDialog(view.context)
+        val dialog = ImageToPDFNameDialog(view.context, object : ImageToPDFNameDialog.Listener{ override fun onSaveButtonClicked(name: String) {createPDF(name)} })
         dialog.showDialog()
 
     }
