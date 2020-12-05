@@ -3,6 +3,8 @@ package com.stcodesapp.documentscanner.ui.documentPages
 import android.content.Intent
 import android.view.View
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.github.clans.fab.FloatingActionMenu
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.Tags
@@ -10,8 +12,10 @@ import com.stcodesapp.documentscanner.database.core.AppDatabase
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class DocumentPagesViewModel @Inject constructor(private val app: DocumentScannerApp) : BaseViewModel(app)
@@ -29,8 +33,6 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
 
     var selectedImages : List<Image>? = null
 
-
-
     private var documentId : Long = 0
 
     fun bindValueFromIntent(intent: Intent)
@@ -43,20 +45,16 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         return imageManager.getDocumentPagesLiveData(documentId)
     }
 
-    fun createPDF(fileName: String)
+    fun createPDF(fileName: String) : LiveData<ImageToPDFProgress>
     {
-        if(selectedImages != null)
-        {
-            imageToPdfTask.createPdf(selectedImages!!, fileName)
+        val liveData = MutableLiveData<ImageToPDFProgress>()
+        ioCoroutine.launch {
+            if(selectedImages != null)
+            {
+                imageToPdfTask.createPdf(selectedImages!!, fileName) { liveData.postValue(it) }
+            }
         }
-
-    }
-
-    fun showPDFNameDialog(view : View)
-    {
-        val dialog = ImageToPDFNameDialog(view.context, object : ImageToPDFNameDialog.Listener{ override fun onSaveButtonClicked(name: String) {createPDF(name)} })
-        dialog.showDialog()
-
+        return liveData
     }
 
 }

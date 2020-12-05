@@ -1,8 +1,8 @@
 package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.content.Intent
-import android.graphics.*
-import android.os.Environment
+import android.graphics.Bitmap
+import android.graphics.Matrix
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,10 +20,6 @@ import org.opencv.android.Utils
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.imgproc.Imgproc
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
 import javax.inject.Inject
 
 
@@ -32,6 +28,8 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
     lateinit var chosenImagePath : String
     private var chosenImageId : Long = -1L
     private val imageBitmapLiveData = MutableLiveData<Bitmap>()
+    private var rotationAngle = 0f
+    var isCropped = false
     var imageBitmap : Bitmap? = null
     var originalBitmap : Bitmap? = null
     @Inject lateinit var imageManager: ImageManager
@@ -86,9 +84,13 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
 
     fun applyFilter(filter: Filter) {
         ioCoroutine.launch {
-            if(filter.type != null) {
-                imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter.type!!)
-                updateFilterNameInDB(filter)
+            if(filter.type != null)
+            {
+                if(!isSameFilterAlreadyApplied(filter))
+                {
+                    imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter.type!!)
+                    updateFilterNameInDB(filter)
+                }
                 imageBitmapLiveData.postValue(imageBitmap)
             }
             else {
@@ -98,7 +100,7 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         }
     }
 
-    private fun applySavedFilter()
+    fun applySavedFilter()
     {
         ioCoroutine.launch {
             applyFilterFromDB()
@@ -128,6 +130,15 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         }
     }
 
+    private suspend fun isSameFilterAlreadyApplied(filter: Filter) : Boolean
+    {
+        val image = imageManager.getImageById(chosenImageId)
+        if (image != null) {
+            return image.filterName == filter.title
+        }
+        return false
+    }
+
     private suspend fun updateCropAreaInDB(area: CropArea)
     {
         val image = imageManager.getImageById(chosenImageId)
@@ -138,9 +149,18 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
 
     fun saveCropArea(cropArea: CropArea) {
         ioCoroutine.launch {
+            if(isCropped) { cropArea.empty() }
             updateCropAreaInDB(cropArea)
+            isCropped = !isCropped
         }
+
+
     }
 
+    fun rotateBitmap(angle: Float) : Float{
+        rotationAngle += angle
+        if (rotationAngle > 360) rotationAngle = 0f
+        return rotationAngle
+    }
 
 }

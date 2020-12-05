@@ -23,4 +23,6 @@
     <string name="enter_name_here">Enter name here</string>
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
+    <string name="saving_as_pdf_message">Please wait while saving file as PDF. This may take a while</string>
+    <string name="saving_as_pdf_title">Saving as PDF</string>
 </resources>

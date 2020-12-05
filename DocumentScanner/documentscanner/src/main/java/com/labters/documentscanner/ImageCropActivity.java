@@ -250,4 +250,9 @@ public class ImageCropActivity extends DocumentScanActivity {
         }
         return directory.getAbsolutePath();
     }
+
+    @Override
+    protected void onInitialCroppingDone() {
+
+    }
 }

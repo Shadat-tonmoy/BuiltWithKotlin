@@ -7,9 +7,12 @@ import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.util.Log
+import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.FileHelper
+import com.stcodesapp.documentscanner.helpers.FilterHelper
+import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.utils.BitmapUtil
 import java.io.File
 import java.io.FileOutputStream
@@ -24,7 +27,7 @@ class ImageToPdfTask(private val context : Context)
         private const val TAG = "ImageToPdfTask"
     }
 
-    fun createPdf(imageList : List<Image>, fileTitle : String): Boolean
+    suspend fun createPdf(imageList : List<Image>, fileTitle : String, callBack : (ImageToPDFProgress) -> Unit): Boolean
     {
         val bitmapUtil = BitmapUtil(context)
         var pdfPageNumber = 1
@@ -48,6 +51,11 @@ class ImageToPdfTask(private val context : Context)
                 bitmap = bitmap?.let { bitmapUtil.rotateBitmap(it, image.rotationAngle.toFloat()) }
             }
 
+            if(image.filterName.isNotEmpty() && image.filterName != ConstValues.DEFAULT_FILTER)
+            {
+                bitmap = bitmap?.let { FilterHelper(context).applyFilterByName(it,image.filterName) }
+            }
+
             val pageInfo = PageInfo.Builder(bitmap!!.width + PADDING, bitmap.height + PADDING, pdfPageNumber).create()
             val page = document.startPage(pageInfo)
             val canvas = page.canvas
@@ -56,6 +64,7 @@ class ImageToPdfTask(private val context : Context)
             canvas.drawPaint(paint)
             canvas.drawBitmap(bitmap, MARGIN.toFloat(), MARGIN.toFloat(), null)
             document.finishPage(page)
+            callBack(ImageToPDFProgress(pdfPageNumber,imageList.size))
             pdfPageNumber++
         }
         val targetPdf: String = getPDFFullPathToSave(fileTitle)
@@ -74,10 +83,7 @@ class ImageToPdfTask(private val context : Context)
 
     private fun getPDFFullPathToSave(fileTitle: String): String
     {
-        val fileHelper = FileHelper(context)
-        val outputFolder = File(fileHelper.getSavedFilePath())
-        if (!outputFolder.exists()) outputFolder.mkdirs()
-        return "$outputFolder/$fileTitle"
+        return FileHelper(context).getPDFFullPathToSave(fileTitle)
     }
 
 }

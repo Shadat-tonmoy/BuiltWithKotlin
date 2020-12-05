@@ -83,6 +83,9 @@ dependencies {
     //image filtering library
     implementation 'info.androidhive:imagefilters:1.0.7'
 
+    //circular progress bar library
+    implementation 'com.mikhaellopez:circularprogressbar:3.0.3'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

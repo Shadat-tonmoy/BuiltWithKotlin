@@ -63,10 +63,10 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
         viewModel.setChosenImagePathFromIntent(intent)
-        cropButton.setOnClickListener {
-            viewModel.saveCropArea(getCroppingArea())
-            showCroppedImage()
-        }
+        cropButton.setOnClickListener { viewModel.saveCropArea(getCroppingArea())
+            showCroppedImage() }
+
+        rotateButton.setOnClickListener { frameLayout.rotation = viewModel.rotateBitmap(90.0f) }
     }
 
     private fun observeImageBitmap()
@@ -84,9 +84,9 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
     private fun showCroppedImage()
     {
         Glide.with(this)
-            .load(croppedImage)
+            .load(if(viewModel.isCropped) croppedImage else viewModel.originalBitmap)
             .into(dataBinding.imageView)
-        polygonView?.visibility = View.GONE
+        polygonView?.visibility = if(viewModel.isCropped) View.GONE else View.VISIBLE
     }
 
     private fun getCroppingArea() : CropArea
@@ -108,6 +108,10 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
     fun onFilterMenuClosed()
     {
         //will scale up image view
+    }
+
+    override fun onInitialCroppingDone() {
+        viewModel.applySavedFilter()
     }
 
     override fun getHolderImageCrop(): FrameLayout? { return dataBinding.holderImageCrop }

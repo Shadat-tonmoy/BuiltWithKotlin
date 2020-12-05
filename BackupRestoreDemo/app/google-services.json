@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "144227502787",
+    "firebase_url": "https://drivebackuptest-27f3a.firebaseio.com",
+    "project_id": "drivebackuptest-27f3a",
+    "storage_bucket": "drivebackuptest-27f3a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:144227502787:android:bf502209840c50c538b076",
+        "android_client_info": {
+          "package_name": "com.test.backuprestoredemo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "144227502787-mvm36eeth8it0628d7am7958naonh10j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.backuprestoredemo",
+            "certificate_hash": "4221b855e496197055bf12543cb5bf18b70706ee"
+          }
+        },
+        {
+          "client_id": "144227502787-hhgm4uub06v7qpcqutek8gn2egbgaqkb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_DVKtkiHB0PYbm9RXqLneMB5pzAJvqcE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "144227502787-hhgm4uub06v7qpcqutek8gn2egbgaqkb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

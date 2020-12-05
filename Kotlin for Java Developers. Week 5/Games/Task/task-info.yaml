@@ -93,8 +93,8 @@ files:
 - name: src/games/game2048/Game2048.kt
   visible: true
   placeholders:
-  - offset: 1280
-    length: 113
+  - offset: 1227
+    length: 111
     placeholder_text: TODO()
     initial_state:
       length: 6
@@ -102,7 +102,7 @@ files:
     initialized_from_dependency: false
     selected: true
     status: Unchecked
-  - offset: 2776
+  - offset: 2289
     length: 12
     placeholder_text: TODO()
     initial_state:
@@ -111,14 +111,14 @@ files:
     initialized_from_dependency: false
     selected: true
     status: Unchecked
-  - offset: 3129
-    length: 6
+  - offset: 2642
+    length: 1101
     placeholder_text: TODO()
     initial_state:
       length: 6
       offset: 2052
     initialized_from_dependency: false
-    selected: false
+    selected: true
     status: Unchecked
   text: |-
     package games.game2048
@@ -194,7 +194,7 @@ files:
   visible: true
   placeholders:
   - offset: 728
-    length: 860
+    length: 646
     placeholder_text: TODO()
     initial_state:
       length: 6
@@ -271,14 +271,14 @@ files:
 - name: src/games/gameOfFifteen/GameOfFifteen.kt
   visible: true
   placeholders:
-  - offset: 385
-    length: 6
+  - offset: 403
+    length: 1224
     placeholder_text: TODO()
     initial_state:
       length: 6
       offset: 385
     initialized_from_dependency: false
-    selected: false
+    selected: true
     status: Unchecked
   text: |+
     package games.gameOfFifteen
@@ -300,13 +300,13 @@ files:
   visible: true
   placeholders:
   - offset: 480
-    length: 6
+    length: 229
     placeholder_text: TODO()
     initial_state:
       length: 6
       offset: 480
     initialized_from_dependency: false
-    selected: false
+    selected: true
     status: Unchecked
   text: |-
     package games.gameOfFifteen
@@ -329,13 +329,13 @@ files:
   visible: true
   placeholders:
   - offset: 576
-    length: 6
+    length: 131
     placeholder_text: TODO()
     initial_state:
       length: 6
       offset: 576
     initialized_from_dependency: false
-    selected: false
+    selected: true
     status: Unchecked
   text: |+
     package games.gameOfFifteen
@@ -1610,4 +1610,8 @@ files:
   learner_created: false
 feedback_link: https://www.coursera.org/learn/kotlin-for-java-developers/programming/NSid0/game-2048-game-of-fifteen/discussions
 status: Unchecked
+feedback:
+  message: <html>Submission successful, please <a href="https://www.coursera.org/learn/kotlin-for-java-developers/programming/NSid0/game-2048-game-of-fifteen/submission">check
+    the status on Coursera</a></html>
+  time: Sun, 29 Nov 2020 11:42:00 UTC
 record: -1

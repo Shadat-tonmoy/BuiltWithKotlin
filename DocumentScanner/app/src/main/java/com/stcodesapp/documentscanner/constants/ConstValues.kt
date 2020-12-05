@@ -48,6 +48,7 @@ class ConstValues
         var AM_PM = arrayOf("AM", "PM")
 
         const val MIN_IMAGE_DIMEN = 512
+        const val DEFAULT_FILTER = "Default"
 
     }
 }

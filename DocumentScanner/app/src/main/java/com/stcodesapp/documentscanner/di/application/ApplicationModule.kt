@@ -7,6 +7,7 @@ import com.stcodesapp.documentscanner.database.core.AppDatabase
 import com.stcodesapp.documentscanner.database.core.migrationScripts
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -47,6 +48,13 @@ class ApplicationModule(private val context: Context)
     fun provideImageManager(context: Context, db : AppDatabase) : ImageManager
     {
         return ImageManager(context,db.imageDao())
+    }
+
+
+    @Provides
+    fun provideImageToPdfTask(context: Context) : ImageToPdfTask
+    {
+        return ImageToPdfTask(context)
     }
 
 

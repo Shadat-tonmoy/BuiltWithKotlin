@@ -47,6 +47,7 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
     protected CompositeDisposable disposable = new CompositeDisposable();
     private Bitmap selectedImage;
     private NativeClass nativeClass = new NativeClass();
+    private float rotationAngle = 0f;
 
     protected abstract FrameLayout getHolderImageCrop();
 
@@ -62,6 +63,9 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
 
     protected abstract Bitmap getBitmapImage();
 
+    protected abstract void onInitialCroppingDone();
+
+
     private void setImageRotation() {
         Bitmap tempBitmap = selectedImage.copy(selectedImage.getConfig(), true);
         for (int i = 1; i <= 4; i++) {
@@ -76,6 +80,9 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
     }
 
     protected Bitmap rotateBitmap(Bitmap source, float angle) {
+        rotationAngle += angle;
+        if(rotationAngle > 360) rotationAngle = 0;
+        angle = rotationAngle;
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
@@ -100,6 +107,7 @@ public abstract class DocumentScanActivity extends AppCompatActivity {
                         .subscribe((result) -> {
                             initializeCropping();
                             setProgressBar(false);
+                            onInitialCroppingDone();
                         })
         );
     }

@@ -124,11 +124,4 @@ class ActivityModule(private val activity: Activity)
         return dataBinding
     }
 
-
-    @Provides
-    fun provideImageToPdfTask() : ImageToPdfTask
-    {
-        return ImageToPdfTask(activity)
-    }
-
 }
