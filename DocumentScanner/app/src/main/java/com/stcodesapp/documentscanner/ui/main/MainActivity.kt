@@ -1,9 +1,13 @@
 package com.stcodesapp.documentscanner.ui.main
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.FrameLayout
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
+import com.stcodesapp.documentscanner.constants.RequestCode
+import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
 import com.stcodesapp.documentscanner.ui.adapters.DocumentListAdapter
@@ -13,6 +17,7 @@ import com.stcodesapp.documentscanner.ui.helpers.FragmentNavigator
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
+
 
 class MainActivity : BaseActivity(), FragmentFrameWrapper
 {
@@ -40,10 +45,25 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         val currentFragment = fragmentNavigator.getCurrentFragment()
         if(currentFragment is HomeFragment)
-        {
-            currentFragment.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        { currentFragment.onRequestPermissionsResult(requestCode, permissions, grantResults) }
+    }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK) {
+            if(requestCode == RequestCode.OPEN_DOCUMENT_PAGES_SCREEN)
+            {
+                if(data != null  && data.hasExtra(Tags.SHOW_OUTPUT))
+                {
+                    val showOutput = data.getBooleanExtra(Tags.SHOW_OUTPUT,false)
+                    if(showOutput)
+                    {
+                        fragmentNavigator.loadSavedFilesFragment()
+                    }
+                }
+            }
         }
+
     }
 
     private fun initUI()
@@ -80,7 +100,7 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
 
     }
 
-    private fun highlightBottomNavMenu()
+    fun highlightBottomNavMenu()
     {
         when
         {

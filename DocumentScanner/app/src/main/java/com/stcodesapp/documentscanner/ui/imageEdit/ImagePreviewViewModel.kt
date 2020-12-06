@@ -163,4 +163,16 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
         return rotationAngle
     }
 
+    fun deleteImage() : LiveData<Int>
+    {
+        val liveData = MutableLiveData<Int>()
+        ioCoroutine.launch {
+            val deletedRows = imageManager.deleteImageById(chosenImageId)
+            liveData.postValue(deletedRows)
+        }
+        return liveData
+
+
+    }
+
 }

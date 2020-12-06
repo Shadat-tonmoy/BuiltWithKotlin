@@ -10,5 +10,6 @@ class Tags
         const val IMAGE_PATH = "image_path"
         const val DOCUMENT_ID = "document_id"
         const val IMAGE_ID = "image_id"
+        const val SHOW_OUTPUT = "show_output"
     }
 }

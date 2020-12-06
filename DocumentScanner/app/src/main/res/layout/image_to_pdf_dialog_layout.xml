@@ -17,7 +17,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/saveAsPDFFieldLayout"
             android:padding="@dimen/dimen_8"
-            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -95,7 +94,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/saveAsPDFProgressLayout"
-            android:visibility=""
+            android:visibility="gone"
             android:padding="@dimen/dimen_8"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -160,6 +159,105 @@
                 app:layout_constraintEnd_toEndOf="@+id/circularProgressBar"
                 app:layout_constraintStart_toStartOf="@+id/circularProgressBar"
                 app:layout_constraintTop_toTopOf="@+id/circularProgressBar" />
+
+
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/saveAsPDFDoneLayout"
+            android:visibility="gone"
+            android:padding="@dimen/dimen_8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/saveAsPDFDoneLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/done"
+                android:layout_marginHorizontal="@dimen/dimen_8"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider"
+                app:layout_constraintTop_toBottomOf="@id/saveAsPDFDoneLabel"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginVertical="@dimen/dimen_8"
+                />
+
+            <com.mikhaellopez.circularprogressbar.CircularProgressBar
+                android:id="@+id/circularProgressBarDone"
+                android:layout_width="@dimen/progress_bar_dimen"
+                android:layout_height="@dimen/progress_bar_dimen"
+                android:layout_margin="@dimen/dimen_16"
+                app:cpb_background_progressbar_color="#b6bbd8"
+                app:cpb_background_progressbar_width="@dimen/dimen_10"
+                app:cpb_progress_direction="to_right"
+                app:cpb_progressbar_color="@color/colorPrimaryDark"
+                app:cpb_progressbar_width="@dimen/dimen_10"
+                app:cpb_round_border="false"
+                app:cpb_progress="100"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider3" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/savingPDFDoneMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/save_done_message"
+                app:layout_constraintTop_toBottomOf="@id/circularProgressBarDone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_margin="@dimen/dimen_16"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/progressDoneIcon"
+                android:layout_width="0dp"
+                android:textAlignment="center"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dimen_16"
+                android:src="@drawable/done_primary_color_64"
+                android:textColor="@color/colorPrimaryDark"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                app:layout_constraintBottom_toBottomOf="@+id/circularProgressBarDone"
+                app:layout_constraintEnd_toEndOf="@+id/circularProgressBarDone"
+                app:layout_constraintStart_toStartOf="@+id/circularProgressBarDone"
+                app:layout_constraintTop_toTopOf="@+id/circularProgressBarDone" />
+
+            <Button
+                android:id="@+id/showOutputButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_output"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:layout_margin="@dimen/dimen_16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/savingPDFDoneMessage" />
+
+            <Button
+                android:id="@+id/noThanksButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_thanks"
+                style="@style/Widget.MaterialComponents.Button.TextButton"
+                android:onClick="@{() -> dialog.hideDialog()}"
+                android:textColor="@color/grey"
+                android:layout_margin="@dimen/dimen_16"
+                app:layout_constraintEnd_toStartOf="@id/showOutputButton"
+                app:layout_constraintTop_toBottomOf="@id/savingPDFDoneMessage" />
 
 
 

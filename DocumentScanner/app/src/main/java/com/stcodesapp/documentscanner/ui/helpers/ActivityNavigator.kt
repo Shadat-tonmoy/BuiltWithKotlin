@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import com.github.clans.fab.FloatingActionMenu
 import com.stcodesapp.documentscanner.camera.CameraActivity
+import com.stcodesapp.documentscanner.constants.RequestCode
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 
@@ -25,7 +26,7 @@ class ActivityNavigator(private val activity:Activity)
     fun toDocumentPagesScreen(docId: Long) {
         val intent = Intent(activity, DocumentPagesActivity::class.java)
         intent.putExtra(Tags.DOCUMENT_ID,docId)
-        activity.startActivity(intent)
+        activity.startActivityForResult(intent,RequestCode.OPEN_DOCUMENT_PAGES_SCREEN)
     }
 
 }

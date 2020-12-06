@@ -115,7 +115,16 @@
                 style="@style/imagePreviewButtonStyle"
                 android:drawableTop="@drawable/delete_white_24"
                 android:text="@string/delete"
+                app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/filterButton" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/detectEdge"
+                style="@style/imagePreviewButtonStyle"
+                android:drawableTop="@drawable/pdf_white_16"
                 android:onClick="@{() -> viewModel.detectEdges()}"
+                android:text="Edges"
                 app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/filterButton" />

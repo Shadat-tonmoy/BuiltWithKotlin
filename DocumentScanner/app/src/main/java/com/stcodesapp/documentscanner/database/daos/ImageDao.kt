@@ -17,7 +17,10 @@ interface ImageDao
     suspend fun updateImage(image: Image) : Int
 
     @Delete
-    suspend fun deleteImage(image: Image)
+    suspend fun deleteImage(image: Image)  : Int
+
+    @Query("DELETE FROM image WHERE id = :id")
+    suspend fun deleteImageById(id: Long)  : Int
 
     @Query("SELECT * FROM image WHERE id = :id")
     suspend fun getImageById(id : Long) : Image?

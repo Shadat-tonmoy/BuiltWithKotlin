@@ -18,7 +18,8 @@
         android:requestLegacyExternalStorage="true"
         android:fullBackupContent="@xml/backup_descriptor">
         <activity android:name=".ui.imageEdit.ImagePreviewActivity"></activity>
-        <activity android:name=".ui.documentPages.DocumentPagesActivity" />
+        <activity android:name=".ui.documentPages.DocumentPagesActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".camera.PreviewActivity" />
         <activity android:name=".camera.CameraActivity" />
         <activity android:name=".ui.main.MainActivity">

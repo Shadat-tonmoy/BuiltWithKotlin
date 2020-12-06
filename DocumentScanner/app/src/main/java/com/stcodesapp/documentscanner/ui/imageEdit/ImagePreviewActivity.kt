@@ -14,11 +14,13 @@ import com.labters.documentscanner.base.DocumentScanActivity
 import com.labters.documentscanner.helpers.ScannerConstants
 import com.labters.documentscanner.libraries.PolygonView
 import com.stcodesapp.documentscanner.DocumentScannerApp
+import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
 import com.stcodesapp.documentscanner.di.activity.ActivityComponent
 import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
 import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
 import com.tigerit.pothghat.di.application.ApplicationComponent
 import kotlinx.android.synthetic.main.image_preview_layout.*
@@ -67,6 +69,7 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
             showCroppedImage() }
 
         rotateButton.setOnClickListener { frameLayout.rotation = viewModel.rotateBitmap(90.0f) }
+        deleteButton.setOnClickListener { showDeleteImageWarning() }
     }
 
     private fun observeImageBitmap()
@@ -79,6 +82,20 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
                     .into(dataBinding.imageView)
             }
         })
+    }
+
+    private fun showDeleteImageWarning()
+    {
+        val dialogHelper = DialogHelper(this)
+        dialogHelper.showWarningDialog(getString(R.string.image_delete_warning_msg)) {onImageDeleteConfirmed()}
+    }
+
+    private fun onImageDeleteConfirmed()
+    {
+        viewModel.deleteImage().observe(this, Observer {
+            if(it != null && it > 0) finish()
+        })
+
     }
 
     private fun showCroppedImage()

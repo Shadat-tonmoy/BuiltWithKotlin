@@ -25,4 +25,10 @@
     <string name="cancel">Cancel</string>
     <string name="saving_as_pdf_message">Please wait while saving file as PDF. This may take a while</string>
     <string name="saving_as_pdf_title">Saving as PDF</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="image_delete_warning_msg">Are you sure to delete this image?</string>
+    <string name="save_done_message">"PDF is saved successfully! "</string>
+    <string name="show_output">Show Output</string>
+    <string name="no_thanks">No Thanks</string>
 </resources>

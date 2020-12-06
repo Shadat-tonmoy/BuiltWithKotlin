@@ -33,4 +33,14 @@ class ImageManager(private val context: Context, private val dao : ImageDao)
     {
         return dao.getImageById(id)
     }
+
+    suspend fun deleteImage(image : Image) : Int
+    {
+        return dao.deleteImage(image)
+    }
+
+    suspend fun deleteImageById(id : Long) : Int
+    {
+        return dao.deleteImageById(id)
+    }
 }

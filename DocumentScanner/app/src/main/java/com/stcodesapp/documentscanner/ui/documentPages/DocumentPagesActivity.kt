@@ -1,10 +1,8 @@
 package com.stcodesapp.documentscanner.ui.documentPages
 
-import android.content.Context
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
-import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
 import com.stcodesapp.documentscanner.base.BaseActivity
@@ -17,6 +15,7 @@ import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
 import kotlinx.android.synthetic.main.document_pages_layout.*
 import javax.inject.Inject
 
+
 class DocumentPagesActivity : BaseActivity()
 {
 
@@ -26,6 +25,7 @@ class DocumentPagesActivity : BaseActivity()
     private val imageToPDFNameDialog : ImageToPDFNameDialog by lazy { ImageToPDFNameDialog(this, imageToPDFNameDialogListener) }
 
     companion object{
+        private const val TAG = "DocumentPagesActivity"
         init {
             System.loadLibrary("NativeImageProcessor")
         }
@@ -79,21 +79,23 @@ class DocumentPagesActivity : BaseActivity()
 
     private fun createPDF(name : String)
     {
-        hideKeyboard()
         viewModel.createPDF(name).observe(this, Observer {
             imageToPDFNameDialog.updateProgress(it)
         })
     }
 
-    private fun hideKeyboard()
+    private fun openOutputList()
     {
-        val view: View? = this.currentFocus
-        if (view != null)
-        {
-            val manager: InputMethodManager? = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-            manager?.hideSoftInputFromWindow(view.windowToken, 0)
-        }
+        val resultIntent = Intent()
+        resultIntent.putExtra(Tags.SHOW_OUTPUT, true)
+        setResult(Activity.RESULT_OK, resultIntent)
+        finish()
     }
 
-    private val imageToPDFNameDialogListener = object : ImageToPDFNameDialog.Listener{ override fun onSaveButtonClicked(name: String) {createPDF(name)} }
+
+
+    private val imageToPDFNameDialogListener = object : ImageToPDFNameDialog.Listener{
+        override fun onSaveButtonClicked(name: String) {createPDF(name)}
+        override fun onShowOutputButtonClicked() {openOutputList()}
+    }
 }
