@@ -28,7 +28,11 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="image_delete_warning_msg">Are you sure to delete this image?</string>
+    <string name="file_delete_warning_msg">Are you sure to delete this file?</string>
     <string name="save_done_message">"PDF is saved successfully! "</string>
     <string name="show_output">Show Output</string>
     <string name="no_thanks">No Thanks</string>
+    <string name="open">Open</string>
+    <string name="share">Share</string>
+    <string name="open_with">Open With</string>
 </resources>

@@ -8,11 +8,16 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
+import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.databinding.SavedFilesLayoutBinding
 import com.stcodesapp.documentscanner.ui.adapters.SavedFileListAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
+import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.main.MainActivity
+import com.stcodesapp.documentscanner.ui.savedFileOption.SavedFileOptionBottomSheet
 import kotlinx.android.synthetic.main.saved_files_layout.*
 import java.io.File
 import javax.inject.Inject
@@ -23,6 +28,7 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
     @Inject lateinit var viewModel : SavedFilesViewModel
     @Inject lateinit var activityNavigator: ActivityNavigator
     @Inject lateinit var dataBinding : SavedFilesLayoutBinding
+    @Inject lateinit var dialogHelper: DialogHelper
     lateinit var savedFileListAdapter : SavedFileListAdapter
 
     companion object
@@ -87,7 +93,36 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
         })
     }
 
-    override fun onItemClick(savedFile: File) {
+    override fun onItemClick(savedFile: File)
+    {
+        val args = Bundle()
+        args.putSerializable(Tags.SAVED_FILE_NAME,savedFile)
+        val options = SavedFileOptionBottomSheet.newInstance(args)
+        options.clickListener = { file: File?, option: Int -> onSavedFileOptionClicked(file, option)}
+        options.show(childFragmentManager,Tags.SAVED_FILE_OPTIONS)
+    }
+
+    private fun onSavedFileOptionClicked(file: File? , option : Int)
+    {
+        when (option) {
+            ConstValues.OPEN_FILE -> file?.let { activityNavigator.toDocumentViewerActivity(it) }
+            ConstValues.SHARE_FILE -> file?.let { activityNavigator.shareFile(it) }
+            ConstValues.DELETE_FILE -> file?.let { showDeleteConfirmationDialog(it)}
+        }
 
     }
+
+    private fun showDeleteConfirmationDialog(file: File)
+    {
+        dialogHelper.showWarningDialog(getString(R.string.file_delete_warning_msg)) {onDeleteFileConfirmed(file)}
+
+    }
+
+    private fun onDeleteFileConfirmed(file: File)
+    {
+        Log.e(TAG, "onDeleteFileConfirmed: willDelete : $file")
+
+    }
+
+
 }

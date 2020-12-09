@@ -31,4 +31,13 @@
         <item name="android:layout_marginTop">@dimen/dimen_8</item>
     </style>
 
+    <style name="savedFileOptionStyle">
+        <item name="android:padding">@dimen/dimen_16</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:drawablePadding">@dimen/dimen_8</item>
+        <item name="android:gravity">center|start</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
+    </style>
+
 </resources>

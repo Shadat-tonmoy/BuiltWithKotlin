@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/savedFileName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/output_file_name"
+        android:layout_margin="@dimen/dimen_16"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/savedFileName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/dimen_10"
+        />
+
+    <LinearLayout
+        android:id="@+id/savedFileOptionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/openFile"
+            style="@style/savedFileOptionStyle"
+            android:text="@string/open"
+            app:drawableStartCompat="@drawable/open_icon_24" />
+
+        <TextView
+            android:id="@+id/shareFile"
+            style="@style/savedFileOptionStyle"
+            android:text="@string/share"
+            app:drawableStartCompat="@drawable/share_icon_24" />
+
+        <TextView
+            android:id="@+id/deleteFile"
+            style="@style/savedFileOptionStyle"
+            android:text="@string/delete"
+            android:textColor="@color/red"
+            app:drawableStartCompat="@drawable/delete_red_24" />
+
+
+
+
+
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

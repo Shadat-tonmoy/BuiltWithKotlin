@@ -11,5 +11,7 @@ class Tags
         const val DOCUMENT_ID = "document_id"
         const val IMAGE_ID = "image_id"
         const val SHOW_OUTPUT = "show_output"
+        const val SAVED_FILE_NAME = "saved_file_name"
+        const val SAVED_FILE_OPTIONS = "saved_file_options"
     }
 }

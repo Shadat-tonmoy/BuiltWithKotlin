@@ -49,6 +49,9 @@ class ConstValues
 
         const val MIN_IMAGE_DIMEN = 512
         const val DEFAULT_FILTER = "Default"
+        const val OPEN_FILE = 1
+        const val SHARE_FILE = 2
+        const val DELETE_FILE = 3
 
     }
 }

@@ -31,7 +31,9 @@ class SavedFilesViewModel @Inject constructor(val app: DocumentScannerApp) : Bas
         val savedFilePath = mutableListOf<File>()
         val savedFileDir = File(getSavedFileDirPath())
         val savedFiles = savedFileDir.listFiles()
-        if (savedFiles != null) {
+        if (savedFiles != null)
+        {
+            savedFiles.sortByDescending { it.lastModified() }
             for (file in savedFiles) {
                 savedFilePath.add(file)
             }
