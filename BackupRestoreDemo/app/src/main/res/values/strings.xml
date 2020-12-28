@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">BackupRestoreDemo</string>
+    <string name="google_sign_in_server_client_id">144227502787-966trjetis07qmcarnp9vbqibnqne527.apps.googleusercontent.com</string>
+    <!--<string name="google_sign_in_server_client_id">144227502787-mvm36eeth8it0628d7am7958naonh10j.apps.googleusercontent.com</string>-->
+    <string name="google_sign_in_server_client_secret">MkdqwFVRSYYWX2fj6dbaMDBQ</string>
+</resources>
