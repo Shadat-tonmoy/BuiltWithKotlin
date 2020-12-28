@@ -1,5 +1,6 @@
 package com.stcodesapp.documentscanner.ui.helpers
 
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.text.Layout
@@ -11,7 +12,13 @@ import com.stcodesapp.documentscanner.R
 class DialogHelper (val context: Context)
 {
 
+
     private var alertDialog : AlertDialog? =null
+    private var progressDialog : ProgressDialog? =null
+
+    init {
+        progressDialog = ProgressDialog(context)
+    }
 
     fun showWarningDialog(message : String, positiveCallback : () -> Unit)
     {
@@ -28,6 +35,24 @@ class DialogHelper (val context: Context)
     private fun hideDialog()
     {
         if(alertDialog!=null && alertDialog?.isShowing!!) alertDialog?.dismiss()
+    }
+
+    fun showProgressDialog(message:String)
+    {
+        if(progressDialog!=null)
+        {
+            if(progressDialog!!.isShowing) return
+        }
+        progressDialog?.setMessage(message)
+        progressDialog?.show()
+    }
+
+    fun hideProgressDialog()
+    {
+        if(progressDialog!=null && progressDialog!!.isShowing)
+        {
+            progressDialog?.dismiss()
+        }
     }
 
 }

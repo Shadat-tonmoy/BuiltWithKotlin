@@ -35,4 +35,6 @@
     <string name="open">Open</string>
     <string name="share">Share</string>
     <string name="open_with">Open With</string>
+    <string name="deleting_file">Deleting file…</string>
+    <string name="file_deleted">File is deleted!</string>
 </resources>

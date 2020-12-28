@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stcodesapp.documentscanner.R
@@ -120,7 +121,15 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
 
     private fun onDeleteFileConfirmed(file: File)
     {
-        Log.e(TAG, "onDeleteFileConfirmed: willDelete : $file")
+        dialogHelper.showProgressDialog(getString(R.string.deleting_file))
+        viewModel.deleteFile(file).observe(viewLifecycleOwner, Observer {
+            if(it)
+            {
+                dialogHelper.hideProgressDialog()
+                savedFileListAdapter.removeFile(file)
+                Toast.makeText(requireContext(),getString(R.string.file_deleted),Toast.LENGTH_SHORT).show()
+            }
+        })
 
     }
 

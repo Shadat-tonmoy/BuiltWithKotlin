@@ -49,4 +49,15 @@ class SavedFilesViewModel @Inject constructor(val app: DocumentScannerApp) : Bas
         if (!outputFolder.exists()) outputFolder.mkdirs()
         return outputFolder.absolutePath
     }
+
+    fun deleteFile(file: File) : LiveData<Boolean>
+    {
+        val liveData = MutableLiveData<Boolean>()
+        ioCoroutine.launch {
+            val result = file.delete()
+            liveData.postValue(result)
+        }
+        return liveData
+
+    }
 }

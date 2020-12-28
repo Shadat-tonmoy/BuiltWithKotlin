@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stcodesapp.documentscanner.R
-import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.databinding.SavedFileItemLayoutBinding
 import java.io.File
 
@@ -45,6 +44,15 @@ class SavedFileListAdapter (private val context: Context, private val listener :
     {
         this.savedFiles = savedFiles as ArrayList<File>
         notifyDataSetChanged()
+    }
+
+    fun removeFile(file: File) {
+        val position = savedFiles.indexOf(file)
+        if(position >= 0)
+        {
+            savedFiles.remove(file)
+            notifyItemRemoved(position)
+        }
     }
 
     inner class SavedFileViewHolder(val dataBinding : SavedFileItemLayoutBinding) : RecyclerView.ViewHolder(dataBinding.root)

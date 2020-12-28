@@ -1,5 +1,6 @@
 package com.stcodesapp.documentscanner.ui.helpers
 
+import android.util.Log
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -90,9 +91,31 @@ fun getFormattedTime(timeInMillis : Long, showFullLength: Boolean = true) : Stri
     val ampm = calendar[Calendar.AM_PM]
     hours = if (hours == 0) 12 else hours
 
-    return if (showFullLength) ConstValues.DAYS_OF_WEEK[day - 1] + " , " + addLeadingZero(date) + " " + ConstValues.FULL_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + seconds + " " + ConstValues.AM_PM[ampm] else ConstValues.TRIMMED_DAYS_OF_WEEK[day - 1]+" , " + addLeadingZero(date) + " " + ConstValues.TRIMMED_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + seconds + " " + ConstValues.AM_PM[ampm]
+    return if (showFullLength) ConstValues.DAYS_OF_WEEK[day - 1] + " , " + addLeadingZero(date) + " " + ConstValues.FULL_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds) + " " + ConstValues.AM_PM[ampm] else ConstValues.TRIMMED_DAYS_OF_WEEK[day - 1]+" , " + addLeadingZero(date) + " " + ConstValues.TRIMMED_MONTHS[month] + " " + year + " | " + addLeadingZero(hours) + ":" + addLeadingZero(minutes) + ":" + addLeadingZero(seconds) + " " + ConstValues.AM_PM[ampm]
 }
 
 fun addLeadingZero(n: Int): String? {
     return if (n < 10) "0$n" else n.toString() + ""
+}
+
+fun getFileSizeString(fileSize: Long): String?
+{
+    val finalSize = ""
+    return if (fileSize < 1024)
+    {
+        String.format("%.2f", fileSize.toDouble()) + " B"
+    }
+    else
+    {
+        val fileSizeInKB = fileSize.toDouble() / 1024
+        if (fileSizeInKB < 1024)
+        {
+            String.format("%.2f", fileSizeInKB.toDouble()) + " KB"
+        }
+        else
+        {
+            val fileSizeInMB = fileSizeInKB.toDouble() / 1024
+            String.format("%.2f", fileSizeInMB.toDouble()) + " MB"
+        }
+    }
 }

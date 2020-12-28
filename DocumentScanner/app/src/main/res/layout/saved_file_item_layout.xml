@@ -31,7 +31,6 @@
             android:layout_marginHorizontal="@dimen/dimen_8"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:layout_marginTop="@dimen/dimen_8"
             android:text="@{UIHelperKt.getFileNameFromPath(file.absolutePath)}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintEnd_toEndOf="parent"
@@ -52,6 +51,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fileIcon"
             app:layout_constraintTop_toBottomOf="@+id/fileTitle" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/fileSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dimen_8"
+            android:ellipsize="middle"
+            android:singleLine="true"
+            android:text="@{UIHelperKt.getFileSizeString(file.length())}"
+            android:layout_marginBottom="@dimen/dimen_8"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            app:layout_constraintBottom_toBottomOf="@+id/fileIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fileIcon"
+            app:layout_constraintTop_toBottomOf="@+id/fileLastModified" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
