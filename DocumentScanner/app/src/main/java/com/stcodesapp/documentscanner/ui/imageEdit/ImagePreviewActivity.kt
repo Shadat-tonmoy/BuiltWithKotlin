@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.Toast
@@ -22,6 +23,7 @@ import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
+import com.theartofdev.edmodo.cropper.CropImageView
 import com.tigerit.pothghat.di.application.ApplicationComponent
 import kotlinx.android.synthetic.main.image_preview_layout.*
 import javax.inject.Inject
@@ -32,6 +34,8 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
 
     @Inject lateinit var viewModel: ImagePreviewViewModel
     @Inject lateinit var dataBinding : ImagePreviewLayoutBinding
+    private var lastWidth = 0
+    private var lastHeight = 0
 
     private val appComponent: ApplicationComponent by lazy {
         (application as DocumentScannerApp).appComponent
@@ -55,7 +59,7 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         activityComponent.inject(this)
         initUI()
         observeImageBitmap()
-        startCropping()
+        //startCropping()
 
 
     }
@@ -68,8 +72,28 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         cropButton.setOnClickListener { viewModel.saveCropArea(getCroppingArea())
             showCroppedImage() }
 
-        rotateButton.setOnClickListener { frameLayout.rotation = viewModel.rotateBitmap(90.0f) }
+        rotateButton.setOnClickListener {
+            Log.e(TAG, "initUI: beforeRotation : width : ${imageView?.drawable?.bounds?.width()}, height : ${imageView?.drawable?.bounds?.height()}")
+            lastWidth = imageView?.width!!
+            lastHeight = imageView?.height!!
+            val rotationAngle = viewModel.rotateBitmap(90.0f)
+            imageView?.rotation = rotationAngle
+            val newWidth = imageView?.height
+            val newHeight = imageView?.width
+            rotate(rotationAngle)
+
+            Log.e(TAG, "initUI: afterRotation : width : ${imageView?.drawable?.bounds?.width()}, height : ${imageView?.drawable?.bounds?.height()}")
+
+
+        }
         deleteButton.setOnClickListener { showDeleteImageWarning() }
+    }
+
+    private fun rotate(degree: Float) {
+        /*val rotateAnim = RotateAnimation(0.0f, degree, RotateAnimation.RELATIVE_TO_SELF, 0.5f, RotateAnimation.RELATIVE_TO_SELF, 0.5f)
+        rotateAnim.duration = 0
+        rotateAnim.fillAfter = true*/
+        imageView?.animate()?.rotation(90F)?.duration = 0
     }
 
     private fun observeImageBitmap()
@@ -77,9 +101,11 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         viewModel.getImageBitmapLiveData().observe(this, Observer {
             if(it != null)
             {
-                Glide.with(this)
+                /*Glide.with(this)
                     .load(it)
-                    .into(dataBinding.imageView)
+                    .into(dataBinding.imageView)*/
+                croptImageView.setImageBitmap(it)
+                croptImageView.guidelines = CropImageView.Guidelines.OFF
             }
         })
     }

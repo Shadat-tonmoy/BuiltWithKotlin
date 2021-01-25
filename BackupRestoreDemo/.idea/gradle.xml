@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/FileLogger" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/fullScreenVideoView" />
             <option value="$PROJECT_DIR$/mobileffmpeg" />
           </set>
         </option>

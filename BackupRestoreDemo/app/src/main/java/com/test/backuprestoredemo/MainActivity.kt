@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import bg.devlabs.fullscreenvideoview.VideoViewActivity
 import com.google.android.gms.auth.api.Auth
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -29,9 +30,13 @@ import com.google.android.gms.common.api.GoogleApiClient
 import com.google.android.gms.common.api.Scope
 import com.google.api.services.drive.DriveScopes
 import com.test.backuprestoredemo.backuprestore.BackupRestoreService
+import com.test.backuprestoredemo.helper.FileHelper
+import com.test.backuprestoredemo.helper.FilePathHelper
+import com.test.backuprestoredemo.helper.PermissionHelper
 import com.test.backuprestoredemo.videoCompression.FFMPEGHelper
 import com.test.backuprestoredemo.videoCompression.VideoInfo
 import com.tigerit.filelogger.FileLogger
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.video_compressor_ui.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -64,10 +69,10 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
     private var selectedHeight : Long = 0
     private var originalVideoInfo : VideoInfo? = null
     private var ultraFastMode : Boolean = false
-    private val maxVideoBitRate = 2000
+    private var maxVideoBitRate = 2000
     private val maxAudioBitRate = 320
     private val maxVideoFrameRate = 30
-    private val maxVideoResolution = 480L
+    private var maxVideoResolution = 480L
     var userSelectedResolution = false
 
     private var backupRestoreService : BackupRestoreService? = null
@@ -86,7 +91,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.video_compressor_ui)
+        setContentView(R.layout.activity_main)
         FFMPEGHelper.loadFFMPEG()
         init()
         getGoogleAccount()
@@ -114,16 +119,23 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
     private fun init()
     {
         //initBackupService()
-//        testButton.setOnClickListener {
-//            startBackup() }
-//        signOut.setOnClickListener { signOut() }
+        testButton.setOnClickListener {
+            startBackup() }
+        signOut.setOnClickListener { signOut() }
 //        emailAButton.setOnClickListener { requestSignIn(emailAButton.text.toString()) }
 //        emailBButton.setOnClickListener { requestSignIn(emailBButton.text.toString()) }
+        /*playVideo.setOnClickListener {
+            videoView.visibility = View.VISIBLE
+            videoView.setVideoPath(chosenFilePath)
+            videoView.start()
+            //VideoViewActivity.startVideo(this, chosenFilePath!!,"Sender","Time")
+        }
         pickVideo.setOnClickListener { pickVideo() }
         compressButton.setOnClickListener { compressVideo() }
         qualityRadioGroup.setOnCheckedChangeListener { radioGroup, i ->
             if(i == R.id.quality360P)
             {
+                maxVideoResolution = 360L
                 if(originalVideoInfo != null)
                 {
                     if(originalVideoInfo!!.width < originalVideoInfo!!.height)
@@ -162,7 +174,8 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
             }
             else if(i == R.id.quality480P)
             {
-                if(originalVideoInfo != null)
+                maxVideoResolution = 480L
+                *//*if(originalVideoInfo != null)
                 {
                     if(originalVideoInfo!!.width < originalVideoInfo!!.height)
                     {
@@ -194,11 +207,13 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
                             userSelectedResolution = false
                         }
                     }
-                }
+                }*//*
             }
             else if(i == R.id.quality720P)
             {
-                if(originalVideoInfo != null)
+                maxVideoResolution = 720L
+
+                *//*if(originalVideoInfo != null)
                 {
                     if(originalVideoInfo!!.width < originalVideoInfo!!.height)
                     {
@@ -230,7 +245,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
                             userSelectedResolution = false
                         }
                     }
-                }
+                }*//*
             }
             else if(i == R.id.qualityOriginal)
             {
@@ -241,7 +256,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
                 }
                 userSelectedResolution = false
             }
-        }
+        }*/
 
 //        ultraFastCheckBox.setOnCheckedChangeListener { compoundButton, b ->
 //            ultraFastMode = b
@@ -252,19 +267,29 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
 
     private fun pickVideo()
     {
-        openOutputButton.visibility = View.GONE
-        startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT)
-                        .setType("video/*"), "Choose Video"), REQUEST_CODE_VIDEO)
+        val permissionHelper = PermissionHelper(this)
+        if(permissionHelper.isReadStoragePermissionGranted())
+        {
+            openOutputButton.visibility = View.GONE
+            startActivityForResult(Intent.createChooser(Intent(Intent.ACTION_GET_CONTENT)
+                .setType("video/*"), "Choose Video"), REQUEST_CODE_VIDEO)
+        }
+
     }
 
     private fun startBackup()
     {
 
         val account = GoogleSignIn.getLastSignedInAccount(this)
-        if(account != null){
+        if(account != null)
+        {
             Log.e(TAG, "startBackup: account : $account")
-            createTestFolder()
-
+            //createTestFolder()
+        }
+        else
+        {
+            Log.e(TAG, "requesting signin")
+            requestSignIn("shadat.tonmoy@gmail.com")
         }
     }
 
@@ -318,12 +343,16 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
         if(result != null)
         {
             val uri: Uri = result.data!!
-            var realpath: String? = copyFile(uri)
+            val path = FilePathHelper().getPath(this, uri)
+            chosenFilePath = path
+            Log.e(TAG, "fetchVideoInfo: Path : ${uri.path} absolutePath : $path")
+
+            /*var realpath: String? = copyFile(uri)
             chosenFilePath = realpath
-            if(realpath == null) realpath = uri.path
+            if(realpath == null) realpath = uri.path*/
             startTime = System.currentTimeMillis()
             CoroutineScope(Dispatchers.IO).launch {
-                var videoInfo = FFMPEGHelper.getFileInfo(realpath!!)
+                var videoInfo = FFMPEGHelper.getFileInfo(chosenFilePath!!)
                 originalVideoInfo = videoInfo
 
                 if(videoInfo != null)
@@ -336,8 +365,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
             }
 
 
-            Log.e(TAG, "handleVideoData: RealPath : $realpath path : ${uri.path}")
-
+            Log.e(TAG, "handleVideoData: RealPath : $chosenFilePath path : ${uri.path}")
         }
     }
 
@@ -352,6 +380,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
                 //selectedAudioBitRate = audioBitrateField.text.toString().toInt()
                 selectedVideoBitRate = videoBitrateField.text.toString().toInt()
                 //selectedVideoFrameRate = videoFrameRateField.text.toString().toInt()
+                maxVideoBitRate = selectedVideoBitRate
 
                 //selectedAudioBitRate = min(selectedAudioBitRate, maxAudioBitRate)
                 //selectedVideoBitRate = min(selectedVideoBitRate, maxVideoBitRate)
@@ -534,6 +563,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
 
     fun copyFile(contentDescriber: Uri, useFd : Boolean = false, sent : Boolean = true) : String?
     {
+        FileHelper(this).copyFile(contentDescriber)
         val fileType = contentResolver.getType(contentDescriber)
         val backupDirectory = File(getExternalStorageDir(), "test_backup")
 
@@ -608,9 +638,9 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
         return if(googleSignInAccount == null){
             val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .setAccountName(email)
-                    .requestEmail()
-                    .requestIdToken(getString(R.string.google_sign_in_server_client_id))
-                    .requestScopes(Scope(DriveScopes.DRIVE_APPDATA))
+                    //.requestEmail()
+                    //.requestIdToken(getString(R.string.google_sign_in_server_client_id))
+                    //.requestScopes(Scope(DriveScopes.DRIVE_APPDATA))
                     .build()
             val client = GoogleSignIn.getClient(this, signInOptions)
             val googleAPIClient = client.asGoogleApiClient()
@@ -619,7 +649,7 @@ class MainActivity : AppCompatActivity(), FFMPEGHelper.Listener, AdapterView.OnI
             /*client.silentSignIn().addOnSuccessListener {
                 Log.e(TAG, "requestSignIn: SilentSignInSuccess")
             }.addOnFailureListener{
-                Log.e(TAG, "requestSignIn: SilentSignInFailed :")
+                Log.e(TAG, "requestSignIn: SilentSignInFailed : $it")
                 it.printStackTrace()
             }*/
             null

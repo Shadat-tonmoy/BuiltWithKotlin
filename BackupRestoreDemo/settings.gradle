@@ -1,3 +1,4 @@
+include ':fullScreenVideoView'
 include ':mobileffmpeg'
 include ':FileLogger'
 include ':app'

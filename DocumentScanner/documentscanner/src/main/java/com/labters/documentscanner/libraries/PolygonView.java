@@ -96,6 +96,12 @@ public class PolygonView extends FrameLayout {
     }
 
     @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+
+    }
+
+    @Override
     protected void attachViewToParent(View child, int index, ViewGroup.LayoutParams params) {
         super.attachViewToParent(child, index, params);
     }
