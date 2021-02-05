@@ -45,15 +45,19 @@ final class BitmapUtils {
   static final Rect EMPTY_RECT = new Rect();
 
   static final RectF EMPTY_RECT_F = new RectF();
+  static final Polygon EMPTY_POLYGON = new Polygon();
 
   /** Reusable rectangle for general internal usage */
   static final RectF RECT = new RectF();
+  static final Polygon POLYGON = new Polygon();
 
   /** Reusable point for general internal usage */
   static final float[] POINTS = new float[6];
+  static final float[] POLYGON_POINTS = new float[10];
 
   /** Reusable point for general internal usage */
   static final float[] POINTS2 = new float[6];
+  static final float[] POLYGON_POINTS2 = new float[10];
 
   /** Used to know the max texture size allowed to be rendered */
   private static int mMaxTextureSize;

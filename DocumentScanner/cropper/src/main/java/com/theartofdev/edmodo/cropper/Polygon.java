@@ -113,4 +113,24 @@ public class Polygon {
     {
         return topLeftX == -1 && topLeftY == -1 && topRightX == -1 && topRightY == -1 && bottomLeftX == -1 && bottomLeftY == -1 && bottomRightX == -1 && bottomRightY == -1;
     }
+
+    public float topWidth()
+    {
+        return topRightX - topLeftX;
+    }
+
+    public float bottomWidth()
+    {
+        return bottomRightX - bottomLeftX;
+    }
+
+    public float leftHeight()
+    {
+        return bottomLeftY - topLeftY;
+    }
+
+    public float rightHeight()
+    {
+        return bottomRightY - topRightY;
+    }
 }

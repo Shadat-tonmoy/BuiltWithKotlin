@@ -171,8 +171,11 @@ public class CropOverlayView extends View {
   /** Fix the current crop window rectangle if it is outside of cropping image or view bounds. */
   public void fixCurrentCropWindowRect() {
     RectF rect = getCropWindowRect();
+    Polygon polygon = getCropPolygon();
     fixCropWindowRectByRules(rect);
+    fixCropWindowPolygonByRules(polygon);
     mCropWindowHandler.setRect(rect);
+    mCropWindowHandler.setPolygon(polygon);
   }
 
   /**
@@ -201,8 +204,11 @@ public class CropOverlayView extends View {
 
   /** Resets the crop overlay view. */
   public void resetCropOverlayView() {
-    if (initializedCropWindow) {
+    if (initializedCropWindow)
+    {
+      Log.e(TAG, "resetCropOverlayView: called");
       setCropWindowRect(BitmapUtils.EMPTY_RECT_F);
+      setCropPolygon(BitmapUtils.EMPTY_POLYGON);
       initCropWindow();
       invalidate();
     }
@@ -611,6 +617,84 @@ public class CropOverlayView extends View {
         rect.bottom -= adj;
       }
     }
+  }
+
+  private void fixCropWindowPolygonByRules(Polygon polygon)
+  {
+    float topWidth = polygon.topRightX - polygon.topLeftX;
+    float bottomWidth = polygon.bottomRightX - polygon.bottomLeftX;
+    float leftHeight = polygon.bottomLeftY - polygon.topLeftY;
+    float rightHeight = polygon.bottomRightY - polygon.topRightY;
+    if (topWidth < mCropWindowHandler.getMinCropWidth()) {
+      float adj = (mCropWindowHandler.getMinCropWidth() - topWidth) / 2;
+      polygon.topLeftX -= adj;
+      polygon.topRightX += adj;
+    }
+
+    if (bottomWidth < mCropWindowHandler.getMinCropWidth()) {
+      float adj = (mCropWindowHandler.getMinCropWidth() - bottomWidth) / 2;
+      polygon.bottomLeftX -= adj;
+      polygon.bottomRightX += adj;
+    }
+
+
+    if (leftHeight < mCropWindowHandler.getMinCropHeight()) {
+      float adj = (mCropWindowHandler.getMinCropHeight() - leftHeight) / 2;
+      polygon.topLeftY -= adj;
+      polygon.bottomLeftY += adj;
+    }
+
+    if (rightHeight < mCropWindowHandler.getMinCropHeight()) {
+      float adj = (mCropWindowHandler.getMinCropHeight() - rightHeight) / 2;
+      polygon.topRightY -= adj;
+      polygon.bottomRightY += adj;
+    }
+
+
+    /*if (rect.width() > mCropWindowHandler.getMaxCropWidth()) {
+      float adj = (rect.width() - mCropWindowHandler.getMaxCropWidth()) / 2;
+      rect.left += adj;
+      rect.right -= adj;
+    }
+    if (rect.height() > mCropWindowHandler.getMaxCropHeight()) {
+      float adj = (rect.height() - mCropWindowHandler.getMaxCropHeight()) / 2;
+      rect.top += adj;
+      rect.bottom -= adj;
+    }
+
+    calculateBounds(rect);
+    if (mCalcBounds.width() > 0 && mCalcBounds.height() > 0) {
+      float leftLimit = Math.max(mCalcBounds.left, 0);
+      float topLimit = Math.max(mCalcBounds.top, 0);
+      float rightLimit = Math.min(mCalcBounds.right, getWidth());
+      float bottomLimit = Math.min(mCalcBounds.bottom, getHeight());
+      if (rect.left < leftLimit) {
+        rect.left = leftLimit;
+      }
+      if (rect.top < topLimit) {
+        rect.top = topLimit;
+      }
+      if (rect.right > rightLimit) {
+        rect.right = rightLimit;
+      }
+      if (rect.bottom > bottomLimit) {
+        rect.bottom = bottomLimit;
+      }
+    }
+    if (mFixAspectRatio && Math.abs(rect.width() - rect.height() * mTargetAspectRatio) > 0.1) {
+      if (rect.width() > rect.height() * mTargetAspectRatio) {
+        float adj = Math.abs(rect.height() * mTargetAspectRatio - rect.width()) / 2;
+        rect.left += adj;
+        rect.right -= adj;
+      } else {
+        float adj = Math.abs(rect.width() / mTargetAspectRatio - rect.height()) / 2;
+        rect.top += adj;
+        rect.bottom -= adj;
+      }
+    }*/
+
+
+
   }
 
   /**

@@ -1077,6 +1077,7 @@ public class CropImageView extends FrameLayout {
           !mCropOverlayView.isFixAspectRatio()
               && ((degrees > 45 && degrees < 135) || (degrees > 215 && degrees < 305));
       BitmapUtils.RECT.set(mCropOverlayView.getCropWindowRect());
+      BitmapUtils.POLYGON.set(mCropOverlayView.getCropPolygon());
       float halfWidth = (flipAxes ? BitmapUtils.RECT.height() : BitmapUtils.RECT.width()) / 2f;
       float halfHeight = (flipAxes ? BitmapUtils.RECT.width() : BitmapUtils.RECT.height()) / 2f;
       if (flipAxes) {
@@ -1086,6 +1087,7 @@ public class CropImageView extends FrameLayout {
       }
 
       mImageMatrix.invert(mImageInverseMatrix);
+      Log.e(TAG, "rotateImage: imageMatrix : "+mImageMatrix.toString()+" InverseMatrix : "+mImageInverseMatrix.toString());
 
       BitmapUtils.POINTS[0] = BitmapUtils.RECT.centerX();
       BitmapUtils.POINTS[1] = BitmapUtils.RECT.centerY();
@@ -1093,7 +1095,28 @@ public class CropImageView extends FrameLayout {
       BitmapUtils.POINTS[3] = 0;
       BitmapUtils.POINTS[4] = 1;
       BitmapUtils.POINTS[5] = 0;
+
+      Log.e(TAG, "rotateImage: PointsRect : 0 "+BitmapUtils.POINTS[0]+" 1 : "+BitmapUtils.POINTS[1]+" 2 : "+BitmapUtils.POINTS[2]+" 3 : "+BitmapUtils.POINTS[3]+" 4 : "+BitmapUtils.POINTS[4]+" 5 : "+BitmapUtils.POINTS[5]);
+
+      Polygon cropPolygon = mCropOverlayView.getCropPolygon();
+
+      BitmapUtils.POLYGON_POINTS[0] = BitmapUtils.RECT.centerX();
+      BitmapUtils.POLYGON_POINTS[1] = BitmapUtils.RECT.centerY();
+      BitmapUtils.POLYGON_POINTS[2] = cropPolygon.topLeftX;
+      BitmapUtils.POLYGON_POINTS[3] = cropPolygon.topLeftY;
+      BitmapUtils.POLYGON_POINTS[4] = cropPolygon.topRightX;
+      BitmapUtils.POLYGON_POINTS[5] = cropPolygon.topRightY;
+      BitmapUtils.POLYGON_POINTS[6] = cropPolygon.bottomRightX;
+      BitmapUtils.POLYGON_POINTS[7] = cropPolygon.bottomRightY;
+      BitmapUtils.POLYGON_POINTS[8] = cropPolygon.bottomLeftX;
+      BitmapUtils.POLYGON_POINTS[9] = cropPolygon.bottomLeftY;
+
+
       mImageInverseMatrix.mapPoints(BitmapUtils.POINTS);
+      mImageInverseMatrix.mapPoints(BitmapUtils.POLYGON_POINTS);
+      Log.e(TAG, "rotateImage: PointsRect After Mapping : 0 "+BitmapUtils.POINTS[0]+" 1 : "+BitmapUtils.POINTS[1]+" 2 : "+BitmapUtils.POINTS[2]+" 3 : "+BitmapUtils.POINTS[3]+" 4 : "+BitmapUtils.POINTS[4]+" 5 : "+BitmapUtils.POINTS[5]);
+
+      Log.e(TAG, "rotateImage: PolygonPoints AfterMapping : 0 "+BitmapUtils.POLYGON_POINTS[0]+" 1 : "+BitmapUtils.POLYGON_POINTS[1]+" 2 : "+BitmapUtils.POLYGON_POINTS[2]+" 3 : "+BitmapUtils.POLYGON_POINTS[3]+" 4 : "+BitmapUtils.POLYGON_POINTS[4]+" 5 : "+BitmapUtils.POLYGON_POINTS[5]+" 6 : "+BitmapUtils.POLYGON_POINTS[6]+" 7 : "+BitmapUtils.POLYGON_POINTS[7]+" 8 : "+BitmapUtils.POLYGON_POINTS[8]+" 9 : "+BitmapUtils.POLYGON_POINTS[9]);
 
       // This is valid because degrees is not negative.
       mDegreesRotated = (mDegreesRotated + degrees) % 360;
@@ -1102,23 +1125,45 @@ public class CropImageView extends FrameLayout {
 
       // adjust the zoom so the crop window size remains the same even after image scale change
       mImageMatrix.mapPoints(BitmapUtils.POINTS2, BitmapUtils.POINTS);
+      mImageMatrix.mapPoints(BitmapUtils.POLYGON_POINTS2, BitmapUtils.POLYGON_POINTS);
+      Log.e(TAG, "rotateImage: AfterMapping");
       mZoom /=
           Math.sqrt(
               Math.pow(BitmapUtils.POINTS2[4] - BitmapUtils.POINTS2[2], 2)
                   + Math.pow(BitmapUtils.POINTS2[5] - BitmapUtils.POINTS2[3], 2));
+
+
+      /*mZoom /= Math.sqrt(
+              Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[6] - BitmapUtils.POLYGON_POINTS2[8]),2) +
+              Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[4] - BitmapUtils.POLYGON_POINTS2[2]),2) +
+              Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[9] - BitmapUtils.POLYGON_POINTS2[3]),2) +
+              Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[7] - BitmapUtils.POLYGON_POINTS2[5]),2));*/
+      //Log.e(TAG, "rotateImage: zoom : "+mZoom);
       mZoom = Math.max(mZoom, 1);
 
-      applyImageMatrix(getWidth(), getHeight(), true, false);
+      //applyImageMatrix(getWidth(), getHeight(), true, false);
 
       mImageMatrix.mapPoints(BitmapUtils.POINTS2, BitmapUtils.POINTS);
+
+      mImageMatrix.mapPoints(BitmapUtils.POLYGON_POINTS2, BitmapUtils.POLYGON_POINTS);
 
       // adjust the width/height by the changes in scaling to the image
       double change =
           Math.sqrt(
               Math.pow(BitmapUtils.POINTS2[4] - BitmapUtils.POINTS2[2], 2)
                   + Math.pow(BitmapUtils.POINTS2[5] - BitmapUtils.POINTS2[3], 2));
+      //Log.e(TAG, "rotateImage: cahngeFroRect : "+change);
+
+      /*change = Math.sqrt(
+              Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[6] - BitmapUtils.POLYGON_POINTS2[8]),2) +
+                      Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[4] - BitmapUtils.POLYGON_POINTS2[2]),2) +
+                      Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[9] - BitmapUtils.POLYGON_POINTS2[3]),2) +
+                      Math.pow(Math.abs(BitmapUtils.POLYGON_POINTS2[7] - BitmapUtils.POLYGON_POINTS2[5]),2));*/
+
+      //Log.e(TAG, "rotateImage: cahngeForPolygon : "+change);
       halfWidth *= change;
       halfHeight *= change;
+      //Log.e(TAG, "rotateImage: halfWidth : "+halfHeight+" HalfHeight : "+halfHeight );
 
       // calculate the new crop window rectangle to center in the same location and have proper
       // width/height
@@ -1128,17 +1173,72 @@ public class CropImageView extends FrameLayout {
           BitmapUtils.POINTS2[0] + halfWidth,
           BitmapUtils.POINTS2[1] + halfHeight);
 
+      BitmapUtils.POLYGON.topLeftX = BitmapUtils.POLYGON_POINTS2[2]; // - halfWidth;
+      BitmapUtils.POLYGON.topLeftY = BitmapUtils.POLYGON_POINTS2[3]; // - halfHeight;
+
+      BitmapUtils.POLYGON.topRightX = BitmapUtils.POLYGON_POINTS2[4]; // + halfWidth;
+      BitmapUtils.POLYGON.topRightY = BitmapUtils.POLYGON_POINTS2[5]; // - halfHeight;
+
+
+      BitmapUtils.POLYGON.bottomLeftX = BitmapUtils.POLYGON_POINTS2[6]; // - halfWidth;
+      BitmapUtils.POLYGON.bottomLeftY = BitmapUtils.POLYGON_POINTS2[7]; // + halfHeight;
+
+      BitmapUtils.POLYGON.bottomRightX = BitmapUtils.POLYGON_POINTS2[8]; // + halfWidth;
+      BitmapUtils.POLYGON.bottomRightY = BitmapUtils.POLYGON_POINTS2[9]; // + halfHeight;
+
+
+      /*BitmapUtils.POLYGON.topLeftX = BitmapUtils.POLYGON_POINTS2[0] - halfWidth;
+      BitmapUtils.POLYGON.topLeftY = BitmapUtils.POLYGON_POINTS2[1] - halfHeight;
+
+      BitmapUtils.POLYGON.topRightX = BitmapUtils.POLYGON_POINTS2[0] + halfWidth;
+      BitmapUtils.POLYGON.topRightY = BitmapUtils.POLYGON_POINTS2[1] - halfHeight;
+
+
+      BitmapUtils.POLYGON.bottomLeftX = BitmapUtils.POLYGON_POINTS2[0] - halfWidth;
+      BitmapUtils.POLYGON.bottomLeftY = BitmapUtils.POLYGON_POINTS2[1] + halfHeight;
+
+      BitmapUtils.POLYGON.bottomRightX = BitmapUtils.POLYGON_POINTS2[0] + halfWidth;
+      BitmapUtils.POLYGON.bottomRightY = BitmapUtils.POLYGON_POINTS2[1] + halfHeight;*/
+
+
       mCropOverlayView.resetCropOverlayView();
       mCropOverlayView.setCropWindowRect(BitmapUtils.RECT);
-      applyImageMatrix(getWidth(), getHeight(), true, false);
+      mCropOverlayView.setCropPolygon(BitmapUtils.POLYGON);
+      //applyImageMatrix(getWidth(), getHeight(), true, false);
       handleCropWindowChanged(false, false);
 
       // make sure the crop window rectangle is within the cropping image bounds after all the
       // changes
       mCropOverlayView.fixCurrentCropWindowRect();
+      Log.e(TAG, "rotateImage: AfterRotation width : "+mBitmap.getWidth()+" Height : "+mBitmap.getHeight());
     }
   }
 
+  private void printPolygonPoints()
+  {
+    Log.e(TAG, "printPolygonPoints: staring...\n\n");
+    String pointString = "";
+    int index = 0;
+    for(float point : BitmapUtils.POLYGON_POINTS)
+    {
+      pointString += " at "+index+" : "+point+" ";
+      index++;
+    }
+    Log.e(TAG, "printPolygonPoints: "+pointString);
+  }
+
+  private void printPolygonPoints2()
+  {
+    Log.e(TAG, "printPolygonPoints2: staring...\n\n");
+    String pointString = "";
+    int index = 0;
+    for(float point : BitmapUtils.POLYGON_POINTS2)
+    {
+      pointString += " at "+index+" : "+point+" ";
+      index++;
+    }
+    Log.e(TAG, "printPolygonPoints2: "+pointString);
+  }
   /** Flips the image horizontally. */
   public void flipImageHorizontally() {
     mFlipHorizontally = !mFlipHorizontally;
@@ -1651,6 +1751,7 @@ public class CropImageView extends FrameLayout {
     }
   }
 
+  private static final String TAG = "CropImageView";
   /**
    * Apply matrix to handle the image inside the image view.
    *
@@ -1662,7 +1763,38 @@ public class CropImageView extends FrameLayout {
 
       mImageMatrix.invert(mImageInverseMatrix);
       RectF cropRect = mCropOverlayView.getCropWindowRect();
+      Polygon cropPolygon = mCropOverlayView.getCropPolygon();
+
+      BitmapUtils.POLYGON_POINTS[0] = BitmapUtils.RECT.centerX();
+      BitmapUtils.POLYGON_POINTS[1] = BitmapUtils.RECT.centerY();
+      BitmapUtils.POLYGON_POINTS[2] = cropPolygon.topLeftX;
+      BitmapUtils.POLYGON_POINTS[3] = cropPolygon.topLeftY;
+      BitmapUtils.POLYGON_POINTS[4] = cropPolygon.topRightX;
+      BitmapUtils.POLYGON_POINTS[5] = cropPolygon.topRightY;
+      BitmapUtils.POLYGON_POINTS[6] = cropPolygon.bottomRightX;
+      BitmapUtils.POLYGON_POINTS[7] = cropPolygon.bottomRightY;
+      BitmapUtils.POLYGON_POINTS[8] = cropPolygon.bottomLeftX;
+      BitmapUtils.POLYGON_POINTS[9] = cropPolygon.bottomLeftY;
+
+
       mImageInverseMatrix.mapRect(cropRect);
+
+      //float[] polygonPoints = {cropPolygon.topLeftX,cropPolygon.topLeftY,cropPolygon.topRightX, cropPolygon.topRightY, cropPolygon.bottomRightX, cropPolygon.bottomRightY, cropPolygon.bottomLeftX, cropPolygon.bottomLeftY};
+
+      mImageInverseMatrix.mapPoints(BitmapUtils.POLYGON_POINTS);
+      //mImageInverseMatrix.mapPoints(polygonPoints);
+
+     // Log.e(TAG, "applyImageMatrix: afterMapping "+cropPolygon.toString());
+
+      /*cropPolygon.topLeftX = polygonPoints[0];
+      cropPolygon.topLeftY = polygonPoints[1];
+      cropPolygon.topRightX = polygonPoints[2];
+      cropPolygon.topRightY = polygonPoints[3];
+      cropPolygon.bottomRightX = polygonPoints[4];
+      cropPolygon.bottomRightY = polygonPoints[5];
+      cropPolygon.bottomLeftX = polygonPoints[6];
+      cropPolygon.bottomLeftY = polygonPoints[7];*/
+      //Log.e(TAG, "applyImageMatrix: afterMapping polygon "+msg);
 
       mImageMatrix.reset();
 
@@ -1707,8 +1839,10 @@ public class CropImageView extends FrameLayout {
       mapImagePointsByImageMatrix();
 
       mImageMatrix.mapRect(cropRect);
+      mImageMatrix.mapPoints(BitmapUtils.POLYGON_POINTS);
 
       if (center) {
+        Log.e(TAG, "applyImageMatrix: if block executed");
         // set the zoomed area to be as to the center of cropping window as possible
         mZoomOffsetX =
             width > BitmapUtils.getRectWidth(mImagePoints)
@@ -1727,6 +1861,7 @@ public class CropImageView extends FrameLayout {
                         getHeight() - BitmapUtils.getRectBottom(mImagePoints))
                     / scaleY;
       } else {
+        Log.e(TAG, "applyImageMatrix: else block executed");
         // adjust the zoomed area so the crop window rectangle will be inside the area in case it
         // was moved outside
         mZoomOffsetX =
@@ -1740,7 +1875,35 @@ public class CropImageView extends FrameLayout {
       // apply to zoom offset translate and update the crop rectangle to offset correctly
       mImageMatrix.postTranslate(mZoomOffsetX * scaleX, mZoomOffsetY * scaleY);
       cropRect.offset(mZoomOffsetX * scaleX, mZoomOffsetY * scaleY);
+      float xFactor = mZoomOffsetX * scaleX;
+      float yFactor = mZoomOffsetY * scaleY;
+
+      /*BitmapUtils.POLYGON_POINTS[2] *//*.topLeftX*//* += xFactor;
+      BitmapUtils.POLYGON_POINTS[3] *//*.topLeftY*//* += yFactor;
+
+      BitmapUtils.POLYGON_POINTS[4] *//*.topRightX*//* += xFactor;
+      BitmapUtils.POLYGON_POINTS[5] *//*.topRightY*//* += yFactor;
+
+      BitmapUtils.POLYGON_POINTS[6] *//*.bottomRightX*//* += xFactor;
+      BitmapUtils.POLYGON_POINTS[7] *//*.bottomRightY*//* += yFactor;
+
+      BitmapUtils.POLYGON_POINTS[8] *//*.bottomLeftX*//* += xFactor;
+      BitmapUtils.POLYGON_POINTS[9] *//*.bottomLeftY*//* += yFactor;*/
+
+
+      /*cropPolygon.topLeftX = BitmapUtils.POLYGON_POINTS[2];
+      cropPolygon.topLeftY = BitmapUtils.POLYGON_POINTS[3];
+      cropPolygon.topRightX = BitmapUtils.POLYGON_POINTS[4];
+      cropPolygon.topRightY = BitmapUtils.POLYGON_POINTS[5];
+      cropPolygon.bottomRightX = BitmapUtils.POLYGON_POINTS[6];
+      cropPolygon.bottomRightY = BitmapUtils.POLYGON_POINTS[7];
+      cropPolygon.bottomLeftX = BitmapUtils.POLYGON_POINTS[8];
+      cropPolygon.bottomLeftY = BitmapUtils.POLYGON_POINTS[9];*/
+
+
       mCropOverlayView.setCropWindowRect(cropRect);
+      mCropOverlayView.setCropPolygon(cropPolygon);
+
       mapImagePointsByImageMatrix();
       mCropOverlayView.invalidate();
 
