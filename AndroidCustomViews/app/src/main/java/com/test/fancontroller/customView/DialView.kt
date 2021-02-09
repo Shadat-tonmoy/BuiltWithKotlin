@@ -1,5 +1,6 @@
 package com.test.fancontroller.customView
 
+import android.R.attr
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -9,10 +10,11 @@ import android.util.AttributeSet
 import android.view.View
 import com.test.fancontroller.R
 
+
 class DialView : View {
 
     companion object {
-        private const val SELECTION_COUNT = 4
+        private const val DEFAULT_SELECTION_COUNT = 4
     }
 
     private var mWidth = 0f
@@ -24,6 +26,7 @@ class DialView : View {
     private var mActiveSelection = 0
     private var mFanOffColor = Color.GRAY
     private var mFanOnColor = Color.CYAN
+    private var mSelectionCount = DEFAULT_SELECTION_COUNT
 
 
     private val mTempLabel = StringBuffer(8)
@@ -70,7 +73,7 @@ class DialView : View {
         mRectPaint?.style = Paint.Style.STROKE
 
         setOnClickListener {
-            mActiveSelection = (mActiveSelection + 1) % SELECTION_COUNT;
+            mActiveSelection = (mActiveSelection + 1) % mSelectionCount
             // Set dial background color to green if selection is >= 1.
             if (mActiveSelection >= 1) {
                 mDialPaint?.color = mFanOnColor
@@ -90,6 +93,7 @@ class DialView : View {
             val typedArray = context.obtainStyledAttributes(attrs, R.styleable.DialView,0,0)
             mFanOnColor = typedArray.getColor(R.styleable.DialView_fanOnColor,mFanOnColor)
             mFanOffColor = typedArray.getColor(R.styleable.DialView_fanOffColor,mFanOffColor)
+            mSelectionCount = typedArray.getInt(R.styleable.DialView_selectionCount,mSelectionCount)
             typedArray.recycle()
         }
     }
@@ -100,12 +104,33 @@ class DialView : View {
         mRadius = (Math.min(mWidth, mHeight) / 2 * 0.8).toFloat()
     }
 
-    private fun computeXYForPosition(pos: Int, radius: Float): FloatArray? {
+    private fun computeXYForPosition(pos: Int, radius: Float, isLabel : Boolean): FloatArray? {
         val result = mTempResult
-        val startAngle = Math.PI * (9 / 8.0) // Angles are in radians.
-        val angle = startAngle + pos * (Math.PI / 4)
-        result[0] = (radius * Math.cos(angle)).toFloat() + mWidth / 2
-        result[1] = (radius * Math.sin(angle)).toFloat() + mHeight / 2
+        var startAngle = Math.PI * (9 / 8.0) // Angles are in radians.
+        var angle = startAngle + pos * (Math.PI / 4)
+
+        if (mSelectionCount > 4)
+        {
+            startAngle = Math.PI * (3 / 2.0)
+            angle = startAngle + pos * (Math.PI / mSelectionCount)
+            result[0] = ((radius * Math.cos(angle * 2)).toFloat()
+                    + mWidth / 2)
+            result[1] = ((radius * Math.sin(angle * 2)).toFloat()
+                    + mHeight / 2)
+            if (angle > Math.toRadians(360.0) && isLabel)
+            {
+                result[1] = result[1] + 20
+            }
+        }
+        else
+        {
+            startAngle = Math.PI * (9 / 8.0)
+            angle = startAngle + pos * (Math.PI / mSelectionCount)
+            result[0] = ((radius * Math.cos(angle)).toFloat()
+                    + mWidth / 2)
+            result[1] = ((radius * Math.sin(angle)).toFloat()
+                    + mHeight / 2)
+        }
         return result
     }
 
@@ -131,8 +156,8 @@ class DialView : View {
     {
         val labelRadius = mRadius + 20
         val label = mTempLabel
-        for (i in 0 until SELECTION_COUNT) {
-            val xyData = computeXYForPosition(i, labelRadius)
+        for (i in 0 until mSelectionCount) {
+            val xyData = computeXYForPosition(i, labelRadius,true)
             val x = xyData!![0]
             val y = xyData!![1]
             label.setLength(0)
@@ -142,14 +167,19 @@ class DialView : View {
         // Draw the indicator mark.
         // Draw the indicator mark.
         val markerRadius = mRadius - 35
-        val xyData = computeXYForPosition(
-            mActiveSelection,
-            markerRadius
-        )
+        val xyData = computeXYForPosition(mActiveSelection, markerRadius, false)
         val x = xyData!![0]
         val y = xyData!![1]
         canvas.drawCircle(x, y, 20f, mTextPaint!!)
 
+    }
+
+    fun setSelectionCount(count : Int)
+    {
+        this.mSelectionCount = count
+        this.mActiveSelection = 0
+        mDialPaint?.color = mFanOffColor
+        invalidate()
     }
 
 
