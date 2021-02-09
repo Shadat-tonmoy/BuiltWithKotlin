@@ -11,11 +11,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity()
 {
 
     companion object{
-        private const val OFFSET = 120
+        private const val OFFSET = 60
         private const val MULTIPLIER = 100
     }
 
@@ -84,11 +85,25 @@ class MainActivity : AppCompatActivity()
         {
             if(mOffset < halfWidth && mOffset < halfHeight)
             {
+                mPaint.color = mColorRectangle - MULTIPLIER * mOffset
+                mRect.set(mOffset,mOffset,vWidth - mOffset, vHeight - mOffset)
+                mCanvas?.drawRect(mRect,mPaint)
+                mOffset += OFFSET
+                view.invalidate()
 
             }
             else
             {
-
+                mPaint.color = mColorAccent
+                mCanvas!!.drawCircle(halfWidth.toFloat(), halfHeight.toFloat(), halfWidth / 3.toFloat(), mPaint)
+                val text = getString(R.string.done)
+                // Get bounding box for text to calculate where to draw it.
+                mPaintText.getTextBounds(text, 0, text.length, mBounds)
+                // Calculate x and y for text so it's centered.
+                val x = halfWidth - mBounds.centerX()
+                val y = halfHeight - mBounds.centerY()
+                mCanvas!!.drawText(text, x.toFloat(), y.toFloat(), mPaintText)
+                view.invalidate()
             }
         }
 
