@@ -6,17 +6,25 @@ import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Path
 import android.util.AttributeSet
+import android.view.MotionEvent
 import android.view.View
 import androidx.core.content.res.ResourcesCompat
+import kotlin.math.abs
 
 class CanvasView : View
 {
+
+    companion object{
+        const val TOUCH_TOLERANCE = 4
+    }
     private var mPaint : Paint? = null
     private var mPath : Path? = null
     private var mDrawColor : Int  = -1
     private var mBackgroundColor : Int = -1
     private var mExtraCanvas : Canvas? = null
     private var mExtraBitmap : Bitmap? = null
+    private var mX = -1F
+    private var mY = -1F
 
 
 
@@ -79,6 +87,57 @@ class CanvasView : View
         mExtraCanvas?.drawColor(mBackgroundColor)
 
     }
+
+    override fun onTouchEvent(event: MotionEvent?): Boolean {
+
+        if(event != null)
+        {
+            val x = event.x
+            val y = event.y
+
+            when(event.action)
+            {
+                MotionEvent.ACTION_DOWN -> touchStart(x,y)
+                MotionEvent.ACTION_MOVE -> {
+                    touchMove(x,y)
+                    invalidate()
+                }
+                MotionEvent.ACTION_UP -> touchEnd(x,y)
+            }
+        }
+        return true
+    }
+
+    private fun touchStart(x : Float, y : Float)
+    {
+        mPath?.moveTo(x,y)
+        mX = x
+        mY = y
+    }
+
+    private fun touchEnd(x : Float, y : Float)
+    {
+        mPath?.reset()
+
+    }
+
+    private fun touchMove(x : Float, y : Float)
+    {
+        val dx = abs(x - mX)
+        val dy = abs(y - mY)
+
+        if(dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE)
+        {
+            mPath?.quadTo(mX,mY,(x+mX)/2,(y+mY)/2)
+
+            mX = x
+            mY = y
+
+            mExtraCanvas?.drawPath(mPath!!,mPaint!!)
+        }
+
+    }
+
 
 
 }
