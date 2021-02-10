@@ -1,10 +1,13 @@
 package com.test.simplecanvas
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
@@ -23,7 +26,7 @@ class MainActivity : AppCompatActivity()
 
     private var mCanvas : Canvas? = null
     private val mPaint = Paint()
-    private val mPaintText = Paint(Paint.ANTI_ALIAS_FLAG)
+    private val mPaintText = Paint(Paint.UNDERLINE_TEXT_FLAG)
     private var mBitmap : Bitmap? = null
     private var mImageView: ImageView? = null
     private val mRect: Rect = Rect()
@@ -39,6 +42,20 @@ class MainActivity : AppCompatActivity()
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         init()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        menuInflater.inflate(R.menu.main_menu,menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId)
+        {
+            R.id.draw_on_canvas -> openDrawingOnCanvasScreen()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun init()
@@ -59,6 +76,7 @@ class MainActivity : AppCompatActivity()
         mPaintText.color = ResourcesCompat.getColor(resources,
                 R.color.colorPrimaryDark, null);
         mPaintText.textSize = 70F
+        mPaintText.isAntiAlias = true
 
         mImageView = findViewById(R.id.imageView)
 
@@ -107,5 +125,11 @@ class MainActivity : AppCompatActivity()
             }
         }
 
+    }
+
+    private fun openDrawingOnCanvasScreen()
+    {
+        val intent = Intent(this,DrawingOnCanvas::class.java)
+        startActivity(intent)
     }
 }

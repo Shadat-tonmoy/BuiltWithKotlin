@@ -2,4 +2,5 @@
     <string name="app_name">SimpleCanvas</string>
     <string name="keep_tapping">Keep tapping.</string>
     <string name="done">Done!</string>
+    <string name="draw_on_canvas">Draw On Canvas</string>
 </resources>
