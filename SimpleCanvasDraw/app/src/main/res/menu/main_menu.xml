@@ -7,6 +7,11 @@
         android:title="@string/draw_on_canvas"
         android:orderInCategory="1"
         app:showAsAction="never"/>
+    <item
+        android:id="@+id/draw_shape"
+        android:title="@string/draw_shape"
+        android:orderInCategory="2"
+        app:showAsAction="never"/>
 
 
 </menu>

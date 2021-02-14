@@ -326,6 +326,30 @@ final class BitmapUtils {
     return (getRectRight(points) + getRectLeft(points)) / 2f;
   }
 
+  /** Get horizontal center value of the bounding rectangle of the given points. */
+  static float getPolygonCenterX()
+  {
+    int centerX = 0;
+    for(int i=2;i<=9;i+=2)
+    {
+      centerX += POLYGON_POINTS[i];
+    }
+    centerX /= 4.0;
+    return centerX;
+  }
+
+  /** Get horizontal center value of the bounding rectangle of the given points. */
+  static float getPolygonCenterY()
+  {
+    int centerY = 0;
+    for(int i=3;i<=9;i+=2)
+    {
+      centerY += POLYGON_POINTS[i];
+    }
+    centerY /= 4.0;
+    return centerY;
+  }
+
   /** Get vertical center value of the bounding rectangle of the given points. */
   static float getRectCenterY(float[] points) {
     return (getRectBottom(points) + getRectTop(points)) / 2f;

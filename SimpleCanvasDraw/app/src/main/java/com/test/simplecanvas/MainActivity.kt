@@ -54,6 +54,7 @@ class MainActivity : AppCompatActivity()
         when(item.itemId)
         {
             R.id.draw_on_canvas -> openDrawingOnCanvasScreen()
+            R.id.draw_shape -> openDrawShapeScreen()
         }
         return super.onOptionsItemSelected(item)
     }
@@ -130,6 +131,12 @@ class MainActivity : AppCompatActivity()
     private fun openDrawingOnCanvasScreen()
     {
         val intent = Intent(this,DrawingOnCanvas::class.java)
+        startActivity(intent)
+    }
+
+    private fun openDrawShapeScreen()
+    {
+        val intent = Intent(this,DrawShapeActivity::class.java)
         startActivity(intent)
     }
 }

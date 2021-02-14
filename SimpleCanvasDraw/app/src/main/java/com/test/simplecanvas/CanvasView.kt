@@ -1,10 +1,7 @@
 package com.test.simplecanvas
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Paint
-import android.graphics.Path
+import android.graphics.*
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.View
@@ -25,6 +22,7 @@ class CanvasView : View
     private var mExtraBitmap : Bitmap? = null
     private var mX = -1F
     private var mY = -1F
+    private var mFrame : Rect? = null
 
 
 
@@ -54,6 +52,8 @@ class CanvasView : View
         if(canvas != null && mExtraBitmap != null)
         {
             canvas.drawBitmap(mExtraBitmap!!,0F,0F,null)
+
+            //canvas.drawRect(mFrame!!,mPaint!!)
         }
     }
 
@@ -85,6 +85,9 @@ class CanvasView : View
         mExtraBitmap = Bitmap.createBitmap(width,height,Bitmap.Config.ARGB_8888)
         mExtraCanvas = Canvas(mExtraBitmap!!)
         mExtraCanvas?.drawColor(mBackgroundColor)
+
+        val inset = 40
+        mFrame = Rect(inset, inset, width-inset, height-inset)
 
     }
 

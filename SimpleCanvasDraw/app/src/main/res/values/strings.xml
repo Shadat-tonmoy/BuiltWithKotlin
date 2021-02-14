@@ -3,4 +3,8 @@
     <string name="keep_tapping">Keep tapping.</string>
     <string name="done">Done!</string>
     <string name="draw_on_canvas">Draw On Canvas</string>
+    <string name="draw_shape">Draw Shape</string>
+    <string name="draw_rectangle">Draw Rectangle</string>
+    <string name="draw_path">Draw Path</string>
+    <string name="rotate_path">Rotate</string>
 </resources>
