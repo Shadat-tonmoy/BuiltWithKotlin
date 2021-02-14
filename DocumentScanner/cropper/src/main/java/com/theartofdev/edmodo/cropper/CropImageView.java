@@ -1782,6 +1782,7 @@ public class CropImageView extends FrameLayout {
           Math.min(
               width / BitmapUtils.getRectWidth(mImagePoints),
               height / BitmapUtils.getRectHeight(mImagePoints));
+
       if (mScaleType == ScaleType.FIT_CENTER
           || (mScaleType == ScaleType.CENTER_INSIDE && scale < 1)
           || (scale > 1 && mAutoZoomEnabled)) {
@@ -1796,12 +1797,13 @@ public class CropImageView extends FrameLayout {
       // scale by the current zoom level
       float scaleX = mFlipHorizontally ? -mZoom : mZoom;
       float scaleY = mFlipVertically ? -mZoom : mZoom;
-      mImageMatrix.postScale(
+      //not using this block of code as it breaks polygon cropping
+      /*mImageMatrix.postScale(
           scaleX,
           scaleY,
           BitmapUtils.getRectCenterX(mImagePoints),
           BitmapUtils.getRectCenterY(mImagePoints));
-      mapImagePointsByImageMatrix();
+      mapImagePointsByImageMatrix();*/
 
       mImageMatrix.mapRect(cropRect);
       mImageMatrix.mapPoints(polygonPoints);
