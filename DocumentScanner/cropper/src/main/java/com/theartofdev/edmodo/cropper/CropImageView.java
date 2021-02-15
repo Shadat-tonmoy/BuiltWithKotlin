@@ -38,6 +38,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.labters.documentscanner.base.CropperErrorType;
 import com.labters.documentscanner.libraries.NativeClass;
 
 import org.opencv.core.MatOfPoint2f;
@@ -49,6 +50,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 import static com.theartofdev.edmodo.cropper.BitmapUtils.POLYGON_POINTS;
@@ -2308,7 +2310,7 @@ public class CropImageView extends FrameLayout {
 
   private NativeClass nativeClass = new NativeClass();
 
-  private Map<Integer, PointF> getEdgePoints(Bitmap tempBitmap) throws Exception {
+  public Map<Integer, PointF> getEdgePoints(Bitmap tempBitmap) throws Exception {
     List<PointF> pointFs = getContourEdgePoints(tempBitmap);
     Map<Integer, PointF> orderedPoints = orderedValidEdgePoints(tempBitmap, pointFs);
     return orderedPoints;
@@ -2375,25 +2377,37 @@ public class CropImageView extends FrameLayout {
     return pointFMap.size() == 4;
   }
 
-  public Bitmap getCroppedBitmapByPolygon()
-  {
-    Matrix matrix = new Matrix();
-    Polygon cropPolygon = mCropOverlayView.getCropPolygon();
-    float[] polygonPoints = {cropPolygon.topLeftX,cropPolygon.topLeftY,cropPolygon.topRightX, cropPolygon.topRightY, cropPolygon.bottomRightX, cropPolygon.bottomRightY, cropPolygon.bottomLeftX, cropPolygon.bottomLeftY};
-    matrix.setPolyToPoly(polygonPoints,0,polygonPoints,0,8);
-    /*Bitmap transformedBitmap = Bitmap.createBitmap(
-            mBitmap,
-            0,
-            0,
-            mBitmap.getWidth(),
-            mBitmap.getHeight(),
-            quadToRect,
-            true);*/
-    return null;
-  }
 
   public void printCropPolygon()
   {
     Log.e(TAG, "printCropPolygon: "+mCropOverlayView.getCropPolygon().toString());
+  }
+
+  public Bitmap getCroppedBitmapByPolygon() {
+    try
+    {
+      Polygon polygon = mCropOverlayView.getCropPolygon();
+      float xRatio = (float) mBitmap.getWidth() / getWidth();
+      float yRatio = (float) mBitmap.getHeight() / getHeight();
+
+      float x1 = polygon.topLeftX * xRatio;
+      float x2 = polygon.topRightX * xRatio;
+      float x3 = polygon.bottomLeftX * xRatio;
+      float x4 = polygon.bottomRightX * xRatio;
+      float y1 = polygon.topLeftY * yRatio;
+      float y2 = polygon.topRightY * yRatio;
+      float y3 = polygon.bottomLeftY * yRatio;
+      float y4 = polygon.bottomRightY * yRatio;
+
+      Bitmap finalBitmap = Bitmap.createBitmap(mBitmap);
+      //String xyValues = String.format("x1 : %f, x2 : %f,x3 : %f, x4 : %f,y1 : %f, y2 : %f,y3 : %f, y4 : %f,",x1,x2,x3,x4,y1,y2,y3,y4);
+      //Log.e(TAG, "getCroppedBitmapByPolygon: "+xyValues);
+      return nativeClass.getScannedBitmap(finalBitmap, x1, y1, x2, y2, x3, y3, x4, y4);
+    } catch (Exception e)
+    {
+      e.printStackTrace();
+      //showError(CropperErrorType.CROP_ERROR);
+      return null;
+    }
   }
 }

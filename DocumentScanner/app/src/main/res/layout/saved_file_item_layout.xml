@@ -16,13 +16,13 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/fileIcon"
-            app:srcCompat="@drawable/pdf"
             android:layout_width="@dimen/saved_file_icon_dimen"
             android:layout_height="@dimen/saved_file_icon_dimen"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/pdf" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fileTitle"
@@ -35,7 +35,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fileIcon"
-            app:layout_constraintTop_toTopOf="@+id/fileIcon" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/fileLastModified"
@@ -45,9 +45,7 @@
             android:ellipsize="middle"
             android:singleLine="true"
             android:text="@{UIHelperKt.getFormattedTime(file.lastModified, false)}"
-            android:layout_marginBottom="@dimen/dimen_8"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toBottomOf="@+id/fileIcon"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fileIcon"
             app:layout_constraintTop_toBottomOf="@+id/fileTitle" />
@@ -62,7 +60,7 @@
             android:text="@{UIHelperKt.getFileSizeString(file.length())}"
             android:layout_marginBottom="@dimen/dimen_8"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            app:layout_constraintBottom_toBottomOf="@+id/fileIcon"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fileIcon"
             app:layout_constraintTop_toBottomOf="@+id/fileLastModified" />
