@@ -1100,7 +1100,7 @@ public class CropImageView extends FrameLayout {
       BitmapUtils.POINTS[5] = 0;
 
       Polygon cropPolygon = mCropOverlayView.getCropPolygon();
-      Log.e(TAG, "rotateImage: cropPolygon : "+cropPolygon.toString());
+      Log.e(TAG, "rotateImage: cropPolygonBefore : "+mCropOverlayView.getCropPolygon().toString());
 
       POLYGON_POINTS[0] = BitmapUtils.RECT.centerX();
       POLYGON_POINTS[1] = BitmapUtils.RECT.centerY();
@@ -1118,6 +1118,7 @@ public class CropImageView extends FrameLayout {
 
       // This is valid because degrees is not negative.
       mDegreesRotated = (mDegreesRotated + degrees) % 360;
+      mCropOverlayView.rotationAngle = mDegreesRotated;
 
       applyImageMatrix(getWidth(), getHeight(), true, false);
 
@@ -1152,6 +1153,7 @@ public class CropImageView extends FrameLayout {
           BitmapUtils.POINTS2[0] + halfWidth,
           BitmapUtils.POINTS2[1] + halfHeight);
 
+      //POLYGON POINTS2 : (2,3) -> topLeftXY, (4,5) -> topRightXY, (6,7) -> bottomRightXY, (8,9) -> bottomLeftXY
       BitmapUtils.POLYGON.topLeftX = POLYGON_POINTS2[2];
       BitmapUtils.POLYGON.topLeftY = POLYGON_POINTS2[3];
       BitmapUtils.POLYGON.topRightX = POLYGON_POINTS2[4];
@@ -1161,6 +1163,7 @@ public class CropImageView extends FrameLayout {
       BitmapUtils.POLYGON.bottomLeftX = POLYGON_POINTS2[8];
       BitmapUtils.POLYGON.bottomLeftY = POLYGON_POINTS2[9];
 
+      adjustRotatedPolygon();
 
       mCropOverlayView.resetCropOverlayView();
       mCropOverlayView.setCropWindowRect(BitmapUtils.RECT);
@@ -1175,20 +1178,29 @@ public class CropImageView extends FrameLayout {
       // changes
       // no need to call this method. Not working with polygon cropping
       //mCropOverlayView.fixCurrentCropWindowRect();
-      Log.e(TAG, "rotateImage: AfterRotation width : "+mBitmap.getWidth()+" Height : "+mBitmap.getHeight());
+      Log.e(TAG, "rotateImage: cropPolygonAfter : "+mDegreesRotated);
     }
   }
 
 
-  private void rotatePolygon(float angle)
+  private void adjustRotatedPolygon()
   {
-    Matrix matrix = new Matrix();
-    RectF bounds = new RectF();
-    Path path = new Path();
-    path.computeBounds(bounds, true);
-    float centerX = bounds.centerX();
-    float centerY = bounds.centerY();
-    matrix.postRotate(angle, centerX, centerY);
+    //POLYGON POINTS2 :
+    // (2,3) -> topLeftXY,
+    // (4,5) -> topRightXY,
+    // (6,7) -> bottomRightXY,
+    // (8,9) -> bottomLeftXY
+    BitmapUtils.POLYGON.topLeftX = POLYGON_POINTS2[8];
+    BitmapUtils.POLYGON.topLeftY = POLYGON_POINTS2[9];
+
+    BitmapUtils.POLYGON.topRightX = POLYGON_POINTS2[2];
+    BitmapUtils.POLYGON.topRightY = POLYGON_POINTS2[3];
+
+    BitmapUtils.POLYGON.bottomRightX = POLYGON_POINTS2[4];
+    BitmapUtils.POLYGON.bottomRightY = POLYGON_POINTS2[5];
+
+    BitmapUtils.POLYGON.bottomLeftX = POLYGON_POINTS2[6];
+    BitmapUtils.POLYGON.bottomLeftY = POLYGON_POINTS2[7];
 
   }
 
@@ -2361,5 +2373,27 @@ public class CropImageView extends FrameLayout {
 
   public boolean isValidShape(Map<Integer, PointF> pointFMap) {
     return pointFMap.size() == 4;
+  }
+
+  public Bitmap getCroppedBitmapByPolygon()
+  {
+    Matrix matrix = new Matrix();
+    Polygon cropPolygon = mCropOverlayView.getCropPolygon();
+    float[] polygonPoints = {cropPolygon.topLeftX,cropPolygon.topLeftY,cropPolygon.topRightX, cropPolygon.topRightY, cropPolygon.bottomRightX, cropPolygon.bottomRightY, cropPolygon.bottomLeftX, cropPolygon.bottomLeftY};
+    matrix.setPolyToPoly(polygonPoints,0,polygonPoints,0,8);
+    /*Bitmap transformedBitmap = Bitmap.createBitmap(
+            mBitmap,
+            0,
+            0,
+            mBitmap.getWidth(),
+            mBitmap.getHeight(),
+            quadToRect,
+            true);*/
+    return null;
+  }
+
+  public void printCropPolygon()
+  {
+    Log.e(TAG, "printCropPolygon: "+mCropOverlayView.getCropPolygon().toString());
   }
 }

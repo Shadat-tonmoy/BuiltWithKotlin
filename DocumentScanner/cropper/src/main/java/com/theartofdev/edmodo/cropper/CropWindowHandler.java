@@ -186,13 +186,13 @@ final class CropWindowHandler {
    * @return the Handle that was pressed; null if no Handle was pressed
    */
   public CropWindowMoveHandler getMoveHandler(
-      float x, float y, float targetRadius, CropImageView.CropShape cropShape) {
+          float x, float y, float targetRadius, CropImageView.CropShape cropShape, CropWindowMoveHandler.Listener listener, float rotationAngle) {
     CropWindowMoveHandler.Type type =
         cropShape == CropImageView.CropShape.OVAL
             ? getOvalPressedMoveType(x, y)
-            : getPolygonPressedMoveType(x, y, targetRadius);
+            : getPolygonPressedMoveType(x, y, targetRadius,rotationAngle);
     Log.e("TAG", "getMoveHandler: type : "+type);
-    return type != null ? new CropWindowMoveHandler(type, this, x, y) : null;
+    return type != null ? new CropWindowMoveHandler(type, this, x, y,listener) : null;
   }
 
   // region: Private methods
@@ -254,7 +254,7 @@ final class CropWindowHandler {
     return moveType;
   }
 
-  private CropWindowMoveHandler.Type getPolygonPressedMoveType(float x, float y, float targetRadius)
+  private CropWindowMoveHandler.Type getPolygonPressedMoveType(float x, float y, float targetRadius,float rotationAngle)
   {
     CropWindowMoveHandler.Type moveType = null;
 
@@ -262,18 +262,22 @@ final class CropWindowHandler {
     if (isInCornerTargetZone(x, y, mPolygon.topLeftX, mPolygon.topLeftY, targetRadius))
     {
       moveType = CropWindowMoveHandler.Type.TOP_LEFT;
+      //if(rotationAngle == 90) moveType = CropWindowMoveHandler.Type.TOP_RIGHT;
     }
     else if (isInCornerTargetZone(x, y,mPolygon.topRightX, mPolygon.topRightY, targetRadius))
     {
       moveType = CropWindowMoveHandler.Type.TOP_RIGHT;
+      //if(rotationAngle == 90) moveType = CropWindowMoveHandler.Type.BOTTOM_RIGHT;
     }
     else if (isInCornerTargetZone(x, y, mPolygon.bottomLeftX, mPolygon.bottomLeftY, targetRadius))
     {
       moveType = CropWindowMoveHandler.Type.BOTTOM_LEFT;
+      //if(rotationAngle == 90) moveType = CropWindowMoveHandler.Type.TOP_LEFT;
     }
     else if (CropWindowHandler.isInCornerTargetZone(x, y, mPolygon.bottomRightX, mPolygon.bottomRightY, targetRadius))
     {
       moveType = CropWindowMoveHandler.Type.BOTTOM_RIGHT;
+      //if(rotationAngle == 90) moveType = CropWindowMoveHandler.Type.BOTTOM_LEFT;
     }
     else if (CropWindowHandler.isInCenterTargetZone(x, y,mPolygon.topLeftX, mPolygon.topLeftY, mPolygon.topRightX, mPolygon.topRightY, mPolygon.bottomLeftX, mPolygon.bottomLeftY, mPolygon.bottomRightX, mPolygon.bottomRightY)
         && focusCenter())

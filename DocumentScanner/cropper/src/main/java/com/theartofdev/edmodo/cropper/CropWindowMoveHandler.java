@@ -25,6 +25,12 @@ final class CropWindowMoveHandler {
 
   // region: Fields and Consts
 
+  public interface Listener{
+    void onDrawMagnifier(float x, float y);
+  }
+
+  private Listener listener;
+
   /** Matrix used for rectangle rotation handling */
   private static final Matrix MATRIX = new Matrix();
 
@@ -61,7 +67,7 @@ final class CropWindowMoveHandler {
    * @param touchY the location of the initial toch possition to measure move distance
    */
   public CropWindowMoveHandler(
-      Type type, CropWindowHandler cropWindowHandler, float touchX, float touchY) {
+      Type type, CropWindowHandler cropWindowHandler, float touchX, float touchY, Listener listener) {
     mType = type;
     mMinCropWidth = cropWindowHandler.getMinCropWidth();
     mMinCropHeight = cropWindowHandler.getMinCropHeight();
@@ -69,6 +75,7 @@ final class CropWindowMoveHandler {
     mMaxCropHeight = cropWindowHandler.getMaxCropHeight();
     //calculateTouchOffset(cropWindowHandler.getRect(), touchX, touchY);
     calculateTouchOffset(cropWindowHandler.getPolygon(), touchX, touchY);
+    this.listener = listener;
   }
 
   /**
@@ -353,6 +360,10 @@ final class CropWindowMoveHandler {
       case TOP_LEFT:
         Log.e(TAG, "movePolygon: adjustTopLeft");
         adjustTopLeft(polygon,y,x,boundingPolygon,snapMargin);
+        /*if(listener != null)
+        {
+          listener.onDrawMagnifier(viewWidth/2F,viewHeight/2F);
+        }*/
         //adjustTop(rect, y, bounds, snapMargin, 0, false, false);
         //adjustLeft(rect, x, bounds, snapMargin, 0, false, false);
         break;

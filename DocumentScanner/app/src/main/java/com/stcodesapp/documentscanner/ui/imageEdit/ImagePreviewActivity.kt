@@ -69,8 +69,11 @@ class ImagePreviewActivity : DocumentScanActivity(), FragmentFrameWrapper {
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
         viewModel.setChosenImagePathFromIntent(intent)
-        cropButton.setOnClickListener { viewModel.saveCropArea(getCroppingArea())
-            showCroppedImage() }
+        cropButton.setOnClickListener {
+            //viewModel.saveCropArea(getCroppingArea())
+            //showCroppedImage()
+            cropImageView.printCropPolygon()
+        }
 
         rotateButton.setOnClickListener {
             cropImageView.rotateImage(90)

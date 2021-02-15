@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Magnifier;
 
 import java.util.Arrays;
 
@@ -56,6 +57,9 @@ public class CropOverlayView extends View {
 
   /** The Paint used to draw the corners of the Border */
   private Paint mBorderCornerPaint;
+  private Paint mBorderFillPaint;
+
+  public float rotationAngle = 0F;
 
   /** The Paint used to draw the guidelines within the crop area when pressed. */
   private Paint mGuidelinePaint;
@@ -135,12 +139,17 @@ public class CropOverlayView extends View {
   private Integer mOriginalLayerType;
   // endregion
 
+  private Magnifier magnifier;
+
+
   public CropOverlayView(Context context) {
     this(context, null);
   }
 
   public CropOverlayView(Context context, AttributeSet attrs) {
     super(context, attrs);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)
+      magnifier = new Magnifier(this);
   }
 
   /** Set the crop window change listener. */
@@ -435,6 +444,11 @@ public class CropOverlayView extends View {
     mGuidelinePaint = getNewPaintOrNull(options.guidelinesThickness, options.guidelinesColor);
 
     mBackgroundPaint = getNewPaint(options.backgroundColor);
+
+    mBorderFillPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    mBorderFillPaint.setStyle(Paint.Style.FILL);
+    String transparentWhite = "#BFFFFFFF";
+    mBorderFillPaint.setColor(Color.parseColor(transparentWhite));
   }
 
   // region: Private methods
@@ -876,14 +890,14 @@ public class CropOverlayView extends View {
         wallpaint.setColor(Color.GRAY);
         wallpaint.setStyle(Paint.Style.FILL);
 
-        Path wallpath = new Path();
-        wallpath.reset(); // only needed when reusing this path for a new build
-        wallpath.moveTo(polygon.topLeftX, polygon.topLeftY); // used for first point
-        wallpath.lineTo(polygon.topRightX, polygon.topRightY);
-        wallpath.lineTo(polygon.bottomRightX, polygon.bottomRightY);
-        wallpath.lineTo(polygon.bottomLeftX, polygon.bottomLeftY);
-        wallpath.lineTo(polygon.topLeftX, polygon.topLeftY);
-        canvas.drawPath(wallpath, mBorderPaint);
+        Path polygonPath = new Path();
+        polygonPath.reset(); // only needed when reusing this path for a new build
+        polygonPath.moveTo(polygon.topLeftX, polygon.topLeftY); // used for first point
+        polygonPath.lineTo(polygon.topRightX, polygon.topRightY);
+        polygonPath.lineTo(polygon.bottomRightX, polygon.bottomRightY);
+        polygonPath.lineTo(polygon.bottomLeftX, polygon.bottomLeftY);
+        polygonPath.lineTo(polygon.topLeftX, polygon.topLeftY);
+        canvas.drawPath(polygonPath, mBorderPaint);
         Log.e(TAG, "drawBorders: Done");
 
         //canvas.drawRect(rect, mBorderPaint);
@@ -894,6 +908,8 @@ public class CropOverlayView extends View {
     }
   }
 
+  private final int innerCircleRadius = 26; //21
+  private final int outerCircleRadius = 30; //25
   /** Draw the corner of crop overlay. */
   private void drawCorners(Canvas canvas) {
     Log.e("TAG", "drawCorners: Called");
@@ -916,13 +932,21 @@ public class CropOverlayView extends View {
 //      RectF rectF = new RectF(x,y,x+width,y+height);
 
       // Top left
-      mBorderCornerPaint.setColor(Color.parseColor("#4c8c4a"));
-      mBorderCornerPaint.setStyle(Paint.Style.FILL);
+      String cornerColor = "#6200EE";
+      mBorderCornerPaint.setColor(Color.parseColor(cornerColor));
+      mBorderCornerPaint.setStyle(Paint.Style.STROKE);
+      mBorderCornerPaint.setStrokeWidth(10F);
       canvas.drawCircle(
           polygon.topLeftX - cornerOffset,
           polygon.topLeftY  - cornerExtension,
-          25,
+          outerCircleRadius,
           mBorderCornerPaint);
+
+      canvas.drawCircle(
+          polygon.topLeftX - cornerOffset,
+          polygon.topLeftY  - cornerExtension,
+          innerCircleRadius,
+          mBorderFillPaint);
 
       /*canvas.drawOval(
           rect.left - cornerExtension,
@@ -935,8 +959,14 @@ public class CropOverlayView extends View {
       canvas.drawCircle(
           polygon.topRightX + cornerOffset,
           polygon.topRightY - cornerExtension,
-          25,
+          outerCircleRadius,
               mBorderCornerPaint);
+
+      canvas.drawCircle(
+          polygon.topRightX + cornerOffset,
+          polygon.topRightY - cornerExtension,
+          innerCircleRadius,
+              mBorderFillPaint);
 
       /*canvas.drawLine(
           rect.right + cornerExtension,
@@ -949,8 +979,14 @@ public class CropOverlayView extends View {
       canvas.drawCircle(
           polygon.bottomLeftX - cornerOffset,
           polygon.bottomLeftY + cornerExtension,
-          25,
+          outerCircleRadius,
           mBorderCornerPaint);
+
+      canvas.drawCircle(
+          polygon.bottomLeftX - cornerOffset,
+          polygon.bottomLeftY + cornerExtension,
+          innerCircleRadius,
+          mBorderFillPaint);
       /*canvas.drawLine(
           rect.left - cornerExtension,
           rect.bottom + cornerOffset,
@@ -962,8 +998,13 @@ public class CropOverlayView extends View {
       canvas.drawCircle(
           polygon.bottomRightX + cornerOffset,
           polygon.bottomRightY + cornerExtension,
-          25,
+          outerCircleRadius,
           mBorderCornerPaint);
+      canvas.drawCircle(
+          polygon.bottomRightX + cornerOffset,
+          polygon.bottomRightY + cornerExtension,
+          innerCircleRadius,
+          mBorderFillPaint);
       /*canvas.drawLine(
           rect.right + cornerExtension,
           rect.bottom + cornerOffset,
@@ -1010,6 +1051,7 @@ public class CropOverlayView extends View {
         case MotionEvent.ACTION_CANCEL:
           getParent().requestDisallowInterceptTouchEvent(false);
           onActionUp();
+          dismissMag();
           return true;
         case MotionEvent.ACTION_MOVE:
           onActionMove(event.getX(), event.getY());
@@ -1030,7 +1072,7 @@ public class CropOverlayView extends View {
   private void onActionDown(float x, float y)
   {
     Log.e("TAG", "onActionDown: Called x : "+x+" Y: "+y);
-    mMoveHandler = mCropWindowHandler.getMoveHandler(x, y, mTouchRadius, mCropShape);
+    mMoveHandler = mCropWindowHandler.getMoveHandler(x, y, mTouchRadius, mCropShape,this::drawMag,rotationAngle);
     if (mMoveHandler != null) {
       invalidate();
     }
@@ -1257,4 +1299,22 @@ public class CropOverlayView extends View {
     }
   }
   // endregion
+
+
+
+  private void drawMag(float x,float y)
+  {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && magnifier!=null) {
+      magnifier.show(x, y);
+    }
+  }
+
+  private void dismissMag()
+  {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && magnifier!=null) {
+      magnifier.dismiss();
+    }
+  }
+
+
 }
