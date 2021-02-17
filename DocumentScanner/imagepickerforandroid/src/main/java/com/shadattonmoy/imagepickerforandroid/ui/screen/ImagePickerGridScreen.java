@@ -1,10 +1,12 @@
 package com.shadattonmoy.imagepickerforandroid.ui.screen;
 
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
+
 public interface ImagePickerGridScreen {
 
     interface Listener
     {
-        void onImageGridItemClicked(int position);
+        void onImageFileClicked(int position, ImageFile imageFile);
 
         void onDoneButtonClicked();
 

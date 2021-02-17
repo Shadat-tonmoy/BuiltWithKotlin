@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/defaultMargin"
         android:text="@string/folder_title"
-        android:textColor="@color/black"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/list_item_icon"
         app:layout_constraintTop_toTopOf="@+id/list_item_icon" />
 
@@ -35,6 +35,7 @@
         android:layout_marginStart="@dimen/defaultMargin"
         android:layout_marginEnd="8dp"
         android:text="@string/folder_path"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintStart_toEndOf="@+id/list_item_icon"
         app:layout_constraintTop_toBottomOf="@+id/list_item_title" />
 

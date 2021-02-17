@@ -1,31 +1,16 @@
 package com.stcodesapp.documentscanner.ui.imageEdit
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.view.animation.RotateAnimation
 import android.widget.FrameLayout
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.lifecycle.Observer
-import com.bumptech.glide.Glide
-import com.labters.documentscanner.base.CropperErrorType
-import com.labters.documentscanner.base.DocumentScanActivity
-import com.labters.documentscanner.helpers.ScannerConstants
-import com.labters.documentscanner.libraries.PolygonView
-import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.databinding.ImagePreviewLayoutBinding
-import com.stcodesapp.documentscanner.di.activity.ActivityComponent
-import com.stcodesapp.documentscanner.di.activity.modules.ActivityModule
-import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
 import com.theartofdev.edmodo.cropper.CropImageView
-import com.tigerit.pothghat.di.application.ApplicationComponent
 import kotlinx.android.synthetic.main.image_preview_layout.*
 import javax.inject.Inject
 

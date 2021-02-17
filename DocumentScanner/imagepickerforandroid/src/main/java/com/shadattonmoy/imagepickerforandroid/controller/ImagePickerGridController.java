@@ -2,6 +2,7 @@ package com.shadattonmoy.imagepickerforandroid.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import com.shadattonmoy.imagepickerforandroid.R;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerType;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerTags;
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
 import com.shadattonmoy.imagepickerforandroid.tasks.ImageFileFetchingTask;
 import com.shadattonmoy.imagepickerforandroid.tasks.uiUpdateTasks.ImagePickerGridUIUpdateTask;
 import com.shadattonmoy.imagepickerforandroid.ui.actvities.ImagePickerActivity;
@@ -24,6 +26,7 @@ public class ImagePickerGridController implements ImagePickerGridScreen.Listener
     private ImagePickerGridScreenView screenView;
     private Bundle arguments;
     private boolean selectAll = false, isBatchModeEnabled = false;
+    private static final String TAG = "ImagePickerGridControll";
 
     public ImagePickerGridController(Activity activity)
     {
@@ -63,6 +66,7 @@ public class ImagePickerGridController implements ImagePickerGridScreen.Listener
         if(arguments!=null )
         {
             folderPath = arguments.getString(ImagePickerTags.FOLDER_PATH_TAG);
+            Log.e(TAG, "startFetchingImages: folderPath : "+folderPath);
             if(folderPath!=null)
             {
                 fetchAllImageFromFolder(folderPath);
@@ -94,15 +98,16 @@ public class ImagePickerGridController implements ImagePickerGridScreen.Listener
     }
 
     @Override
-    public void onAllImageFileFetched(List<String> imagePaths)
+    public void onAllImageFileFetched(List<ImageFile> imageFiles)
     {
-        uiUpdateTask.bindImages(imagePaths);
+        screenView.getImagePickerGridAdapter().setListener(this::onImageFileClicked);
+        uiUpdateTask.bindImages(imageFiles);
         uiUpdateTask.hideLoadingView();
 
     }
 
     @Override
-    public void onImageGridItemClicked(int position)
+    public void onImageFileClicked(int position, ImageFile imageFile)
     {
         if(isBatchModeEnabled)
             uiUpdateTask.setSelection(position);
@@ -121,7 +126,7 @@ public class ImagePickerGridController implements ImagePickerGridScreen.Listener
     {
         ((ImagePickerActivity)activity)
                 .getController()
-                .onImageListSelected(screenView.getImagePickerGridAdapter().getSelectedImages());
+                .onImageListSelected(screenView.getImagePickerGridAdapter().getSelectedImageFiles());
     }
 
     @Override

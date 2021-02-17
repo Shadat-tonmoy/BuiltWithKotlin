@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.List;
 
 import com.shadattonmoy.imagepickerforandroid.R;
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
 import com.shadattonmoy.imagepickerforandroid.ui.screenView.ImagePickerGridScreenView;
 
 public class ImagePickerGridUIUpdateTask
@@ -36,9 +37,9 @@ public class ImagePickerGridUIUpdateTask
         updateTotalSelectionText();
     }
 
-    public void bindImages(List<String> imagePaths)
+    public void bindImages(List<ImageFile> imageFiles)
     {
-        screenView.getImagePickerGridAdapter().bindImages(imagePaths);
+        screenView.getImagePickerGridAdapter().bindImages(imageFiles);
     }
 
     public void selectAll() 

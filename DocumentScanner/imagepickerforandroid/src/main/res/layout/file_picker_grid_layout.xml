@@ -6,19 +6,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <GridView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/image_grid_view"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:columnWidth="160dp"
-        android:gravity="center"
-        android:verticalSpacing="4dp"
-        android:horizontalSpacing="8dp"
-        android:layout_marginTop="@dimen/defaultMargin"
-        android:numColumns="auto_fit"
-        android:paddingBottom="?attr/actionBarSize"
-        android:clipToPadding="false"
-        android:stretchMode="columnWidth"
+        android:layout_margin="@dimen/defaultMargin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

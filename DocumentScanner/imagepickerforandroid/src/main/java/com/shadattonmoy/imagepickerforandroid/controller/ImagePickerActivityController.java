@@ -8,6 +8,7 @@ import android.util.Log;
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerType;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerTags;
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
 import com.shadattonmoy.imagepickerforandroid.tasks.uiUpdateTasks.ImagePickerUIUpdateTask;
 import com.shadattonmoy.imagepickerforandroid.ui.fragments.ImagePickerGridFragment;
 import com.shadattonmoy.imagepickerforandroid.ui.fragments.ImagePickerListFragment;
@@ -74,13 +75,13 @@ public class ImagePickerActivityController implements ImagePickerActivityScreen.
 
     }
 
-    public void onImageListSelected(List<String> selectedImageList)
+    public void onImageListSelected(List<ImageFile> selectedImageList)
     {
         imagePickerForAndroid.onImageListSelected(selectedImageList);
         activity.finish();
     }
 
-    public void onSingleImageSelected(String selectedImage)
+    public void onSingleImageSelected(ImageFile selectedImage)
     {
         imagePickerForAndroid.onSingleImageSelected(selectedImage);
         activity.finish();

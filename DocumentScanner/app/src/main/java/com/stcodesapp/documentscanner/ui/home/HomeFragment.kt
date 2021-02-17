@@ -12,6 +12,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.shadattonmoy.imagepickerforandroid.ImagePickerForAndroid
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.RequestCode
@@ -100,18 +101,18 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
         imagePickerForAndroid.openImagePicker()
     }
 
-    override fun onSingleImageSelected(selectedImage: String?)
+    override fun onSingleImageSelected(selectedImage: ImageFile?)
     {
         /*val intent = Intent(this, DocumentPagesActivity::class.java)
         startActivity(intent)*/
 
     }
 
-    override fun onBatchImageSelected(selectedImages: MutableList<String>?)
+    override fun onBatchImageSelected(selectedImages: MutableList<ImageFile>?)
     {
         if(selectedImages!=null && selectedImages.size>0)
         {
-            copySelectedImages(selectedImages)
+            //copySelectedImages(selectedImages)
         }
         else context?.showToast("No image selected!")
     }

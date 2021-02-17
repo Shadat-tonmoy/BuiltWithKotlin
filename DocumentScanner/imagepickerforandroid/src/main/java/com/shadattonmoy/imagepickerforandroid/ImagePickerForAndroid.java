@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerTags;
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
 import com.shadattonmoy.imagepickerforandroid.ui.actvities.ImagePickerActivity;
 
 import java.util.List;
@@ -17,12 +18,12 @@ public class ImagePickerForAndroid
 
     public interface BatchImageSelectionListener
     {
-        void onBatchImageSelected(List<String> selectedImageList);
+        void onBatchImageSelected(List<ImageFile> selectedImageList);
     }
 
     public interface SingleImageSelectionListener
     {
-        void onSingleImageSelected(String selectedImage);
+        void onSingleImageSelected(ImageFile selectedImage);
     }
 
     private static final String TAG = "ImagePickerForAndroid";
@@ -117,13 +118,13 @@ public class ImagePickerForAndroid
     }
 
 
-    public void onImageListSelected(List<String> selectedImageList)
+    public void onImageListSelected(List<ImageFile> selectedImageList)
     {
         if(batchImageSelectionListener !=null)
             batchImageSelectionListener.onBatchImageSelected(selectedImageList);
     }
 
-    public void onSingleImageSelected(String selectedImage)
+    public void onSingleImageSelected(ImageFile selectedImage)
     {
         if(singleImageSelectionListener !=null)
             singleImageSelectionListener.onSingleImageSelected(selectedImage);

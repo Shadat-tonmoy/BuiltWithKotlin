@@ -5,33 +5,39 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
 import com.shadattonmoy.imagepickerforandroid.constants.Constants;
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerType;
 import com.shadattonmoy.imagepickerforandroid.helpers.FileHelper;
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile;
 import com.shadattonmoy.imagepickerforandroid.model.ImageFolder;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
+import static com.shadattonmoy.imagepickerforandroid.tasks.UtilityTask.isAndroidX;
+
+public class ImageFileFetchingTask extends AsyncTask<String, Void, List<ImageFile>>
 {
+    private static final String TAG = "ImageFileFetchingTask";
     private Activity activity;
     private RecentImageFileFetchListener recentImageFileFetchListener;
     private AllImageFileFetchListener allImageFileFetchListener;
     private ImagePickerType imagePickerType;
 
     public interface AllImageFileFetchListener{
-        void onAllImageFileFetched(List<String> imagePaths);
+        void onAllImageFileFetched(List<ImageFile> imageFiles);
     }
 
     public interface RecentImageFileFetchListener{
-        void onRecentImageFileFetched(List<String> imagePaths);
+        void onRecentImageFileFetched(List<ImageFile> imageFiles);
     }
 
     public ImageFileFetchingTask(Activity activity, ImagePickerType imagePickerType) {
@@ -45,7 +51,7 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
     }
 
     @Override
-    protected List<String> doInBackground(String... arguments)
+    protected List<ImageFile> doInBackground(String... arguments)
     {
         if(imagePickerType == ImagePickerType.RECENT_IMAGE_LIST || imagePickerType == ImagePickerType.ALL_IMAGE_LIST)
         {
@@ -54,13 +60,13 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
         else if(imagePickerType == ImagePickerType.ALL_IMAGE_FROM_FOLDER)
         {
             String folderPath = arguments[0];
-            return getImagesByFolder(folderPath);
+            return getImagesFromFolder(folderPath);
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(List<String> result) {
+    protected void onPostExecute(List<ImageFile> result) {
         super.onPostExecute(result);
         if(imagePickerType == ImagePickerType.RECENT_IMAGE_LIST && recentImageFileFetchListener!=null)
         {
@@ -77,18 +83,19 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
 
     }
 
-    public ArrayList<String> getImagePaths(ImagePickerType imagePickerType)
+    public ArrayList<ImageFile> getImagePaths(ImagePickerType imagePickerType)
     {
         Uri uri;
         Cursor cursor;
-        int columnIndexForImages, columnIndexForFolder;
-        ArrayList<String> listOfAllImages = new ArrayList<String>();
-        String absolutePathOfImage = null;
+        int dataColumnIndex = -1 , idColumnIndex = -1, displayNameColumnIndex = -1, dateModifiedColumnIndex = -1, folderColumnIndex = -1, relativePathIndex = -1;
+        ArrayList<ImageFile> listOfAllImages = new ArrayList<>();
         uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-        String[] projection = { MediaStore.MediaColumns.DATA,
-                MediaStore.MediaColumns.DATE_ADDED,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+        String[] projection = { MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DATE_MODIFIED, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns._ID};
+        if(isAndroidX())
+        {
+            projection = new String[]{MediaStore.MediaColumns.DATE_MODIFIED, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns._ID, MediaStore.MediaColumns.RELATIVE_PATH};
+        }
         String limit = "";
         if(imagePickerType == ImagePickerType.RECENT_IMAGE_LIST)
             limit = "limit "+ Constants.RECENT_IMAGE_LIMIT;
@@ -100,24 +107,120 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
 
         if(cursor!=null)
         {
-            columnIndexForImages = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-
-            columnIndexForFolder = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.BUCKET_DISPLAY_NAME);
+            if(isAndroidX())
+            {
+                idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+                displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                dateModifiedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
+                relativePathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH);
+            }
+            else
+            {
+                dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                dateModifiedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
+            }
 
             while (cursor.moveToNext())
             {
-                absolutePathOfImage = cursor.getString(columnIndexForImages);
-                File imageFile = new File(absolutePathOfImage);
-//            Logger.showLog("ImagePath",absolutePathOfImage+" length "+imageFile.length());
-                if(imageFile.exists() && imageFile.length()>0)
-                    listOfAllImages.add(absolutePathOfImage);
+                if(isAndroidX())
+                {
+                    long id = cursor.getLong(idColumnIndex);
+                    String displayName = cursor.getString(displayNameColumnIndex);
+                    String relativePath= cursor.getString(relativePathIndex);
+                    Uri imageUri = Uri.withAppendedPath(uri,Long.toString(id));
+                    long lastModified = cursor.getLong(dateModifiedColumnIndex);
+                    ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified);
+                    Log.e(TAG, "getImagePaths: "+imageFile.toString());
+                    listOfAllImages.add(imageFile);
+                }
+                else
+                {
+                    String absolutePathOfImage = cursor.getString(dataColumnIndex);
+                    String displayName = cursor.getString(displayNameColumnIndex);
+                    long lastModified = cursor.getLong(dateModifiedColumnIndex);
+                    ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified);
+                    listOfAllImages.add(imageFile);
+                }
             }
             if(!cursor.isClosed())
                 cursor.close();
         }
+        return listOfAllImages;
+    }
 
 
+    public ArrayList<ImageFile> getImagesFromFolder(String folder)
+    {
+        Uri uri;
+        Cursor cursor;
+        int dataColumnIndex = -1 , idColumnIndex = -1, displayNameColumnIndex = -1, dateModifiedColumnIndex = -1, folderColumnIndex = -1, relativePathIndex = -1;
+        ArrayList<ImageFile> listOfAllImages = new ArrayList<>();
+        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
+        String[] projection = { MediaStore.MediaColumns.DATA, MediaStore.MediaColumns.DATE_MODIFIED, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns._ID};
+        if(isAndroidX())
+        {
+            projection = new String[]{MediaStore.MediaColumns.DATE_MODIFIED, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns._ID, MediaStore.MediaColumns.RELATIVE_PATH};
+        }
+        String limit = "";
+        if(imagePickerType == ImagePickerType.RECENT_IMAGE_LIST)
+            limit = "limit "+ Constants.RECENT_IMAGE_LIMIT;
+
+        String sortOrder = MediaStore.MediaColumns.DATE_ADDED + " desc "+limit;
+
+        cursor = activity.getContentResolver().query(uri, projection, null,
+                null, sortOrder);
+
+        if(cursor!=null)
+        {
+            if(isAndroidX())
+            {
+                idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns._ID);
+                displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                dateModifiedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
+                relativePathIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.RELATIVE_PATH);
+            }
+            else
+            {
+                dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+                dateModifiedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_MODIFIED);
+            }
+
+            while (cursor.moveToNext())
+            {
+                if(isAndroidX())
+                {
+                    long id = cursor.getLong(idColumnIndex);
+                    String displayName = cursor.getString(displayNameColumnIndex);
+                    String relativePath= cursor.getString(relativePathIndex);
+                    Uri imageUri = Uri.withAppendedPath(uri,Long.toString(id));
+                    long lastModified = cursor.getLong(dateModifiedColumnIndex);
+                    if(relativePath.equals(folder))
+                    {
+                        ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified);
+                        Log.e(TAG, "getImagePaths: "+imageFile.toString());
+                        listOfAllImages.add(imageFile);
+                    }
+                }
+                else
+                {
+                    String absolutePathOfImage = cursor.getString(dataColumnIndex);
+                    String displayName = cursor.getString(displayNameColumnIndex);
+                    long lastModified = cursor.getLong(dateModifiedColumnIndex);
+                    String parentFolder = FileHelper.getFolderPathFromFilePath(new File(absolutePathOfImage));
+                    if(parentFolder.equals(folder))
+                    {
+                        ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified);
+                        listOfAllImages.add(imageFile);
+                    }
+
+                }
+            }
+            if(!cursor.isClosed())
+                cursor.close();
+        }
         return listOfAllImages;
     }
 
@@ -125,44 +228,60 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<String>>
     {
         Uri uri;
         Cursor cursor;
-        int  columnIndexForFolder, columnIndexForImages;
+        int  dataColumnIndex,relativePathColumnIndex = -1, idColumnIndex = -1;
         ArrayList<ImageFolder> imageFolderList = new ArrayList<>();
         Map<String, Boolean> visitedFolders = new HashMap<>();
-        String absolutePathOfImage = null;
-        uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        uri = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
 
-        String[] projection = { MediaStore.MediaColumns.DATA,
-                MediaStore.Images.Media.BUCKET_DISPLAY_NAME };
+        String[] projection = { MediaStore.MediaColumns.DATA};
+        if(isAndroidX())
+        {
+            projection = new String[]{MediaStore.MediaColumns._ID, MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.Images.Media.RELATIVE_PATH};
+        }
+        String sortOrder = MediaStore.MediaColumns.DATE_ADDED+" desc";
 
-        cursor = activity.getContentResolver().query(uri, projection, null,
-                null, null);
-
-        cursor = activity.getContentResolver().query(uri, projection, null, null, null);
+        cursor = activity.getContentResolver().query(uri, projection, null, null, sortOrder);
         if(cursor != null)
         {
             while (cursor.moveToNext())
             {
-                String firstImageFilePath = cursor.getString(cursor.getColumnIndex(projection[0]));
-                String imageFolderPath = cursor.getString(cursor.getColumnIndex(projection[1]));
-
-                File firstImage = new File(firstImageFilePath);
-                String folderPath = FileHelper.getFolderPathFromFilePath(firstImage);
-                if(visitedFolders.get(folderPath)==null)
+                if(isAndroidX())
                 {
-                    File file = new File(firstImageFilePath);
-                    if (file.exists())
+                    idColumnIndex = cursor.getColumnIndex(MediaStore.MediaColumns._ID);
+                    relativePathColumnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.RELATIVE_PATH);
+                    String folderPath = cursor.getString(relativePathColumnIndex);
+                    long id = cursor.getLong(idColumnIndex);
+                    if(visitedFolders.get(folderPath)==null)
                     {
-                        ImageFolder imageFolder = new ImageFolder(folderPath, firstImageFilePath);
+                        Uri firstImageUri = Uri.withAppendedPath(uri,Long.toString(id));
+                        ImageFolder imageFolder = new ImageFolder(folderPath, firstImageUri.toString());
                         imageFolderList.add(imageFolder);
                         visitedFolders.put(folderPath,true);
+                    }
+                }
+                else
+                {
+                    dataColumnIndex = cursor.getColumnIndex(MediaStore.MediaColumns.DATA);
+                    String firstImageFilePath = cursor.getString(dataColumnIndex);
+                    File firstImage = new File(firstImageFilePath);
+                    String folderPath = FileHelper.getFolderPathFromFilePath(firstImage);
+                    if(visitedFolders.get(folderPath)==null)
+                    {
+                        File file = new File(firstImageFilePath);
+                        if (file.exists())
+                        {
+                            ImageFolder imageFolder = new ImageFolder(folderPath, firstImageFilePath);
+                            imageFolderList.add(imageFolder);
+                            visitedFolders.put(folderPath,true);
+                        }
                     }
                 }
             }
             cursor.close();
         }
-
         return imageFolderList;
     }
+
 
 
     public List<String> getImagesByFolder(@NonNull String folderPath){

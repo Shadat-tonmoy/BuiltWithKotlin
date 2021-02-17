@@ -1,6 +1,7 @@
 package com.shadattonmoy.imagepickerforandroid.ui.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ public class ImagePickerListAdapter extends RecyclerView.Adapter<ImagePickerList
     private ImagePickerType imagePickerType;
     private FileFilteringTask fileFilteringTask;
     private FileSortingTask fileSortingTask;
+    private static final String TAG = "ImagePickerListAdapter";
 
 
     public class ListViewHolder extends RecyclerView.ViewHolder {
@@ -83,16 +85,14 @@ public class ImagePickerListAdapter extends RecyclerView.Adapter<ImagePickerList
             final ImageFolder imageFolder = imageFolders.get(position);
             holder.folderTitle.setText(imageFolder.getFolderName());
             holder.folderPath.setText(UtilityTask.trimString(imageFolder.getFolderPath()));
+            Log.e(TAG, "onBindViewHolder: firstImageUri : "+imageFolder.getFirstImagePath() );
             Glide.with(context)
                     .load(imageFolder.getFirstImagePath())
                     .into(holder.listItemIcon);
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener!=null)
-                    {
-                        listener.onFilePickerListItemClicked(imageFolder.getFolderPath(), imagePickerType);
-                    }
+            holder.rootView.setOnClickListener(v -> {
+                if(listener!=null)
+                {
+                    listener.onFilePickerListItemClicked(imageFolder.getFolderPath(), imagePickerType);
                 }
             });
         }
@@ -103,13 +103,10 @@ public class ImagePickerListAdapter extends RecyclerView.Adapter<ImagePickerList
             holder.folderPath.setText(UtilityTask.trimString(pdfFilePath));
             holder.folderTitle.setText(UtilityTask.trimString(pdfFileName));
             holder.listItemIcon.setImageDrawable(context.getResources().getDrawable(R.drawable.pdf_icon));
-            holder.rootView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener!=null)
-                    {
-                        listener.onFilePickerListItemClicked(pdfFilePath, imagePickerType);
-                    }
+            holder.rootView.setOnClickListener(v -> {
+                if(listener!=null)
+                {
+                    listener.onFilePickerListItemClicked(pdfFilePath, imagePickerType);
                 }
             });
         }

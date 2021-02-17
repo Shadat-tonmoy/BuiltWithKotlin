@@ -20,11 +20,6 @@ public class ImageFolder
         this.firstImagePath = firstImagePath;
     }
 
-    public ImageFolder(String folderName, List<String> imageFilePaths) {
-        this.folderName = folderName;
-        this.imageFilePaths = imageFilePaths;
-    }
-
     public ImageFolder(String folderPath, String firstImagePath) {
         this.folderPath= folderPath;
         File folder = new File(folderPath);

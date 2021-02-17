@@ -2,6 +2,7 @@ package com.shadattonmoy.imagepickerforandroid.controller;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.shadattonmoy.imagepickerforandroid.constants.ImagePickerType;
 import com.shadattonmoy.imagepickerforandroid.constants.SortingType;
@@ -14,6 +15,7 @@ import com.shadattonmoy.imagepickerforandroid.ui.screenView.ImagePickerFolderCon
 
 public class ImagePickerFolderContainerController implements ImagePickerFolderContainerScreen.Listener, ImagePickerListAdapter.Listener
 {
+    private static final String TAG = "ImagePickerFolderContai";
     Activity activity;
     private ImagePickerFolderContainerUIUpdateTask uiUpdateTask;
     private ImagePickerFolderContainerScreenView screenView;
@@ -70,6 +72,7 @@ public class ImagePickerFolderContainerController implements ImagePickerFolderCo
 
     private void loadAllImageForFolder(String folderPath)
     {
+        Log.e(TAG, "loadAllImageForFolder: folderPath : "+folderPath);
         Bundle args = new Bundle();
         args.putString(ImagePickerTags.FOLDER_PATH_TAG,folderPath);
         args.putBoolean(ImagePickerTags.BATCH_MODE_ENABLED,true);
