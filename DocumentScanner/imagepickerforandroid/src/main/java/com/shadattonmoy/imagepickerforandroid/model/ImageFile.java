@@ -1,15 +1,19 @@
 package com.shadattonmoy.imagepickerforandroid.model;
 
+import android.net.Uri;
+
 public class ImageFile
 {
     private String displayName, pathString, relativePath;
     private long lastModified;
+    private Uri imageFileUri;
 
-    public ImageFile(String displayName, String pathString, String relativePath, long lastModified) {
+    public ImageFile(String displayName, String pathString, String relativePath, long lastModified, Uri imageFileUri) {
         this.displayName = displayName;
         this.pathString = pathString;
         this.relativePath = relativePath;
         this.lastModified = lastModified;
+        this.imageFileUri = imageFileUri;
     }
 
     public String getDisplayName() {
@@ -44,6 +48,14 @@ public class ImageFile
         this.lastModified = lastModified;
     }
 
+    public Uri getImageFileUri() {
+        return imageFileUri;
+    }
+
+    public void setImageFileUri(Uri imageFileUri) {
+        this.imageFileUri = imageFileUri;
+    }
+
     @Override
     public String toString() {
         return "ImageFile{" +
@@ -51,6 +63,7 @@ public class ImageFile
                 ", pathString='" + pathString + '\'' +
                 ", relativePath='" + relativePath + '\'' +
                 ", lastModified=" + lastModified +
+                ", imageFileUri=" + imageFileUri +
                 '}';
     }
 }

@@ -112,12 +112,12 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
     {
         if(selectedImages!=null && selectedImages.size>0)
         {
-            //copySelectedImages(selectedImages)
+            copySelectedImages(selectedImages)
         }
         else context?.showToast("No image selected!")
     }
 
-    private fun copySelectedImages(selectedImages: MutableList<String>)
+    private fun copySelectedImages(selectedImages: MutableList<ImageFile>)
     {
         val progressDialog = ImageCopyProgressDialog(requireContext())
         progressDialog.showDialog()

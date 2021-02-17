@@ -130,7 +130,7 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<ImageFil
                     String relativePath= cursor.getString(relativePathIndex);
                     Uri imageUri = Uri.withAppendedPath(uri,Long.toString(id));
                     long lastModified = cursor.getLong(dateModifiedColumnIndex);
-                    ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified);
+                    ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified,imageUri);
                     Log.e(TAG, "getImagePaths: "+imageFile.toString());
                     listOfAllImages.add(imageFile);
                 }
@@ -139,7 +139,9 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<ImageFil
                     String absolutePathOfImage = cursor.getString(dataColumnIndex);
                     String displayName = cursor.getString(displayNameColumnIndex);
                     long lastModified = cursor.getLong(dateModifiedColumnIndex);
-                    ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified);
+                    File file = new File(absolutePathOfImage);
+                    Uri imageUri = Uri.fromFile(file);
+                    ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified,imageUri);
                     listOfAllImages.add(imageFile);
                 }
             }
@@ -199,7 +201,7 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<ImageFil
                     long lastModified = cursor.getLong(dateModifiedColumnIndex);
                     if(relativePath.equals(folder))
                     {
-                        ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified);
+                        ImageFile imageFile = new ImageFile(displayName,imageUri.toString(),relativePath,lastModified,imageUri);
                         Log.e(TAG, "getImagePaths: "+imageFile.toString());
                         listOfAllImages.add(imageFile);
                     }
@@ -210,9 +212,11 @@ public class ImageFileFetchingTask extends AsyncTask<String, Void, List<ImageFil
                     String displayName = cursor.getString(displayNameColumnIndex);
                     long lastModified = cursor.getLong(dateModifiedColumnIndex);
                     String parentFolder = FileHelper.getFolderPathFromFilePath(new File(absolutePathOfImage));
+                    File file = new File(absolutePathOfImage);
+                    Uri imageUri = Uri.fromFile(file);
                     if(parentFolder.equals(folder))
                     {
-                        ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified);
+                        ImageFile imageFile = new ImageFile(displayName,absolutePathOfImage,absolutePathOfImage,lastModified,imageUri);
                         listOfAllImages.add(imageFile);
                     }
 

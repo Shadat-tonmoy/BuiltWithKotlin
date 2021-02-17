@@ -35,14 +35,14 @@ class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
     {
         val copiedImageLiveData = MutableLiveData<List<Image>>()
         val copiedImageList = mutableListOf<Image>()
-        val imageHelper = ImageHelper()
+        val imageHelper = ImageHelper(context)
         ioCoroutine.launch {
             if(selectedImages!=null)
             {
                 val newDocument = createNewDocument()
                 val outputDirPath = newDocument.path
                 var position = 1
-                for(imagePath in selectedImages)
+                /*for(imagePath in selectedImages)
                 {
                     val outputImagePath = getOutputImagePath(outputDirPath)
                     val result = imageHelper.copyImage(imagePath,outputImagePath)
@@ -52,7 +52,7 @@ class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
                         copiedImageList.add(newImage)
                         copiedImageLiveData.postValue(copiedImageList)
                     }
-                }
+                }*/
             }
         }
         return copiedImageLiveData

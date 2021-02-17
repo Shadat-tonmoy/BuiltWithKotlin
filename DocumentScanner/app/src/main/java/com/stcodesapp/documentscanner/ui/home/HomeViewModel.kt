@@ -2,6 +2,7 @@ package com.stcodesapp.documentscanner.ui.home
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.shadattonmoy.imagepickerforandroid.model.ImageFile
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
@@ -30,21 +31,21 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
         return documentManager.getDocumentListLiveData()
     }
 
-    fun copySelectedImages(selectedImages: MutableList<String>?) : LiveData<List<Image>>
+    fun copySelectedImages(selectedImages: MutableList<ImageFile>?) : LiveData<List<Image>>
     {
         val copiedImageLiveData = MutableLiveData<List<Image>>()
         val copiedImageList = mutableListOf<Image>()
-        val imageHelper = ImageHelper()
+        val imageHelper = ImageHelper(context)
         ioCoroutine.launch {
             if(selectedImages!=null)
             {
                 val newDocument = createNewDocument()
                 val outputDirPath = newDocument.path
                 var position = 1
-                for(imagePath in selectedImages)
+                for(imageFile in selectedImages)
                 {
                     val outputImagePath = getOutputImagePath(outputDirPath)
-                    val result = imageHelper.copyImage(imagePath,outputImagePath)
+                    val result = imageHelper.copyImage(imageFile.imageFileUri,outputImagePath)
                     if(result)
                     {
                         val newImage = createNewImage(outputImagePath,position++, newDocument.id)
