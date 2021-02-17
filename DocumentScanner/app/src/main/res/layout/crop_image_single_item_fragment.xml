@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.imageCrop.CropImageSingleItemFragment">
+
+    <com.theartofdev.edmodo.cropper.CropImageView
+        android:id="@+id/cropImageView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/dimen_32"
+        app:layout_constraintBottom_toTopOf="@+id/imageOptionContainer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+    <LinearLayout
+        android:id="@+id/imageOptionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/rotateButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/rotate_left_white_24"
+            android:text="@string/rotate"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cropButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/crop_white_24"
+            android:text="@string/crop"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintStart_toEndOf="@id/rotateButton" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/filterButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/filter_white_24"
+            android:text="@string/filter"
+            android:onClick="@{() -> fragmentNavigator.loadFilterFragment(viewModel.chosenImagePath)}"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintStart_toEndOf="@id/cropButton" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/deleteButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/delete_white_24"
+            android:text="@string/delete"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filterButton" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/detectEdge"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/pdf_white_16"
+            android:onClick="@{() -> viewModel.detectEdges()}"
+            android:text="Edges"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filterButton" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/saveButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/done_white_24"
+            android:text="@string/save"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filterButton" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

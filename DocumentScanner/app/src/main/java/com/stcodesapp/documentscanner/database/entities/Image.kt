@@ -5,6 +5,7 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.stcodesapp.documentscanner.models.CropArea
+import java.io.Serializable
 
 @Entity(tableName = "image")
 data class Image(
@@ -15,4 +16,4 @@ data class Image(
     val rotationAngle : Double = 0.0,
     @Embedded var cropArea: CropArea? = null,
     var croppingRatio : Double = 1.0,
-    var filterName : String = "")
+    var filterName : String = "") : Serializable

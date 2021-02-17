@@ -11,7 +11,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.databinding.DocumentPagesLayoutBinding
 import com.stcodesapp.documentscanner.ui.adapters.DocumentPageAdapter
 import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
-import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
+import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
 import kotlinx.android.synthetic.main.document_pages_layout.*
 import javax.inject.Inject
 
@@ -71,9 +71,10 @@ class DocumentPagesActivity : BaseActivity()
 
     private fun onDocumentPageClicked(documentPage : Image)
     {
-        val intent = Intent(this,ImagePreviewActivity::class.java)
+        val intent = Intent(this,ImageCropActivity::class.java)
         intent.putExtra(Tags.IMAGE_PATH,documentPage.path)
         intent.putExtra(Tags.IMAGE_ID,documentPage.id)
+        intent.putExtra(Tags.DOCUMENT_ID,documentPage.docId)
         startActivity(intent)
     }
 

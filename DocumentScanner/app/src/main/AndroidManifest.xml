@@ -10,14 +10,16 @@
     <application
         android:name=".DocumentScannerApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
-        <activity android:name=".ui.imageEdit.ImagePreviewActivity"/>
-        <activity android:name=".ui.documentPages.DocumentPagesActivity"
+        android:theme="@style/AppTheme">
+        <activity android:name=".ui.imageCrop.ImageCropActivity"></activity>
+        <activity android:name=".ui.imageEdit.ImagePreviewActivity" />
+        <activity
+            android:name=".ui.documentPages.DocumentPagesActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".camera.PreviewActivity" />
         <activity android:name=".camera.CameraActivity" />
@@ -38,7 +40,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
     </application>
 
 </manifest>

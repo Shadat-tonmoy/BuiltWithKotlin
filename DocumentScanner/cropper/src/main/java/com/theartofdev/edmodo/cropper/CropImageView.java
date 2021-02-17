@@ -2390,6 +2390,8 @@ public class CropImageView extends FrameLayout {
       float xRatio = (float) mBitmap.getWidth() / getWidth();
       float yRatio = (float) mBitmap.getHeight() / getHeight();
 
+      Log.e(TAG, "getCroppedBitmapByPolygon: xRatio : "+xRatio+" yRatio : "+yRatio );
+
       float x1 = polygon.topLeftX * xRatio;
       float x2 = polygon.topRightX * xRatio;
       float x3 = polygon.bottomLeftX * xRatio;
