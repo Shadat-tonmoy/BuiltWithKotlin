@@ -1,0 +1,4 @@
+include ':mobile-ffmpeg'
+include ':FileLogger'
+include ':app'
+rootProject.name = "Video Compressor"
