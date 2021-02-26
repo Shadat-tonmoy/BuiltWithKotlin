@@ -2386,11 +2386,15 @@ public class CropImageView extends FrameLayout {
   public Bitmap getCroppedBitmapByPolygon() {
     try
     {
+      Log.e(TAG, "getCroppedBitmapByPolygon: bitmapW : "+mBitmap.getWidth()+" bitmapH : "+mBitmap.getHeight()+" ViewWidth : "+mImageView.getWidth()+" ViewHeight : "+mImageView.getHeight());
       Polygon polygon = mCropOverlayView.getCropPolygon();
-      float xRatio = (float) mBitmap.getWidth() / getWidth();
-      float yRatio = (float) mBitmap.getHeight() / getHeight();
-
-      Log.e(TAG, "getCroppedBitmapByPolygon: xRatio : "+xRatio+" yRatio : "+yRatio );
+      int orgWidth = mBitmap.getWidth() * mLoadedSampleSize;
+      int orgHeight = mBitmap.getHeight() * mLoadedSampleSize;
+      float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
+      float yRatio = 1;
+      if(mImageView.getHeight() > mBitmap.getHeight())
+        yRatio =  (float) mImageView.getHeight() / mBitmap.getHeight();
+      else yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();
 
       float x1 = polygon.topLeftX * xRatio;
       float x2 = polygon.topRightX * xRatio;
@@ -2400,6 +2404,9 @@ public class CropImageView extends FrameLayout {
       float y2 = polygon.topRightY * yRatio;
       float y3 = polygon.bottomLeftY * yRatio;
       float y4 = polygon.bottomRightY * yRatio;
+
+      String xy = String.format("x1 : %f, y1 : %f, x2 : %f, y2 : %f, x3 : %f, y3 : %f, x4 : %f, y4 : %f",x1,y1,x2,y2,x3,y3,x4,y4);
+      Log.e(TAG, "getCroppedBitmapByPolygon: xRatio : "+xRatio+" yRatio : "+yRatio+" XY : "+xy+" BitWidth : "+mBitmap.getWidth()+" BitHeight : "+mBitmap.getHeight());
 
       Bitmap finalBitmap = Bitmap.createBitmap(mBitmap);
       //String xyValues = String.format("x1 : %f, x2 : %f,x3 : %f, x4 : %f,y1 : %f, y2 : %f,y3 : %f, y4 : %f,",x1,x2,x3,x4,y1,y2,y3,y4);
@@ -2411,5 +2418,11 @@ public class CropImageView extends FrameLayout {
       //showError(CropperErrorType.CROP_ERROR);
       return null;
     }
+  }
+
+  protected Bitmap scaledBitmap(Bitmap bitmap, int width, int height) {
+    Matrix m = new Matrix();
+    m.setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0, 0, width, height), Matrix.ScaleToFit.CENTER);
+    return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
   }
 }

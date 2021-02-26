@@ -16,7 +16,6 @@ import com.stcodesapp.documentscanner.utils.BitmapUtil
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.cropImageView
-import kotlinx.android.synthetic.main.image_preview_layout.*
 import java.io.File
 
 class CropImageSingleItemFragment : BaseFragment() {
@@ -47,6 +46,15 @@ class CropImageSingleItemFragment : BaseFragment() {
         val serializedImage = arguments?.getSerializable(Tags.SERIALIZED_IMAGE) as Image
         cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
         cropImageView.guidelines = CropImageView.Guidelines.OFF
+
+        rotateButton.setOnClickListener {
+            cropImageView.rotateImage(90)
+        }
+
+        cropButton.setOnClickListener {
+            cropImageView.setImageBitmap(cropImageView.croppedBitmapByPolygon)
+            cropImageView.isShowCropOverlay = false
+        }
 
     }
 

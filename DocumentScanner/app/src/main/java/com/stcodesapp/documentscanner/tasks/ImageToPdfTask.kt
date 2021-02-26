@@ -6,18 +6,18 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
-import android.util.Log
+import com.google.gson.Gson
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.helpers.FilterHelper
+import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.utils.BitmapUtil
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.util.*
 
 class ImageToPdfTask(private val context : Context)
 {
@@ -41,9 +41,11 @@ class ImageToPdfTask(private val context : Context)
             }
             bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.width, bitmap.height, true)
 
-            val cropArea = image.cropArea
+            val cropAreaJson = image.cropArea
 
-            if (cropArea!=null && !cropArea.isEmpty()) {
+            if (cropAreaJson!=null && cropAreaJson.isNotEmpty())
+            {
+                val cropArea = Gson().fromJson(cropAreaJson,CropArea::class.java)
                 bitmap = bitmapUtil.getCroppedBitmap(bitmap, cropArea)
             }
 

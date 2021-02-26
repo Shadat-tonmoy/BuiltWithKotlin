@@ -6,6 +6,7 @@ import android.graphics.Matrix
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
@@ -142,8 +143,10 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
     private suspend fun updateCropAreaInDB(area: CropArea)
     {
         val image = imageManager.getImageById(chosenImageId)
-        if (image != null) {
-            imageManager.updateImage(image.apply { cropArea = area })
+        if (image != null)
+        {
+            val cropAreaJson = Gson().toJson(area,CropArea::class.java)
+            imageManager.updateImage(image.apply { cropArea = cropAreaJson })
         }
     }
 

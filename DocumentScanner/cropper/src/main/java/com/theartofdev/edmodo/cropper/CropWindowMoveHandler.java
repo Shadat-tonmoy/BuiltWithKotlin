@@ -284,6 +284,12 @@ final class CropWindowMoveHandler {
     float centerY = (polygon.getTopLeftY() + polygon.getBottomRightY()) / 2;
     float dx = x - centerX;
     float dy = y - centerY;
+    if(polygon.topLeftX + dx < 0 || polygon.topRightX + dx > viewWidth) return;
+    if(polygon.topLeftY + dy < 0 || polygon.topRightY + dy > viewHeight) return;
+
+    if(polygon.bottomLeftX + dx < 0 || polygon.bottomRightX + dx > viewWidth) return;
+    if(polygon.bottomLeftY + dy < 0 || polygon.bottomRightY + dy > viewHeight) return;
+
     if (polygon.topLeftX + dx < 0
         || polygon.topRightX + dx > viewWidth
         || polygon.topLeftX + dx < bounds.topLeftX
@@ -805,6 +811,8 @@ final class CropWindowMoveHandler {
 
   private void adjustTop(Polygon polygon, float top, Polygon boundingPolygon, float snapMargin)
   {
+
+    Log.e(TAG, "adjustTop: polygon : "+polygon.toString()+" BoundingPolygon : "+boundingPolygon.toString());
 
     float newTop = top;
 

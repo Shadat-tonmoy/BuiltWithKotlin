@@ -96,18 +96,7 @@ class ImagePickerActivity : AppCompatActivity()
                 val fileType = contentResolver.getType(viewModel.chosenFileUri!!)
                 if(grantedDir != null && fileType != null && fileType.startsWith("image/"))
                 {
-                    var imageDirectory : DocumentFile? = null
-                    val allFiles = grantedDir.listFiles()
-                    Log.e(TAG, "saveImageToExternalStorage: allFileSize : ${allFiles.size} grantedDir : ${grantedDir.name}")
-                    for(file in allFiles)
-                    {
-                        Log.e(TAG, "saveImageToExternalStorage: allFiles : ${file.name}, isDir : ${file.isDirectory}")
-                        if(file.isDirectory && file.name == "Image")
-                        {
-                            imageDirectory = file
-                            break
-                        }
-                    }
+                    var imageDirectory : DocumentFile? = grantedDir.findFile("Image")
                     if(imageDirectory == null)
                     {
                         imageDirectory = grantedDir.createDirectory("Image")
@@ -176,7 +165,5 @@ class ImagePickerActivity : AppCompatActivity()
                 saveImageToExternalStorage()
             }
         }
-
-
     }
 }
