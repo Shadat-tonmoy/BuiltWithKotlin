@@ -10,6 +10,10 @@ interface ImageDao
     @Query("SELECT * FROM image WHERE docId = :documentId")
     fun getAllImageLiveDataForDocument(documentId : Long) : LiveData<List<Image>>
 
+
+    @Query("SELECT * FROM image WHERE docId = :documentId")
+    fun getAllImagesForDocument(documentId : Long) : List<Image>
+
     @Insert (onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertImage(image: Image) : Long
 

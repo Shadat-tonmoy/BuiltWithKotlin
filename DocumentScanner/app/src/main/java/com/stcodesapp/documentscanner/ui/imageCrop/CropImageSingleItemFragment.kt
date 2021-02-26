@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.utils.BitmapUtil
 import com.theartofdev.edmodo.cropper.CropImageView
+import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.cropImageView
 import java.io.File
@@ -65,4 +66,8 @@ class CropImageSingleItemFragment : BaseFragment() {
         // TODO: Use the ViewModel
     }
 
+    fun getCropPolygon() : Polygon
+    {
+        return cropImageView.cropPolygon
+    }
 }

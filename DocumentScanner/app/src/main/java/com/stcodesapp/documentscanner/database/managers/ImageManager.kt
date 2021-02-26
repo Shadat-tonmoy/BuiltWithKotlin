@@ -29,6 +29,11 @@ class ImageManager(private val context: Context, private val dao : ImageDao)
         return dao.getAllImageLiveDataForDocument(docId)
     }
 
+    fun getDocumentPagesValue(docId : Long) : List<Image>
+    {
+        return dao.getAllImagesForDocument(docId)
+    }
+
     suspend fun getImageById(id : Long) : Image?
     {
         return dao.getImageById(id)

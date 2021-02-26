@@ -108,7 +108,7 @@ class BitmapUtil(private val context: Context)
     }
 
     fun getCroppedBitmap(src: Bitmap, ca: CropArea): Bitmap {
-        return NativeClass().getScannedBitmap(src, ca.x1, ca.y1, ca.x2, ca.y2, ca.x3, ca.y3, ca.x4, ca.y4);
+        return NativeClass().getScannedBitmap(src, ca.topLeftX, ca.topLeftY, ca.topRightX, ca.topRightY, ca.bottomLeftX, ca.bottomLeftY, ca.bottomRightX, ca.bottomRightY);
 
     }
 

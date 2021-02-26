@@ -2383,6 +2383,11 @@ public class CropImageView extends FrameLayout {
     Log.e(TAG, "printCropPolygon: "+mCropOverlayView.getCropPolygon().toString());
   }
 
+  public Polygon getCropPolygon()
+  {
+    return mCropOverlayView.getCropPolygon();
+  }
+
   public Bitmap getCroppedBitmapByPolygon() {
     try
     {
