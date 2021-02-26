@@ -19,3 +19,14 @@ fun getCropAreaJsonFromPolygon(polygon: Polygon) : String
 {
     return Gson().toJson(getCropAreaFromPolygon(polygon),CropArea::class.java)
 }
+
+fun getPolygonFromCropArea(cropArea: CropArea) : Polygon
+{
+    return Polygon(cropArea.topLeftX,cropArea.topLeftY,cropArea.topRightX,cropArea.topRightY,cropArea.bottomLeftX,cropArea.bottomLeftY,cropArea.bottomRightX,cropArea.bottomRightY)
+}
+
+fun getPolygonFromCropAreaJson(cropAreaJSON: String) : Polygon
+{
+    val cropArea =  Gson().fromJson(cropAreaJSON,CropArea::class.java)
+    return getPolygonFromCropArea(cropArea)
+}

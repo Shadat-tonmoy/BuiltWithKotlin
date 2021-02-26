@@ -12,6 +12,7 @@ import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.utils.BitmapUtil
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
@@ -42,12 +43,32 @@ class CropImageSingleItemFragment : BaseFragment() {
         return inflater.inflate(R.layout.crop_image_single_item_fragment, container, false)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?)
+    {
         super.onViewCreated(view, savedInstanceState)
+        initUI()
+
+    }
+
+    private fun initUI()
+    {
         val serializedImage = arguments?.getSerializable(Tags.SERIALIZED_IMAGE) as Image
         cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
-        cropImageView.guidelines = CropImageView.Guidelines.OFF
+        cropImageView.setOnSetImageUriCompleteListener { view, uri, error -> setSavedCropArea(serializedImage) }
+        initClickListeners()
+    }
 
+    private fun setSavedCropArea(serializedImage: Image)
+    {
+        val savedCropArea = serializedImage.cropArea
+        if (!savedCropArea.isNullOrEmpty()) {
+            val polygon = getPolygonFromCropAreaJson(savedCropArea)
+            cropImageView.cropPolygon = polygon }
+        cropImageView.guidelines = CropImageView.Guidelines.OFF
+    }
+
+    private fun initClickListeners()
+    {
         rotateButton.setOnClickListener {
             cropImageView.rotateImage(90)
         }
@@ -56,14 +77,6 @@ class CropImageSingleItemFragment : BaseFragment() {
             cropImageView.setImageBitmap(cropImageView.croppedBitmapByPolygon)
             cropImageView.isShowCropOverlay = false
         }
-
-    }
-
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-//        viewModel = ViewModelProvider(this).get(CropImageSingleItemViewModel::class.java)
-        // TODO: Use the ViewModel
     }
 
     fun getCropPolygon() : Polygon

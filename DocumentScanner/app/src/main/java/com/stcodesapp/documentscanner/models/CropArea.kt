@@ -26,4 +26,10 @@ data class CropArea(
         bottomRightY = 0f
 
   }
+
+    override fun toString(): String {
+        return "CropArea(topLeftX=$topLeftX, topLeftY=$topLeftY, topRightX=$topRightX, topRightY=$topRightY, bottomLeftX=$bottomLeftX, bottomLeftY=$bottomLeftY, bottomRightX=$bottomRightX, bottomRightY=$bottomRightY)"
+    }
+
+
 }

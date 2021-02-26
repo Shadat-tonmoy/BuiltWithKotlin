@@ -2388,6 +2388,13 @@ public class CropImageView extends FrameLayout {
     return mCropOverlayView.getCropPolygon();
   }
 
+  public void setCropPolygon(Polygon polygon)
+  {
+    mCropOverlayView.setCropPolygon(polygon);
+    mCropOverlayView.postInvalidate();
+    //postInvalidate();
+  }
+
   public Bitmap getCroppedBitmapByPolygon() {
     try
     {
