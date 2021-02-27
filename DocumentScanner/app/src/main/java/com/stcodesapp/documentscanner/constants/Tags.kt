@@ -14,5 +14,6 @@ class Tags
         const val SAVED_FILE_NAME = "saved_file_name"
         const val SAVED_FILE_OPTIONS = "saved_file_options"
         const val SERIALIZED_IMAGE = "serialized_image"
+        const val IMAGE_POSITION = "image_position"
     }
 }

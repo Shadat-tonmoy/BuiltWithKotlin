@@ -11,7 +11,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.databinding.DocumentPageItemLayoutBinding
 import com.stcodesapp.documentscanner.models.DocumentPage
 
-class DocumentPageAdapter (val context : Context, val onItemClickListener : (Image) -> Unit) : RecyclerView.Adapter<DocumentPageAdapter.DocumentPageViewHolder>()
+class DocumentPageAdapter (val context : Context, val onItemClickListener : (Image,Position : Int) -> Unit) : RecyclerView.Adapter<DocumentPageAdapter.DocumentPageViewHolder>()
 {
     private var documentPages = ArrayList<Image>()
 
@@ -30,7 +30,7 @@ class DocumentPageAdapter (val context : Context, val onItemClickListener : (Ima
     {
         val documentPage = documentPages[position]
         holder.bind(documentPage)
-        holder.dataBinding.root.setOnClickListener { onItemClickListener(documentPage) }
+        holder.dataBinding.root.setOnClickListener { onItemClickListener(documentPage,position) }
     }
 
     fun setDocumentPages(documentPages : List<Image>)

@@ -30,3 +30,8 @@ fun getPolygonFromCropAreaJson(cropAreaJSON: String) : Polygon
     val cropArea =  Gson().fromJson(cropAreaJSON,CropArea::class.java)
     return getPolygonFromCropArea(cropArea)
 }
+
+fun isValidPolygon(polygon: Polygon) : Boolean
+{
+    return polygon.topLeftX > 0 && polygon.topLeftY > 0 && polygon.topRightX > 0 && polygon.topRightY > 0 &&polygon.bottomLeftX > 0 && polygon.bottomLeftY > 0 &&polygon.bottomRightX > 0 && polygon.bottomRightY > 0
+}

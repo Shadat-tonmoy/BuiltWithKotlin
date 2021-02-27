@@ -45,7 +45,7 @@ class DocumentPagesActivity : BaseActivity()
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
         saveFab.isIconAnimated = false
-        adapter = DocumentPageAdapter(this){onDocumentPageClicked(it)}
+        adapter = DocumentPageAdapter(this){ image: Image, position: Int -> onDocumentPageClicked(image,position)}
         documentPagesList.layoutManager = GridLayoutManager(this,2)
         documentPagesList.adapter = adapter
         saveAsPDFMenu.setOnClickListener { showPDFNameDialog() }
@@ -69,12 +69,13 @@ class DocumentPagesActivity : BaseActivity()
         })
     }
 
-    private fun onDocumentPageClicked(documentPage : Image)
+    private fun onDocumentPageClicked(documentPage : Image, position : Int)
     {
         val intent = Intent(this,ImageCropActivity::class.java)
         intent.putExtra(Tags.IMAGE_PATH,documentPage.path)
         intent.putExtra(Tags.IMAGE_ID,documentPage.id)
         intent.putExtra(Tags.DOCUMENT_ID,documentPage.docId)
+        intent.putExtra(Tags.IMAGE_POSITION,position)
         startActivity(intent)
     }
 
