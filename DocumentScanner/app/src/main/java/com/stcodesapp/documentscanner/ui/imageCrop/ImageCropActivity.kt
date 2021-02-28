@@ -11,17 +11,22 @@ import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.showToast
 import kotlinx.android.synthetic.main.activity_image_crop.*
+import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import javax.inject.Inject
 
 class ImageCropActivity : BaseActivity()
 {
     companion object{
         private const val TAG = "ImageCropActivity"
+        init {
+            System.loadLibrary("native-lib")
+        }
     }
 
     @Inject lateinit var viewModel : CropImageViewModel
@@ -72,6 +77,7 @@ class ImageCropActivity : BaseActivity()
     private fun initClickListener()
     {
         cropButton.setOnClickListener {
+            grayScaleCurrentImage()
 
 
         }
@@ -121,6 +127,20 @@ class ImageCropActivity : BaseActivity()
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
             currentFragment.rotateImage()
+        }
+    }
+
+    private fun grayScaleCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            val srcBitmap = currentFragment.cropImageView.bitmap
+            val dstBitmap = srcBitmap.copy(srcBitmap.config,true)
+            getGrayscaleImage(srcBitmap, dstBitmap)
+            currentFragment.cropImageView.setImageBitmap(dstBitmap)
+
         }
     }
 
