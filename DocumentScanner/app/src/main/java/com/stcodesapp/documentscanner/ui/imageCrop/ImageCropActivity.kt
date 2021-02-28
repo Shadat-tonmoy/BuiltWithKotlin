@@ -13,6 +13,8 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
+import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
+import com.stcodesapp.documentscanner.ui.helpers.showToast
 import kotlinx.android.synthetic.main.activity_image_crop.*
 import javax.inject.Inject
 
@@ -37,6 +39,8 @@ class ImageCropActivity : BaseActivity()
         activityComponent.inject(this)
 
         setContentView(R.layout.activity_image_crop)
+
+        initClickListener()
 
         viewModel.bindValueFromIntent(intent)
 
@@ -63,6 +67,61 @@ class ImageCropActivity : BaseActivity()
             }
         }
 
+    }
+
+    private fun initClickListener()
+    {
+        cropButton.setOnClickListener {
+
+
+        }
+
+        rotateButton.setOnClickListener {
+            rotateCurrentImage()
+        }
+
+        deleteButton.setOnClickListener {
+            showDeleteImageWarning()
+
+        }
+
+    }
+
+
+
+    private fun showDeleteImageWarning()
+    {
+        val dialogHelper = DialogHelper(this)
+        dialogHelper.showWarningDialog(getString(R.string.image_delete_warning_msg)) {onImageDeleteConfirmed()}
+    }
+
+    private fun onImageDeleteConfirmed()
+    {
+        val chosenImagePosition = viewPager.currentItem
+        if(chosenImagePosition > 0)
+        {
+            val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
+            if(imageAtPosition != null)
+            {
+                viewModel.deleteImage(imageAtPosition).observe(this, Observer {
+                    if(it != null && it > 0)
+                    {
+                        //viewPagerAdapter.notifyItemRemoved(viewModel.chosenImagePosition)
+                        showToast("Image is removed!")
+                    }
+                })
+            }
+        }
+    }
+
+    private fun rotateCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            currentFragment.rotateImage()
+        }
     }
 
 }

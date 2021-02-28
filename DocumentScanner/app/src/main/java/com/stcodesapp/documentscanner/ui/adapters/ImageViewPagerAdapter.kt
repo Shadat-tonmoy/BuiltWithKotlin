@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
+import java.lang.Exception
 
 class ImageViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity)
 {
@@ -24,4 +25,17 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateA
         this.documentPages = documentPages
         notifyDataSetChanged()
     }
+
+    fun getDocumentPageAt(position: Int) : Image?
+    {
+        return try {
+            documentPages[position]
+        }catch (e : Exception) {
+            e.printStackTrace()
+            null
+        }
+
+    }
+
+
 }

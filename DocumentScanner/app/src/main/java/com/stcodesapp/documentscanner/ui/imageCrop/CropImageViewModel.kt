@@ -26,6 +26,7 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
     var documentPages : List<Image>? = null
 
     private var documentId : Long = 0
+    var chosenImagePosition : Int = -1
 
     fun bindValueFromIntent(intent: Intent)
     {
@@ -43,6 +44,29 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         ioCoroutine.launch {
             val rowAffected = imageManager.updateImage(image)
             liveData.postValue(rowAffected)
+        }
+        return liveData
+    }
+
+    fun deleteImage(chosenImage : Image) : LiveData<Int>
+    {
+        val liveData = MutableLiveData<Int>()
+        ioCoroutine.launch {
+            val deletedRows = imageManager.deleteImageById(chosenImage.id)
+            val document = documentManager.getDocumentById(chosenImage.docId)
+            if(document != null)
+            {
+                val allImagesOfDocument = imageManager.getDocumentPagesValue(document.id)
+                val lastImage = allImagesOfDocument.maxBy { it.id }
+                if(lastImage != null)
+                {
+                    document.apply {
+                        thumbPath = lastImage.path
+                    }
+                    documentManager.updateDocument(document)
+                }
+            }
+            liveData.postValue(deletedRows)
         }
         return liveData
     }

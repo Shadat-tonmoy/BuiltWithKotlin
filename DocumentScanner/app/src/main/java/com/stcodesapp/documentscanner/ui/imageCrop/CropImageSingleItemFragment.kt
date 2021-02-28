@@ -112,25 +112,13 @@ class CropImageSingleItemFragment : BaseFragment() {
         })
     }
 
-    private fun showDeleteImageWarning()
-    {
-        val dialogHelper = DialogHelper(requireContext())
-        dialogHelper.showWarningDialog(getString(R.string.image_delete_warning_msg)) {onImageDeleteConfirmed()}
-    }
-
-    private fun onImageDeleteConfirmed()
-    {
-        viewModel.deleteImage().observe(viewLifecycleOwner, Observer {
-            if(it != null && it > 0)
-            {
-                listener?.onItemDeleted(viewModel.chosenImagePosition)
-            }
-        })
-
-    }
-
     fun getCropPolygon() : Polygon
     {
         return cropImageView.cropPolygon
+    }
+
+    fun rotateImage()
+    {
+        cropImageView.rotateImage(90)
     }
 }
