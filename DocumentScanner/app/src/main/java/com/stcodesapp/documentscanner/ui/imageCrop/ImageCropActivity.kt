@@ -1,17 +1,16 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
 import androidx.core.view.doOnLayout
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import androidx.viewpager2.widget.ViewPager2
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
-import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
+import com.stcodesapp.documentscanner.scanner.getFilteredImage
+import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
@@ -62,24 +61,59 @@ class ImageCropActivity : BaseActivity()
     }
 
     private val documentPagesObserver = Observer<List<Image>> {
-        viewPagerAdapter.setDocumentPages(it)
-        val selectedPosition = intent.getIntExtra(Tags.IMAGE_POSITION,-1)
-        if(selectedPosition > 0)
+        if(it.isEmpty())
         {
-            viewPager.doOnLayout {
-                viewPager.setCurrentItem(selectedPosition,false)
-                intent.putExtra(Tags.IMAGE_POSITION,-1)
-            }
+            deleteDocAndExit()
+
+        }
+        else
+        {
+            setPagesOnUI(it)
         }
 
+    }
+
+    private fun deleteDocAndExit()
+    {
+        viewModel.deleteDoc().observe(this, Observer {
+            if(it > 0) finish()
+        })
+    }
+
+    private fun setPagesOnUI(it: List<Image>)
+    {
+        viewPagerAdapter.setDocumentPages(it)
+        val selectedPosition = intent.getIntExtra(Tags.IMAGE_POSITION, -1)
+        if (selectedPosition > 0)
+        {
+            viewPager.doOnLayout {
+                viewPager.setCurrentItem(selectedPosition, false)
+                intent.putExtra(Tags.IMAGE_POSITION, -1)
+            }
+        }
+        val currentPosition = viewPager.currentItem
+        if (currentPosition < viewPagerAdapter.itemCount)
+        {
+            val currentImage = it[currentPosition]
+            setCurrentImageCropText(currentImage)
+        }
+    }
+
+    private fun setCurrentImageCropText(currentImage: Image?)
+    {
+        if (currentImage != null)
+        {
+            //need not null check to work after deletion
+            if (currentImage.isCropped) {
+                cropButton.text = "Re-Crop"
+            } else cropButton.text = "Crop"
+        }
     }
 
     private fun initClickListener()
     {
         cropButton.setOnClickListener {
-            grayScaleCurrentImage()
-
-
+            cropCurrentImage()
         }
 
         rotateButton.setOnClickListener {
@@ -91,9 +125,11 @@ class ImageCropActivity : BaseActivity()
 
         }
 
+        filterButton.setOnClickListener {
+            applyMagicFilter()
+        }
+
     }
-
-
 
     private fun showDeleteImageWarning()
     {
@@ -104,7 +140,7 @@ class ImageCropActivity : BaseActivity()
     private fun onImageDeleteConfirmed()
     {
         val chosenImagePosition = viewPager.currentItem
-        if(chosenImagePosition > 0)
+        if(chosenImagePosition >= 0)
         {
             val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
             if(imageAtPosition != null)
@@ -112,7 +148,6 @@ class ImageCropActivity : BaseActivity()
                 viewModel.deleteImage(imageAtPosition).observe(this, Observer {
                     if(it != null && it > 0)
                     {
-                        //viewPagerAdapter.notifyItemRemoved(viewModel.chosenImagePosition)
                         showToast("Image is removed!")
                     }
                 })
@@ -130,7 +165,17 @@ class ImageCropActivity : BaseActivity()
         }
     }
 
-    private fun grayScaleCurrentImage()
+    private fun cropCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            currentFragment.cropImage()
+        }
+    }
+
+    private fun applyMagicFilter()
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
@@ -138,8 +183,9 @@ class ImageCropActivity : BaseActivity()
         {
             val srcBitmap = currentFragment.cropImageView.bitmap
             val dstBitmap = srcBitmap.copy(srcBitmap.config,true)
-            getGrayscaleImage(srcBitmap, dstBitmap)
-            currentFragment.cropImageView.setImageBitmap(dstBitmap)
+            getFilteredImage(srcBitmap, dstBitmap)
+            currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
+            cropImageView.isShowCropOverlay = false
 
         }
     }

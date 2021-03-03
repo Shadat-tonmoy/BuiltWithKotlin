@@ -23,4 +23,7 @@ interface DocumentDao
     @Query("SELECT * FROM document WHERE id = :id")
     suspend fun getDocumentById(id: Long) : Document?
 
+    @Query("DELETE FROM document WHERE id = :id")
+    suspend fun deleteDocumentById(id: Long)  : Int
+
 }

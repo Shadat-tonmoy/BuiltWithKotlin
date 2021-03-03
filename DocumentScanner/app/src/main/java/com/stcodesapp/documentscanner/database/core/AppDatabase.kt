@@ -9,7 +9,7 @@ import com.stcodesapp.documentscanner.database.daos.ImageDao
 import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 
-@Database(entities = [Document::class, Image::class], version = 5)
+@Database(entities = [Document::class, Image::class], version = 6)
 @TypeConverters(MapConverter::class)
 abstract class AppDatabase : RoomDatabase()
 {

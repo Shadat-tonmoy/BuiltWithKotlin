@@ -36,7 +36,6 @@ class ImagePreviewActivity : BaseActivity(), FragmentFrameWrapper {
         super.onCreate(savedInstanceState)
         activityComponent.inject(this)
         initUI()
-        observeImageBitmap()
     }
 
     private fun initUI()
@@ -44,45 +43,6 @@ class ImagePreviewActivity : BaseActivity(), FragmentFrameWrapper {
         setContentView(dataBinding.root)
         dataBinding.viewModel = viewModel
         viewModel.setChosenImagePathFromIntent(intent)
-        cropButton.setOnClickListener {
-            cropImageView.setImageBitmap(cropImageView.croppedBitmapByPolygon)
-            cropImageView.printCropPolygon()
-            cropImageView.isShowCropOverlay = false
-        }
-
-        rotateButton.setOnClickListener {
-            cropImageView.rotateImage(90)
-
-
-        }
-        deleteButton.setOnClickListener { showDeleteImageWarning() }
-    }
-
-    private fun observeImageBitmap()
-    {
-        viewModel.getImageBitmapLiveData().observe(this, Observer {
-            if(it != null)
-            {
-                cropImageView.setImageBitmap(it)
-                cropImageView.guidelines = CropImageView.Guidelines.OFF
-                val pointMaps = cropImageView.getEdgePoints(it)
-                Log.e(TAG, "observeImageBitmap: pointMaps : $pointMaps")
-            }
-        })
-    }
-
-    private fun showDeleteImageWarning()
-    {
-        val dialogHelper = DialogHelper(this)
-        dialogHelper.showWarningDialog(getString(R.string.image_delete_warning_msg)) {onImageDeleteConfirmed()}
-    }
-
-    private fun onImageDeleteConfirmed()
-    {
-        viewModel.deleteImage().observe(this, Observer {
-            if(it != null && it > 0) finish()
-        })
-
     }
 
 

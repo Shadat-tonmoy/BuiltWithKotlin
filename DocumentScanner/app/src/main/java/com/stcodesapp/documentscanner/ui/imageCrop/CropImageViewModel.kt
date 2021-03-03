@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -17,6 +18,10 @@ import javax.inject.Inject
 
 class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
+
+    companion object{
+        private const val TAG = "CropImageViewModel"
+    }
 
     @Inject lateinit var appDB : AppDatabase
     @Inject lateinit var documentManager: DocumentManager
@@ -38,11 +43,11 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         return imageManager.getDocumentPagesLiveData(documentId)
     }
 
-    fun updateImage(image: Image) : LiveData<Long>
+    fun deleteDoc() : LiveData<Int>
     {
-        val liveData = MutableLiveData<Long>()
+        val liveData = MutableLiveData<Int>()
         ioCoroutine.launch {
-            val rowAffected = imageManager.updateImage(image)
+            val rowAffected = documentManager.deleteDocumentById(documentId)
             liveData.postValue(rowAffected)
         }
         return liveData
@@ -54,10 +59,12 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         ioCoroutine.launch {
             val deletedRows = imageManager.deleteImageById(chosenImage.id)
             val document = documentManager.getDocumentById(chosenImage.docId)
+            Log.e(TAG, "deleteImage: deletedRow : $deletedRows")
             if(document != null)
             {
                 val allImagesOfDocument = imageManager.getDocumentPagesValue(document.id)
                 val lastImage = allImagesOfDocument.maxBy { it.id }
+                Log.e(TAG, "deleteImage: lastImage : $lastImage")
                 if(lastImage != null)
                 {
                     document.apply {

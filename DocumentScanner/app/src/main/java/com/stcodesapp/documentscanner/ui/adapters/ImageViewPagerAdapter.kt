@@ -34,7 +34,10 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateA
             e.printStackTrace()
             null
         }
+    }
 
+    override fun getItemId(position: Int): Long {
+        return documentPages[position].hashCode().toLong()
     }
 
 

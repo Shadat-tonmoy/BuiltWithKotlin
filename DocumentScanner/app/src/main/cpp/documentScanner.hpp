@@ -132,6 +132,62 @@ Mat warpImage(Mat inputImage, vector<Point> points, float width, float height)
     return warpImage;
 }
 
+Mat getWarpedImage(Mat inputImage, vector<Point> docPoints)
+{
+    //Mat preprocessedImage = preprocessImage(inputImage);
+    //vector<Point> initialPoints = getContours(preprocessedImage,inputImage);
+    //vector<Point> docPoints = reorderPoints(initialPoints);
+    float a4PaperWidth = 420, a4PaperHeight = 596;
+    Mat warpedImage = warpImage(inputImage,docPoints,a4PaperWidth, a4PaperHeight);
+    return warpedImage;
+}
+
+Mat removeNoise(Mat thresholdImage)
+{
+    vector<vector<Point>> contours;
+    vector<Vec4i> hierarchy;
+    int thresholdBlobArea = 10;
+
+    //opencv function to find contours from dilated image
+    findContours(thresholdImage,contours, hierarchy, RETR_TREE,CHAIN_APPROX_SIMPLE);
+
+    if ( !contours.empty() && !hierarchy.empty() )
+    {
+        for ( int i=0; i<contours.size(); i++ )
+        {
+            int indexLevel = hierarchy[i][1];
+            if ( indexLevel <= i )
+            {
+                int area = contourArea(contours[i]);
+                if(area <= thresholdBlobArea)
+                {
+                    drawContours(thresholdImage,contours,-1,255,-1,1);
+                }
+                // random colour
+                //Scalar colour( (rand()&255), (rand()&255), (rand()&255) );
+                //drawContours( outImage, contours, i, colour );
+            }
+        }
+    }
+    return thresholdImage;
+}
+
+Mat applyAdaptiveThreshold(Mat warpedImage)
+{
+    Mat grayScaleImage, thresholdImage, blurredImage,edges, dilatedImage, erodedImage;
+
+    //convert image to grayscale
+    cvtColor(warpedImage,grayScaleImage,COLOR_BGR2GRAY);
+
+    adaptiveThreshold(grayScaleImage,thresholdImage,255,ADAPTIVE_THRESH_GAUSSIAN_C,THRESH_BINARY,15,5);
+    //thresholdImage = removeNoise(thresholdImage);
+    //bitwise_not(thresholdImage, thresholdImage);
+    //medianBlur(thresholdImage, thresholdImage, 3);
+    return thresholdImage;
+}
+
+
+
 int main()
 {
     string imagePath = "resources/paper.jpg";

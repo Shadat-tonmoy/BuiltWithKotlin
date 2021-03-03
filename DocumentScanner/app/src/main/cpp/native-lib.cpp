@@ -4,6 +4,7 @@
 #include <jni.h>
 #include "documentScanner.hpp"
 #include "android/bitmap.h"
+#include "android/log.h"
 #include "opencv2/core.hpp"
 
 void bitmapToMat (JNIEnv * env, jobject bitmap, Mat& dst, jboolean needUnPremultiplyAlpha);
@@ -17,6 +18,65 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getGrayscaleImage(JNIEn
     bitmapToMat(env,inputImage,srcImage,false);
     Mat processedImage = preprocessImage(srcImage);
     matToBitmap(env,processedImage,outputImage,false);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getWarpedImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage, jobject polygon)
+{
+
+    jclass polygonClass = env->GetObjectClass(polygon);
+
+    jfieldID topLeftXId = env->GetFieldID(polygonClass, "topLeftX", "F");
+    jfieldID topLeftYId = env->GetFieldID(polygonClass, "topLeftY", "F");
+
+    jfieldID topRightXId = env->GetFieldID(polygonClass, "topRightX", "F");
+    jfieldID topRightYId = env->GetFieldID(polygonClass, "topRightY", "F");
+
+    jfieldID bottomLeftXId = env->GetFieldID(polygonClass, "bottomLeftX", "F");
+    jfieldID bottomLeftYId = env->GetFieldID(polygonClass, "bottomLeftY", "F");
+
+    jfieldID bottomRightXId = env->GetFieldID(polygonClass, "bottomRightX", "F");
+    jfieldID bottomRightYId = env->GetFieldID(polygonClass, "bottomRightY", "F");
+
+    jfloat topLeftX = env->GetFloatField(polygon,topLeftXId);
+    jfloat topLeftY = env->GetFloatField(polygon,topLeftYId);
+    jfloat topRightX = env->GetFloatField(polygon,topRightXId);
+    jfloat topRightY = env->GetFloatField(polygon,topRightYId);
+    jfloat bottomLeftX = env->GetFloatField(polygon,bottomLeftXId);
+    jfloat bottomLeftY = env->GetFloatField(polygon,bottomLeftYId);
+    jfloat bottomRightX = env->GetFloatField(polygon,bottomRightXId);
+    jfloat bottomRightY = env->GetFloatField(polygon,bottomRightYId);
+
+    float a4PaperWidth = 420, a4PaperHeight = 596;
+    vector<Point> srcPoints;
+    srcPoints.push_back(Point2f(topLeftX,topLeftY));
+    srcPoints.push_back(Point2f(topRightX,topRightY));
+    srcPoints.push_back(Point2f(bottomLeftX,bottomLeftY));
+    srcPoints.push_back(Point2f(bottomRightX,bottomRightY));
+
+    Mat warpedImage;
+    Mat inputImageMat;
+    bitmapToMat(env,inputImage,inputImageMat, false);
+    warpedImage = getWarpedImage(inputImageMat,srcPoints);
+    matToBitmap(env,warpedImage,outputImage,false);
+
+    __android_log_print(ANDROID_LOG_ERROR, "PolygonPoints", "FromC++ TopLeftX %f, TopLeftY %f , TopRightX %f, TopRightY %f,"
+                                                            "BottomLeftX %f, BottomLeftY %f , BottomRightX %f, BottomRightY %f,"
+                                                            " ", topLeftX, topLeftY,topRightX, topRightY,bottomLeftX, bottomLeftY,bottomRightX, bottomRightY);
+
+    __android_log_print(ANDROID_LOG_ERROR, "WarpedImage", "FromC++ rows : %d, cols : %d",warpedImage.rows,warpedImage.cols);
+}
+
+
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage)
+{
+    Mat filteredImage;
+    Mat inputImageMat;
+    bitmapToMat(env,inputImage,inputImageMat, false);
+    filteredImage = applyAdaptiveThreshold(inputImageMat);
+    matToBitmap(env,filteredImage,outputImage,false);
 }
 
 

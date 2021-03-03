@@ -981,8 +981,9 @@ public class CropImageView extends FrameLayout {
    *
    * @param bitmap the Bitmap to set
    */
-  public void setImageBitmap(Bitmap bitmap) {
-    mCropOverlayView.setInitialCropWindowRect(null);
+  public void setImageBitmap(Bitmap bitmap, boolean resetCropOverlay)
+  {
+    if(resetCropOverlay) mCropOverlayView.setInitialCropWindowRect(null);
     setBitmap(bitmap, 0, null, 1, 0);
     try {
       Map<Integer,PointF> edgePoints = getEdgePoints(bitmap);
@@ -2388,6 +2389,28 @@ public class CropImageView extends FrameLayout {
     return mCropOverlayView.getCropPolygon();
   }
 
+  public Polygon getCropPolygonByRation()
+  {
+    Polygon polygon = mCropOverlayView.getCropPolygon();
+    float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
+    float yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();
+
+    /*if(mImageView.getHeight() > mBitmap.getHeight())
+      yRatio =  (float) mImageView.getHeight() / mBitmap.getHeight();
+    else yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();*/
+
+    polygon.topLeftX *= xRatio;
+    polygon.topRightX *= xRatio;
+    polygon.bottomLeftX *= xRatio;
+    polygon.bottomRightX *= xRatio;
+    polygon.topLeftY *= yRatio;
+    polygon.topRightY *= yRatio;
+    polygon.bottomLeftY *= yRatio;
+    polygon.bottomRightY *= yRatio;
+
+    return polygon;
+  }
+
   public void setCropPolygon(Polygon polygon)
   {
     mCropOverlayView.setCropPolygon(polygon);
@@ -2400,8 +2423,6 @@ public class CropImageView extends FrameLayout {
     {
       Log.e(TAG, "getCroppedBitmapByPolygon: bitmapW : "+mBitmap.getWidth()+" bitmapH : "+mBitmap.getHeight()+" ViewWidth : "+mImageView.getWidth()+" ViewHeight : "+mImageView.getHeight());
       Polygon polygon = mCropOverlayView.getCropPolygon();
-      int orgWidth = mBitmap.getWidth() * mLoadedSampleSize;
-      int orgHeight = mBitmap.getHeight() * mLoadedSampleSize;
       float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
       float yRatio = 1;
       if(mImageView.getHeight() > mBitmap.getHeight())
@@ -2436,5 +2457,9 @@ public class CropImageView extends FrameLayout {
     Matrix m = new Matrix();
     m.setRectToRect(new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight()), new RectF(0, 0, width, height), Matrix.ScaleToFit.CENTER);
     return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), m, true);
+  }
+
+  public CropOverlayView getmCropOverlayView() {
+    return mCropOverlayView;
   }
 }
