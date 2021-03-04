@@ -132,7 +132,7 @@ final class CropWindowMoveHandler {
     // handle so that the crop window size does not "jump".
     float adjX = x + mTouchOffset.x;
     float adjY = y + mTouchOffset.y;
-    Log.e(TAG, "move: call for type : "+mType);
+    //Log.e(TAG, "move: call for type : "+mType);
 
     if (mType == Type.CENTER) {
       // TODO need to handle this
@@ -242,7 +242,7 @@ final class CropWindowMoveHandler {
         break;
       case CENTER:
         // TODO need to handle this
-        Log.e(TAG, "calculateTouchOffset: caseCenter");
+        //Log.e(TAG, "calculateTouchOffset: caseCenter");
         float centerX = (polygon.getTopLeftX() + polygon.getBottomRightX()) / 2;
         float centerY = (polygon.getTopLeftY() + polygon.getBottomRightY()) / 2;
         touchOffsetX = centerX - touchX;
@@ -361,10 +361,10 @@ final class CropWindowMoveHandler {
 
   private void movePolygon(Polygon polygon, float x, float y, Polygon boundingPolygon, int viewWidth, int viewHeight, float snapMargin)
   {
-    Log.e(TAG, "movePolygon: Called for type : "+mType);
+    //Log.e(TAG, "movePolygon: Called for type : "+mType);
     switch (mType) {
       case TOP_LEFT:
-        Log.e(TAG, "movePolygon: adjustTopLeft");
+        //Log.e(TAG, "movePolygon: adjustTopLeft");
         adjustTopLeft(polygon,y,x,boundingPolygon,snapMargin);
         /*if(listener != null)
         {
@@ -812,7 +812,7 @@ final class CropWindowMoveHandler {
   private void adjustTop(Polygon polygon, float top, Polygon boundingPolygon, float snapMargin)
   {
 
-    Log.e(TAG, "adjustTop: polygon : "+polygon.toString()+" BoundingPolygon : "+boundingPolygon.toString());
+    //Log.e(TAG, "adjustTop: polygon : "+polygon.toString()+" BoundingPolygon : "+boundingPolygon.toString());
 
     float newTop = top;
 
@@ -849,7 +849,7 @@ final class CropWindowMoveHandler {
 
   private void adjustTopLeft(Polygon polygon, float top, float left, Polygon boundingPolygon, float snapMargin)
   {
-    Log.e(TAG, "adjustTopLeft: PolygonBefore : "+polygon.toString());
+    //Log.e(TAG, "adjustTopLeft: PolygonBefore : "+polygon.toString());
 
     float newTop = top;
 
@@ -912,12 +912,12 @@ final class CropWindowMoveHandler {
       newLeft = boundingPolygon.topLeftX;
     }
     polygon.topLeftX = newLeft;
-    Log.e(TAG, "adjustTopLeft: PolygonAfter : "+polygon.toString());
+    //Log.e(TAG, "adjustTopLeft: PolygonAfter : "+polygon.toString());
   }
 
   private void adjustTopRight(Polygon polygon, float top, float right, int viewWidth, Polygon boundingPolygon, float snapMargin)
   {
-    Log.e(TAG, "adjustTopLeft: PolygonBefore : "+polygon.toString());
+    //Log.e(TAG, "adjustTopLeft: PolygonBefore : "+polygon.toString());
 
     float newTop = top;
 
@@ -984,14 +984,14 @@ final class CropWindowMoveHandler {
 
     polygon.topRightX = newRight;
 
-    Log.e(TAG, "adjustTopLeft: PolygonAfter : "+polygon.toString());
+    //Log.e(TAG, "adjustTopLeft: PolygonAfter : "+polygon.toString());
   }
 
   private void adjustBottomLeft(Polygon polygon, float bottom, float left, Polygon boundingPolygon, int viewHeight, float snapMargin)
   {
 
     float newBottom = bottom;
-    Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
 
     if (newBottom > viewHeight) {
       newBottom = viewHeight + (newBottom - viewHeight) / 1.05f;
@@ -1020,7 +1020,7 @@ final class CropWindowMoveHandler {
       newBottom = boundingPolygon.bottomLeftY;
     }
 
-    Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
 
     polygon.bottomLeftY = newBottom;
 
@@ -1060,7 +1060,7 @@ final class CropWindowMoveHandler {
   {
 
     float newBottom = bottom;
-    Log.e(TAG, "adjustBottomRight: newBottom Initial : "+newBottom);
+    //Log.e(TAG, "adjustBottomRight: newBottom Initial : "+newBottom);
 
     if (newBottom > viewHeight) {
       newBottom = viewHeight + (newBottom - viewHeight) / 1.05f;
@@ -1089,7 +1089,7 @@ final class CropWindowMoveHandler {
       newBottom = boundingPolygon.bottomRightY;
     }
 
-    Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
 
     polygon.bottomRightY = newBottom;
 
@@ -1140,7 +1140,7 @@ final class CropWindowMoveHandler {
   private void adjustBottom(RectF rect, float bottom, RectF bounds, int viewHeight, float snapMargin, float aspectRatio, boolean leftMoves, boolean rightMoves) {
 
     float newBottom = bottom;
-    Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
 
     if (newBottom > viewHeight) {
       newBottom = viewHeight + (newBottom - viewHeight) / 1.05f;
@@ -1169,7 +1169,7 @@ final class CropWindowMoveHandler {
       newBottom = bounds.bottom;
     }
 
-    Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Final : "+newBottom);
 
     // check horizontal bounds if aspect ratio is in play
     if (aspectRatio > 0) {
@@ -1216,7 +1216,7 @@ final class CropWindowMoveHandler {
   {
 
     float newBottom = bottom;
-    Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
+    //Log.e(TAG, "adjustBottom: newBottom Initial : "+newBottom);
 
     if (newBottom > viewHeight) {
       newBottom = viewHeight + (newBottom - viewHeight) / 1.05f;

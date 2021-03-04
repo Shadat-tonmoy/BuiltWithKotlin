@@ -987,7 +987,7 @@ public class CropImageView extends FrameLayout {
     setBitmap(bitmap, 0, null, 1, 0);
     try {
       Map<Integer,PointF> edgePoints = getEdgePoints(bitmap);
-      Log.e("TAG", "onSetImageUriAsyncComplete: EdgePoints : "+edgePoints);
+      //Log.e("TAG", "onSetImageUriAsyncComplete: EdgePoints : "+edgePoints);
     }catch (Exception e)
     {
 
@@ -1103,7 +1103,7 @@ public class CropImageView extends FrameLayout {
       BitmapUtils.POINTS[5] = 0;
 
       Polygon cropPolygon = mCropOverlayView.getCropPolygon();
-      Log.e(TAG, "rotateImage: cropPolygonBefore : "+mCropOverlayView.getCropPolygon().toString());
+      //Log.e(TAG, "rotateImage: cropPolygonBefore : "+mCropOverlayView.getCropPolygon().toString());
 
       POLYGON_POINTS[0] = BitmapUtils.RECT.centerX();
       POLYGON_POINTS[1] = BitmapUtils.RECT.centerY();
@@ -1181,7 +1181,7 @@ public class CropImageView extends FrameLayout {
       // changes
       // no need to call this method. Not working with polygon cropping
       //mCropOverlayView.fixCurrentCropWindowRect();
-      Log.e(TAG, "rotateImage: cropPolygonAfter : "+mDegreesRotated);
+      //Log.e(TAG, "rotateImage: cropPolygonAfter : "+mDegreesRotated);
     }
   }
 
@@ -1209,7 +1209,7 @@ public class CropImageView extends FrameLayout {
 
   private void printPolygonPoints()
   {
-    Log.e(TAG, "printPolygonPoints: staring...\n\n");
+    //Log.e(TAG, "printPolygonPoints: staring...\n\n");
     String pointString = "";
     int index = 0;
     for(float point : POLYGON_POINTS)
@@ -1217,12 +1217,12 @@ public class CropImageView extends FrameLayout {
       pointString += " at "+index+" : "+point+" ";
       index++;
     }
-    Log.e(TAG, "printPolygonPoints: "+pointString);
+    //Log.e(TAG, "printPolygonPoints: "+pointString);
   }
 
   private void printPolygonPoints2()
   {
-    Log.e(TAG, "printPolygonPoints2: staring...\n\n");
+    //Log.e(TAG, "printPolygonPoints2: staring...\n\n");
     String pointString = "";
     int index = 0;
     for(float point : POLYGON_POINTS2)
@@ -1230,7 +1230,7 @@ public class CropImageView extends FrameLayout {
       pointString += " at "+index+" : "+point+" ";
       index++;
     }
-    Log.e(TAG, "printPolygonPoints2: "+pointString);
+    //Log.e(TAG, "printPolygonPoints2: "+pointString);
   }
   /** Flips the image horizontally. */
   public void flipImageHorizontally() {
@@ -1262,7 +1262,7 @@ public class CropImageView extends FrameLayout {
       setBitmap(result.bitmap, 0, result.uri, result.loadSampleSize, result.degreesRotated);
       try {
         Map<Integer,PointF> edgePoints = getEdgePoints(result.bitmap);
-        Log.e("TAG", "onSetImageUriAsyncComplete: EdgePoints : "+edgePoints);
+        //Log.e("TAG", "onSetImageUriAsyncComplete: EdgePoints : "+edgePoints);
       }catch (Exception e)
       {
 
@@ -1824,7 +1824,7 @@ public class CropImageView extends FrameLayout {
       mImageMatrix.mapPoints(polygonPoints);
 
       if (center) {
-        Log.e(TAG, "applyImageMatrix: if block executed");
+        //Log.e(TAG, "applyImageMatrix: if block executed");
         // set the zoomed area to be as to the center of cropping window as possible
         mZoomOffsetX =
             width > BitmapUtils.getRectWidth(mImagePoints)
@@ -1843,7 +1843,7 @@ public class CropImageView extends FrameLayout {
                         getHeight() - BitmapUtils.getRectBottom(mImagePoints))
                     / scaleY;
       } else {
-        Log.e(TAG, "applyImageMatrix: else block executed");
+        //Log.e(TAG, "applyImageMatrix: else block executed");
         // adjust the zoomed area so the crop window rectangle will be inside the area in case it
         // was moved outside
         mZoomOffsetX =
@@ -1860,7 +1860,7 @@ public class CropImageView extends FrameLayout {
       float xFactor = mZoomOffsetX * scaleX;
       float yFactor = mZoomOffsetY * scaleY;
 
-      Log.e(TAG, "applyImageMatrix: xFactor : "+xFactor+" yFactor : "+yFactor );
+      //Log.e(TAG, "applyImageMatrix: xFactor : "+xFactor+" yFactor : "+yFactor );
 
 
       cropPolygon.topLeftX += xFactor;
@@ -2381,7 +2381,7 @@ public class CropImageView extends FrameLayout {
 
   public void printCropPolygon()
   {
-    Log.e(TAG, "printCropPolygon: "+mCropOverlayView.getCropPolygon().toString());
+    //Log.e(TAG, "printCropPolygon: "+mCropOverlayView.getCropPolygon().toString());
   }
 
   public Polygon getCropPolygon()
@@ -2421,7 +2421,7 @@ public class CropImageView extends FrameLayout {
   public Bitmap getCroppedBitmapByPolygon() {
     try
     {
-      Log.e(TAG, "getCroppedBitmapByPolygon: bitmapW : "+mBitmap.getWidth()+" bitmapH : "+mBitmap.getHeight()+" ViewWidth : "+mImageView.getWidth()+" ViewHeight : "+mImageView.getHeight());
+      //Log.e(TAG, "getCroppedBitmapByPolygon: bitmapW : "+mBitmap.getWidth()+" bitmapH : "+mBitmap.getHeight()+" ViewWidth : "+mImageView.getWidth()+" ViewHeight : "+mImageView.getHeight());
       Polygon polygon = mCropOverlayView.getCropPolygon();
       float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
       float yRatio = 1;
@@ -2439,7 +2439,7 @@ public class CropImageView extends FrameLayout {
       float y4 = polygon.bottomRightY * yRatio;
 
       String xy = String.format("x1 : %f, y1 : %f, x2 : %f, y2 : %f, x3 : %f, y3 : %f, x4 : %f, y4 : %f",x1,y1,x2,y2,x3,y3,x4,y4);
-      Log.e(TAG, "getCroppedBitmapByPolygon: xRatio : "+xRatio+" yRatio : "+yRatio+" XY : "+xy+" BitWidth : "+mBitmap.getWidth()+" BitHeight : "+mBitmap.getHeight());
+      //Log.e(TAG, "getCroppedBitmapByPolygon: xRatio : "+xRatio+" yRatio : "+yRatio+" XY : "+xy+" BitWidth : "+mBitmap.getWidth()+" BitHeight : "+mBitmap.getHeight());
 
       Bitmap finalBitmap = Bitmap.createBitmap(mBitmap);
       //String xyValues = String.format("x1 : %f, x2 : %f,x3 : %f, x4 : %f,y1 : %f, y2 : %f,y3 : %f, y4 : %f,",x1,x2,x3,x4,y1,y2,y3,y4);

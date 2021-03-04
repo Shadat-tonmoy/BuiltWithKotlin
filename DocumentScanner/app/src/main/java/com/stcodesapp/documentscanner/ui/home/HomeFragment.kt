@@ -165,7 +165,7 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
     {
         viewModel.fetchDocumentListLiveData().observe(viewLifecycleOwner, Observer {
             // Log.e("TAG", "observeDocumentListLiveData: Docs : $it")
-            if(it != null && it.isNotEmpty())
+            if(it != null)
             {
                 adapter.setDocuments(it)
             }

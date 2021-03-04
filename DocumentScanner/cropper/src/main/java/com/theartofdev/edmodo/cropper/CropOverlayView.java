@@ -215,7 +215,7 @@ public class CropOverlayView extends View {
   public void resetCropOverlayView() {
     if (initializedCropWindow)
     {
-      Log.e(TAG, "resetCropOverlayView: called");
+      //Log.e(TAG, "resetCropOverlayView: called");
       setCropWindowRect(BitmapUtils.EMPTY_RECT_F);
       setCropPolygon(BitmapUtils.EMPTY_POLYGON);
       initCropWindow();
@@ -754,7 +754,7 @@ public class CropOverlayView extends View {
     {
       if (!isNonStraightAngleRotated() || Build.VERSION.SDK_INT <= 17)
       {
-        Log.e(TAG, "drawBackground: for if");
+        //Log.e(TAG, "drawBackground: for if");
         /*canvas.drawRect(left, top, right, rect.top, mBackgroundPaint);
         canvas.drawRect(left, rect.bottom, right, bottom, mBackgroundPaint);
         canvas.drawRect(left, rect.top, rect.left, rect.bottom, mBackgroundPaint);
@@ -775,10 +775,10 @@ public class CropOverlayView extends View {
         mPath.close();
         canvas.save();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-          Log.e(TAG, "drawBackground: clipping for if");
+          //Log.e(TAG, "drawBackground: clipping for if");
           canvas.clipOutPath(mPath);
         } else {
-          Log.e(TAG, "drawBackground: clipping for else");
+          //Log.e(TAG, "drawBackground: clipping for else");
           canvas.clipPath(mPath, Region.Op.INTERSECT);
         }
         //canvas.clipPath(wallpath, Region.Op.INTERSECT);
@@ -787,7 +787,7 @@ public class CropOverlayView extends View {
         canvas.restore();
 
       } else {
-        Log.e(TAG, "drawBackground: for else");
+        //Log.e(TAG, "drawBackground: for else");
         mPath.reset();
         mPath.moveTo(mBoundsPoints[0], mBoundsPoints[1]);
         mPath.lineTo(mBoundsPoints[2], mBoundsPoints[3]);
@@ -881,7 +881,7 @@ public class CropOverlayView extends View {
       rect.inset(w / 2, w / 2);
 
       String msg = String.format("drawBorders polygon %s hashCode : %d",polygon.toString(), polygon.hashCode());
-      Log.e(TAG, msg);
+      //Log.e(TAG, msg);
 
       if (mCropShape == CropImageView.CropShape.RECTANGLE) {
         // Draw rectangle crop window border.
@@ -898,7 +898,7 @@ public class CropOverlayView extends View {
         polygonPath.lineTo(polygon.bottomLeftX, polygon.bottomLeftY);
         polygonPath.lineTo(polygon.topLeftX, polygon.topLeftY);
         canvas.drawPath(polygonPath, mBorderPaint);
-        Log.e(TAG, "drawBorders: Done");
+        //Log.e(TAG, "drawBorders: Done");
 
         //canvas.drawRect(rect, mBorderPaint);
       } else {
@@ -912,7 +912,7 @@ public class CropOverlayView extends View {
   private final int outerCircleRadius = 30; //25
   /** Draw the corner of crop overlay. */
   private void drawCorners(Canvas canvas) {
-    Log.e("TAG", "drawCorners: Called");
+    //Log.e("TAG", "drawCorners: Called");
     if (mBorderCornerPaint != null) {
 
       float lineWidth = mBorderPaint != null ? mBorderPaint.getStrokeWidth() : 0;
@@ -1071,7 +1071,7 @@ public class CropOverlayView extends View {
    */
   private void onActionDown(float x, float y)
   {
-    Log.e("TAG", "onActionDown: Called x : "+x+" Y: "+y);
+    //Log.e("TAG", "onActionDown: Called x : "+x+" Y: "+y);
     mMoveHandler = mCropWindowHandler.getMoveHandler(x, y, mTouchRadius, mCropShape,this::drawMag,rotationAngle);
     if (mMoveHandler != null) {
       invalidate();
@@ -1080,7 +1080,7 @@ public class CropOverlayView extends View {
 
   /** Clear move handler starting in {@link #onActionDown(float, float)} if exists. */
   private void onActionUp() {
-    Log.e(TAG, "onActionUp: Called");
+    //Log.e(TAG, "onActionUp: Called");
     if (mMoveHandler != null) {
       mMoveHandler = null;
       callOnCropWindowChanged(false);
@@ -1094,7 +1094,7 @@ public class CropOverlayView extends View {
    * The move handler will do the proper move/resize of the crop window.
    */
   private void onActionMove(float x, float y) {
-    Log.e(TAG, "onActionMove: Called x : "+x+" y : "+y);
+    //Log.e(TAG, "onActionMove: Called x : "+x+" y : "+y);
     if (mMoveHandler != null) {
       float snapRadius = mSnapRadius;
       RectF rect = mCropWindowHandler.getRect();
@@ -1115,7 +1115,7 @@ public class CropOverlayView extends View {
           mFixAspectRatio,
           mTargetAspectRatio);
       mCropWindowHandler.setRect(rect);*/
-      Log.e(TAG, "onActionMove: polygon : "+polygon+" boundingPolygon : "+mBoundingPolygon);
+      //Log.e(TAG, "onActionMove: polygon : "+polygon+" boundingPolygon : "+mBoundingPolygon);
 
       mMoveHandler.move(polygon,x,y,mBoundingPolygon,mViewWidth,mViewHeight,snapRadius);
       callOnCropWindowChanged(true);
@@ -1244,7 +1244,7 @@ public class CropOverlayView extends View {
         mCropWindowChangeListener.onCropWindowChanged(inProgress);
       }
     } catch (Exception e) {
-      Log.e("AIC", "Exception in crop window changed", e);
+      //Log.e("AIC", "Exception in crop window changed", e);
     }
   }
   // endregion

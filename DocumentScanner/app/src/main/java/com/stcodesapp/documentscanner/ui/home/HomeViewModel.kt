@@ -1,5 +1,6 @@
 package com.stcodesapp.documentscanner.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shadattonmoy.imagepickerforandroid.model.ImageFile
@@ -45,6 +46,7 @@ class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewM
                 for(imageFile in selectedImages)
                 {
                     val outputImagePath = getOutputImagePath(outputDirPath)
+                    Log.e(TAG, "copySelectedImages: selectedImage : $imageFile")
                     val result = imageHelper.copyImage(imageFile.imageFileUri,outputImagePath)
                     if(result)
                     {

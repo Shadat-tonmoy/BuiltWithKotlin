@@ -69,9 +69,13 @@ class CropImageSingleItemFragment : BaseFragment() {
         {
             viewModel.chosenImage = serializedImage
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
-            cropImageView.setOnSetImageUriCompleteListener { view, uri, error -> setSavedValue(serializedImage) }
+            cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
+                setSavedValue(serializedImage)
+            }
 
-            cropImageView.setOnCropWindowChangedListener { saveUpdatedCropArea() }
+            cropImageView.setOnCropWindowChangedListener {
+                saveUpdatedCropArea()
+            }
         }
         val imagePosition = arguments?.getInt(Tags.IMAGE_POSITION)
         viewModel.chosenImagePosition = imagePosition ?: -1
@@ -97,7 +101,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         cropImageView.guidelines = CropImageView.Guidelines.OFF
     }
 
-    private fun saveUpdatedCropArea()
+    fun saveUpdatedCropArea()
     {
         messageTextView.visibility = View.VISIBLE
         viewModel.updateImageCropPolygon(getCropPolygon()).observe(viewLifecycleOwner, Observer {
@@ -138,6 +142,9 @@ class CropImageSingleItemFragment : BaseFragment() {
     private fun setSavedRotation()
     {
         val savedRotationAngle = viewModel.chosenImage?.rotationAngle?.toInt()
-        savedRotationAngle?.let { cropImageView.rotateImage(it) }
+        if(savedRotationAngle != null && savedRotationAngle > 0)
+        {
+             cropImageView.rotateImage(savedRotationAngle)
+        }
     }
 }

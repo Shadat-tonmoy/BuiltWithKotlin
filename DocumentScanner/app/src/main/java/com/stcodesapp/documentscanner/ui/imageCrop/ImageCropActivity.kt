@@ -82,7 +82,7 @@ class ImageCropActivity : BaseActivity()
 
     private fun setPagesOnUI(it: List<Image>)
     {
-        viewPagerAdapter.setDocumentPages(it)
+        viewPagerAdapter.submitList(it)
         val selectedPosition = intent.getIntExtra(Tags.IMAGE_POSITION, -1)
         if (selectedPosition > 0)
         {
@@ -90,23 +90,6 @@ class ImageCropActivity : BaseActivity()
                 viewPager.setCurrentItem(selectedPosition, false)
                 intent.putExtra(Tags.IMAGE_POSITION, -1)
             }
-        }
-        val currentPosition = viewPager.currentItem
-        if (currentPosition < viewPagerAdapter.itemCount)
-        {
-            val currentImage = it[currentPosition]
-            setCurrentImageCropText(currentImage)
-        }
-    }
-
-    private fun setCurrentImageCropText(currentImage: Image?)
-    {
-        if (currentImage != null)
-        {
-            //need not null check to work after deletion
-            if (currentImage.isCropped) {
-                cropButton.text = "Re-Crop"
-            } else cropButton.text = "Crop"
         }
     }
 
@@ -127,6 +110,10 @@ class ImageCropActivity : BaseActivity()
 
         filterButton.setOnClickListener {
             applyMagicFilter()
+        }
+
+        saveButton.setOnClickListener {
+            saveCurrentImage()
         }
 
     }
@@ -172,6 +159,16 @@ class ImageCropActivity : BaseActivity()
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
             currentFragment.cropImage()
+        }
+    }
+
+    private fun saveCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            currentFragment.saveUpdatedCropArea()
         }
     }
 
