@@ -51,7 +51,7 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         ioCoroutine.launch {
             if(selectedImages != null)
             {
-                imageToPdfTask.createPdf(selectedImages!!, fileName) { liveData.postValue(it) }
+                //imageToPdfTask.createPdf(selectedImages!!, fileName) { liveData.postValue(it) }
             }
         }
         return liveData

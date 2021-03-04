@@ -12,6 +12,11 @@ import com.stcodesapp.documentscanner.R
 class DialogHelper (val context: Context)
 {
 
+    interface AlertDialogListener
+    {
+        fun onPositiveButtonClicked()
+        fun onNegativeButtonClicked()
+    }
 
     private var alertDialog : AlertDialog? =null
     private var progressDialog : ProgressDialog? =null
@@ -52,6 +57,33 @@ class DialogHelper (val context: Context)
         if(progressDialog!=null && progressDialog!!.isShowing)
         {
             progressDialog?.dismiss()
+        }
+    }
+
+    fun showAlertDialog(message:String, listener: AlertDialogListener?,title : String = "", positiveButtonText : String = context.getString(R.string.yes), negativeButtonText : String = context.getString(R.string.no))
+    {
+        val builder: AlertDialog.Builder = AlertDialog.Builder(context)
+            .setMessage(message)
+            .setPositiveButton(positiveButtonText
+            ) { dialog, which ->
+                listener?.onPositiveButtonClicked()
+                hideAlertDialog()
+            }
+            .setNegativeButton(negativeButtonText
+            ) { dialog, which ->
+                listener?.onNegativeButtonClicked()
+                hideAlertDialog()
+            }
+        if(title.isNotEmpty()) builder.setTitle(title)
+        alertDialog = builder.create()
+        alertDialog?.show()
+    }
+
+    private fun hideAlertDialog()
+    {
+        if(alertDialog!=null && alertDialog!!.isShowing)
+        {
+            alertDialog?.dismiss()
         }
     }
 

@@ -1,6 +1,8 @@
 package com.stcodesapp.documentscanner.helpers
 
+import android.os.Build
 import com.google.gson.Gson
+import com.stcodesapp.documentscanner.BuildConfig
 import com.stcodesapp.documentscanner.models.CropArea
 import com.theartofdev.edmodo.cropper.Polygon
 import java.io.File
@@ -34,4 +36,9 @@ fun getPolygonFromCropAreaJson(cropAreaJSON: String) : Polygon
 fun isValidPolygon(polygon: Polygon) : Boolean
 {
     return polygon.topLeftX > 0 && polygon.topLeftY > 0 && polygon.topRightX > 0 && polygon.topRightY > 0 &&polygon.bottomLeftX > 0 && polygon.bottomLeftY > 0 &&polygon.bottomRightX > 0 && polygon.bottomRightY > 0
+}
+
+fun isAndroidX() : Boolean
+{
+    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
 }

@@ -1,13 +1,15 @@
-package com.tigerit.pothghat.di.application
+package com.stcodesapp.documentscanner.di.application
 
 import android.content.Context
 import androidx.room.Room
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.database.core.AppDatabase
-import com.stcodesapp.documentscanner.database.core.migrationScripts
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.helpers.CacheHelper
+import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
+import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFServiceHelper
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -56,6 +58,26 @@ class ApplicationModule(private val context: Context)
     {
         return ImageToPdfTask(context)
     }
+
+    @Provides
+    fun provideCacheHelper(context: Context) : CacheHelper
+    {
+        return CacheHelper(context)
+    }
+
+
+    @Provides
+    fun provideFileHelper(context: Context) : FileHelper
+    {
+        return FileHelper(context)
+    }
+
+    @Provides
+    fun provideImageToPDFServiceHelper(context: Context) : ImageToPDFServiceHelper
+    {
+        return ImageToPDFServiceHelper(context)
+    }
+
 
 
 

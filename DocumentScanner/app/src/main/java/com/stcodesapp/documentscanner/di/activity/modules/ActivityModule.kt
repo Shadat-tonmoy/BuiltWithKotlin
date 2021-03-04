@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.di.activity.modules
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil

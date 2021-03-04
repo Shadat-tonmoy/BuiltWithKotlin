@@ -6,35 +6,38 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
+import android.net.Uri
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.database.entities.Image
-import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.utils.BitmapUtil
-import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 
 class ImageToPdfTask(private val context : Context)
 {
+
+    interface Listener{
+        fun onImageToPDFProgressUpdate(progress : ImageToPDFProgress)
+    }
     companion object{
         const val PADDING = 40
         const val MARGIN = 20
         private const val TAG = "ImageToPdfTask"
     }
 
-    suspend fun createPdf(imageList : List<Image>, fileTitle : String, callBack : (ImageToPDFProgress) -> Unit): Boolean
+    suspend fun createPdf(imageList : List<Image>, pdfFileUri : Uri, callBack : Listener): Boolean
     {
         val bitmapUtil = BitmapUtil(context)
         var pdfPageNumber = 1
         val document = PdfDocument()
-        for (image in imageList) {
-            val imagePath: String = image.path
-            var bitmap: Bitmap? = bitmapUtil.getBitmapFromPath(imagePath, MIN_IMAGE_DIMEN, MIN_IMAGE_DIMEN)
+        for (image in imageList)
+        {
+            val imageUri: String = image.path
+            var bitmap: Bitmap? = bitmapUtil.getBitmapFromPath(imageUri, MIN_IMAGE_DIMEN, MIN_IMAGE_DIMEN)
             if (bitmap == null) {
                 pdfPageNumber++
                 continue
@@ -49,7 +52,8 @@ class ImageToPdfTask(private val context : Context)
                 bitmap = bitmapUtil.getCroppedBitmap(bitmap, cropArea)
             }
 
-            if (image.rotationAngle > 0f) {
+            if (image.rotationAngle > 0f)
+            {
                 bitmap = bitmap?.let { bitmapUtil.rotateBitmap(it, image.rotationAngle.toFloat()) }
             }
 
@@ -66,14 +70,16 @@ class ImageToPdfTask(private val context : Context)
             canvas.drawPaint(paint)
             canvas.drawBitmap(bitmap, MARGIN.toFloat(), MARGIN.toFloat(), null)
             document.finishPage(page)
-            callBack(ImageToPDFProgress(pdfPageNumber,imageList.size))
+            callBack.onImageToPDFProgressUpdate(ImageToPDFProgress(pdfPageNumber,imageList.size))
             pdfPageNumber++
         }
-        val targetPdf: String = getPDFFullPathToSave(fileTitle)
-        val outputPDFFile = File(targetPdf)
-        try {
-            if (!outputPDFFile.exists()) outputPDFFile.createNewFile()
-            document.writeTo(FileOutputStream(outputPDFFile))
+        try
+        {
+            val outputStream = context.contentResolver.openOutputStream(pdfFileUri)
+            if(outputStream != null)
+            {
+                document.writeTo(outputStream)
+            }
         } catch (e: IOException) {
             e.printStackTrace()
             return false
@@ -81,11 +87,6 @@ class ImageToPdfTask(private val context : Context)
         // close the document
         document.close()
         return true
-    }
-
-    private fun getPDFFullPathToSave(fileTitle: String): String
-    {
-        return FileHelper(context).getPDFFullPathToSave(fileTitle)
     }
 
 }
