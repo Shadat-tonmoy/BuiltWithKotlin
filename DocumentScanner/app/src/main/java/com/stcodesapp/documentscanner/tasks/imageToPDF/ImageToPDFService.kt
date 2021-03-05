@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.Handler
 import android.os.IBinder
+import android.util.Log
 import androidx.core.content.FileProvider
 import com.stcodesapp.documentscanner.base.BaseService
 import com.stcodesapp.documentscanner.database.entities.Image
@@ -26,7 +27,7 @@ class ImageToPDFService : BaseService()
 
     companion object{
         private const val TAG = "FileSavingService"
-        private const val NOTIFICATION_ID = 943
+        private const val NOTIFICATION_ID = 123
     }
 
     @Inject lateinit var cacheHelper: CacheHelper
@@ -34,6 +35,8 @@ class ImageToPDFService : BaseService()
     @Inject lateinit var imageToPDFTask: ImageToPdfTask
 
     var listener : Listener? = null
+    var isConversionRunning = false
+    var lastProgress = ImageToPDFProgress(0,0)
 
     interface ImageToPDFServiceCallback
     {
@@ -58,6 +61,7 @@ class ImageToPDFService : BaseService()
 
     fun createPDF(fileName : String,selectedImages : List<Image>)
     {
+        isConversionRunning = true
         ioCoroutine.launch {
             if(isAndroidX())
             {
@@ -102,11 +106,14 @@ class ImageToPDFService : BaseService()
     {
         override fun onImageToPDFProgressUpdate(progress: ImageToPDFProgress)
         {
+            lastProgress = progress
             val conversionProgress = (progress.totalDone.toFloat()/progress.totalToDone.toFloat())*100
             startForeground(NOTIFICATION_ID,notificationHelper.getNotification("Document Scanner","Conversion is in progress",conversionProgress.toInt()))
+            isConversionRunning = true
             if(conversionProgress >= 100)
             {
                 stopForeground(true)
+                isConversionRunning = false
             }
             listener?.onImageToPDFProgressUpdate(progress)
         }

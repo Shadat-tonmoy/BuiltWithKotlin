@@ -15,6 +15,7 @@ import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.CropArea
 import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.utils.BitmapUtil
+import kotlinx.coroutines.delay
 import java.io.IOException
 
 class ImageToPdfTask(private val context : Context)
@@ -72,6 +73,7 @@ class ImageToPdfTask(private val context : Context)
             document.finishPage(page)
             callBack.onImageToPDFProgressUpdate(ImageToPDFProgress(pdfPageNumber,imageList.size))
             pdfPageNumber++
+            delay(5000)
         }
         try
         {

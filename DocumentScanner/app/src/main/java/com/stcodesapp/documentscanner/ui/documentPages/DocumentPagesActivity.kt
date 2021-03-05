@@ -50,7 +50,7 @@ class DocumentPagesActivity : BaseActivity()
     {
         activityComponent.inject(this)
         viewModel.bindValueFromIntent(intent)
-        serviceHelper.initService()
+        serviceHelper.initService(serviceConnectionListener)
         initUI()
         observeDocumentPages()
     }
@@ -173,16 +173,26 @@ class DocumentPagesActivity : BaseActivity()
 
     private val imageToPDFServiceListener = object : ImageToPDFService.Listener{
         override fun onImageToPDFProgressUpdate(progress: ImageToPDFProgress) {
-
-            runOnUiThread { imageToPDFNameDialog.updateProgress(progress) }
-        }
-
+            runOnUiThread { imageToPDFNameDialog.updateProgress(progress) } }
     }
 
 
     private val imageToPDFNameDialogListener = object : ImageToPDFNameDialog.Listener{
         override fun onSaveButtonClicked(name: String) {createPDF(name)}
         override fun onShowOutputButtonClicked() {openOutputList()}
+    }
+
+    private val serviceConnectionListener = object : ImageToPDFServiceHelper.Listener{
+        override fun onServiceConnected() {
+            if(serviceHelper.imageToPDFService?.isConversionRunning == true)
+            {
+                serviceHelper.imageToPDFService?.listener =imageToPDFServiceListener
+                showPDFNameDialog()
+                imageToPDFNameDialog.updateProgress(serviceHelper.imageToPDFService?.lastProgress)
+
+            }
+
+        }
     }
 
 }

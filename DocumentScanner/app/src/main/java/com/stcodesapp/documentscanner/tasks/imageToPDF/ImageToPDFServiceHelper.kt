@@ -9,18 +9,24 @@ import javax.inject.Inject
 
 class ImageToPDFServiceHelper(private val context: Context)
 {
+
+    interface Listener { fun onServiceConnected() }
+
     var imageToPDFService : ImageToPDFService? = null
+    var listener : Listener? = null
 
     private val imageToPDfServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
             imageToPDFService = (service as ImageToPDFService.ServiceBinder).getService()
+            listener?.onServiceConnected()
         }
 
         override fun onServiceDisconnected(name: ComponentName) { imageToPDFService = null }
     }
 
-    fun initService()
+    fun initService(listener: Listener)
     {
+        this.listener = listener
         val serviceIntent = Intent(context, ImageToPDFService::class.java)
         context.startService(serviceIntent)
         context.bindService(serviceIntent, imageToPDfServiceConnection, Context.BIND_AUTO_CREATE)

@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.stcodesapp.documentscanner.R
@@ -12,7 +13,7 @@ import com.stcodesapp.documentscanner.R
 class ImageToPDFNotificationHelper(private val context: Context)
 {
     companion object{
-        private const val TAG = "FileSavingNotificationH"
+        private const val TAG = "ImageToPDFNotification"
     }
 
     fun getNotification(title : String, message : String, progress : Int = 0) : Notification
@@ -20,7 +21,7 @@ class ImageToPDFNotificationHelper(private val context: Context)
         val channelId = createNotificationChannel()
         var builder = NotificationCompat.Builder(context, channelId)
             .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
-            //.setSmallIcon(R.drawable.ic_not_icon)
+            .setSmallIcon(R.drawable.pdf_icon)
             .setContentTitle(title)
             .setAutoCancel(true)
         if(!message.isNullOrEmpty())
@@ -28,6 +29,7 @@ class ImageToPDFNotificationHelper(private val context: Context)
             builder = builder.setContentText(message)
         }
         val inDeterminate = progress <= 0
+        Log.e(TAG, "getNotification: progress : $progress, title : $title, message : $message")
         builder = builder
             .setProgress(100,progress, inDeterminate)
             .setContentText("$progress%")
@@ -37,7 +39,7 @@ class ImageToPDFNotificationHelper(private val context: Context)
 
     private fun createNotificationChannel():String
     {
-        val channelId = "file-saving-notification-channel-low"
+        val channelId = "image-to-pdf-notification"
         val channelName = "FileSavingNotification"
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
         {

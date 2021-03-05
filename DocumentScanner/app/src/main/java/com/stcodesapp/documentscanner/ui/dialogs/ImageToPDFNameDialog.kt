@@ -38,7 +38,7 @@ class ImageToPDFNameDialog(private val context: Context, private val listener : 
             .setView(binding.root)
             .create()
         binding.dialog = this
-        dialog?.show()
+        if(dialog != null && !dialog!!.isShowing) dialog?.show()
 
     }
 
@@ -113,6 +113,7 @@ class ImageToPDFNameDialog(private val context: Context, private val listener : 
         binding.saveAsPDFFieldLayout.visibility = View.GONE
         binding.saveAsPDFDoneLayout.visibility = View.GONE
         binding.saveAsPDFProgressLayout.visibility = View.VISIBLE
+        dialog?.setCancelable(false)
     }
 
     private fun showDone()
@@ -122,12 +123,17 @@ class ImageToPDFNameDialog(private val context: Context, private val listener : 
         binding.saveAsPDFDoneLayout.visibility = View.VISIBLE
     }
 
-    fun updateProgress(progress: ImageToPDFProgress)
+    fun updateProgress(progress: ImageToPDFProgress?)
     {
-        val percent = (progress.totalDone / progress.totalToDone.toFloat()) * 100
-        binding.circularProgressBar.progress = percent
-        binding.progressMessage.text = "${progress.totalDone}/${progress.totalToDone}"
-        if(progress.totalDone == progress.totalToDone) showDone()
+        if(progress != null)
+        {
+            showProgress()
+            val percent = (progress.totalDone / progress.totalToDone.toFloat()) * 100
+            binding.circularProgressBar.progress = percent
+            binding.progressMessage.text = "${progress.totalDone}/${progress.totalToDone}"
+            if(progress.totalDone == progress.totalToDone) showDone()
+        }
+
     }
 
     private fun hideKeyboard()
