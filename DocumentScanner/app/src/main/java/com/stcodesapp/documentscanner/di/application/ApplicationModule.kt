@@ -9,6 +9,7 @@ import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.CacheHelper
 import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
+import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFNotificationHelper
 import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFServiceHelper
 import dagger.Module
 import dagger.Provides
@@ -77,6 +78,14 @@ class ApplicationModule(private val context: Context)
     {
         return ImageToPDFServiceHelper(context)
     }
+
+    @Provides
+    fun provideImageToPDFNotificationHelper(context: Context) : ImageToPDFNotificationHelper
+    {
+        return ImageToPDFNotificationHelper(context)
+    }
+
+
 
 
 

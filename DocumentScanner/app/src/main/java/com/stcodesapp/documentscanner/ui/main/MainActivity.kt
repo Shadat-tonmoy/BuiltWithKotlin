@@ -10,6 +10,7 @@ import com.stcodesapp.documentscanner.constants.RequestCode
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.databinding.ActivityMainBinding
 import com.stcodesapp.documentscanner.helpers.PermissionHelper
+import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFServiceHelper
 import com.stcodesapp.documentscanner.ui.adapters.DocumentListAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.FragmentFrameWrapper
@@ -26,6 +27,7 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
     @Inject lateinit var dataBinding : ActivityMainBinding
     @Inject lateinit var viewModel: MainViewModel
     @Inject lateinit var permissionHelper: PermissionHelper
+    @Inject lateinit var serviceHelper: ImageToPDFServiceHelper
     lateinit var adapter : DocumentListAdapter
 
 
@@ -36,8 +38,14 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
+        init()
+    }
+
+    private fun init()
+    {
         activityComponent.inject(this)
         initUI()
+        serviceHelper.initService(serviceConnectionListener)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray)
@@ -112,6 +120,22 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
     }
     override fun getFragmentFrame(): FrameLayout? {
         return fragmentContainer
+    }
+
+    private val serviceConnectionListener = object : ImageToPDFServiceHelper.Listener{
+        override fun onServiceConnected() {
+            if(serviceHelper.imageToPDFService?.isConversionRunning == true)
+            {
+                openRunningScanPage(serviceHelper.imageToPDFService?.documentId)
+
+            }
+
+        }
+    }
+
+    private fun openRunningScanPage(documentId : Long?)
+    {
+        if(documentId != null) activityNavigator.toDocumentPagesScreen(documentId)
     }
 
 

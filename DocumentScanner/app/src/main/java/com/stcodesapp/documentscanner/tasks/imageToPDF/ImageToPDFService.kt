@@ -33,34 +33,23 @@ class ImageToPDFService : BaseService()
     @Inject lateinit var cacheHelper: CacheHelper
     @Inject lateinit var fileHelper: FileHelper
     @Inject lateinit var imageToPDFTask: ImageToPdfTask
+    @Inject lateinit var notificationHelper: ImageToPDFNotificationHelper
 
     var listener : Listener? = null
     var isConversionRunning = false
     var lastProgress = ImageToPDFProgress(0,0)
-
-    interface ImageToPDFServiceCallback
-    {
-        fun onRequirePersistableStoragePermission()
-        fun onFileSaveToExternalStorageUpdate(progress : Int)
-    }
+    var documentId = 0L
 
     private val serviceBinder = ServiceBinder()
-
-    private val notificationHelper by lazy {
-        ImageToPDFNotificationHelper(this)
-    }
-
-    var callbacks : ImageToPDFServiceCallback? = null
-
-    private var lastSavingProgress = 0
 
     override fun onCreate() {
         super.onCreate()
         appComponent.inejct(this)
     }
 
-    fun createPDF(fileName : String,selectedImages : List<Image>)
+    fun createPDF(fileName : String,selectedImages : List<Image>, documentId : Long)
     {
+        this.documentId = documentId
         isConversionRunning = true
         ioCoroutine.launch {
             if(isAndroidX())

@@ -33,7 +33,7 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
 
     var selectedImages : List<Image>? = null
 
-    private var documentId : Long = 0
+    var documentId : Long = 0
 
     fun bindValueFromIntent(intent: Intent)
     {

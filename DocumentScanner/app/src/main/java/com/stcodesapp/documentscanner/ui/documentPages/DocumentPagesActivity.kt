@@ -158,7 +158,7 @@ class DocumentPagesActivity : BaseActivity()
     private fun createPDF(name : String)
     {
         serviceHelper.imageToPDFService
-        serviceHelper.imageToPDFService?.createPDF(name,viewModel.selectedImages!!)
+        serviceHelper.imageToPDFService?.createPDF(name,viewModel.selectedImages!!,viewModel.documentId)
         serviceHelper.imageToPDFService?.listener =imageToPDFServiceListener
     }
 
