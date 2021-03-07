@@ -1,9 +1,13 @@
 package com.stcodesapp.documentscanner.helpers
 
+import android.net.Uri
 import android.os.Build
+import androidx.core.content.FileProvider
+import androidx.documentfile.provider.DocumentFile
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.BuildConfig
 import com.stcodesapp.documentscanner.models.CropArea
+import com.stcodesapp.documentscanner.models.SavedFile
 import com.theartofdev.edmodo.cropper.Polygon
 import java.io.File
 
@@ -41,4 +45,36 @@ fun isValidPolygon(polygon: Polygon) : Boolean
 fun isAndroidX() : Boolean
 {
     return Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+}
+
+fun getSavedFileListFromDocumentFile(documentFileList : List<DocumentFile>) : MutableList<SavedFile>
+{
+    val savedFileList = mutableListOf<SavedFile>()
+    for(documentFile in documentFileList)
+    {
+        val name = documentFile.name ?: ""
+        val pathString = documentFile.uri.toString()
+        val fileSize = documentFile.length()
+        val lastModified = documentFile.lastModified()
+        val fileUri = documentFile.uri
+        val relativePath = documentFile.parentFile?.name ?: ""
+        savedFileList.add(SavedFile(name,pathString,relativePath,lastModified,fileSize,fileUri))
+    }
+    return savedFileList
+}
+
+fun getSavedFileListFromFile(fileList : List<File>) : MutableList<SavedFile>
+{
+    val savedFileList = mutableListOf<SavedFile>()
+    for(file in fileList)
+    {
+        val name = file.name ?: ""
+        val pathString = file.absolutePath
+        val fileSize = file.length()
+        val lastModified = file.lastModified()
+        val fileUri = Uri.fromFile(file)
+        val relativePath = file.parentFile?.name ?: ""
+        savedFileList.add(SavedFile(name,pathString,relativePath,lastModified,fileSize,fileUri))
+    }
+    return savedFileList
 }

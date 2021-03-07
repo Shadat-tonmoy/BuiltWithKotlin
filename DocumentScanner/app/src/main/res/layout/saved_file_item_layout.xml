@@ -5,7 +5,7 @@
     <data>
         <variable
             name="file"
-            type="java.io.File" />
+            type="com.stcodesapp.documentscanner.models.SavedFile" />
         <import type="com.stcodesapp.documentscanner.ui.helpers.UIHelperKt"/>
     </data>
 
@@ -31,7 +31,7 @@
             android:layout_marginHorizontal="@dimen/dimen_8"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="@{UIHelperKt.getFileNameFromPath(file.absolutePath)}"
+            android:text="@{file.displayName}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/fileIcon"
@@ -57,7 +57,7 @@
             android:layout_marginHorizontal="@dimen/dimen_8"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="@{UIHelperKt.getFileSizeString(file.length())}"
+            android:text="@{UIHelperKt.getFileSizeString(file.fileSize)}"
             android:layout_marginBottom="@dimen/dimen_8"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             app:layout_constraintBottom_toBottomOf="parent"

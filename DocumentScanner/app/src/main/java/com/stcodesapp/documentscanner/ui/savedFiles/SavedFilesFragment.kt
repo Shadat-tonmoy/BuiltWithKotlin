@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.databinding.SavedFilesLayoutBinding
+import com.stcodesapp.documentscanner.models.SavedFile
 import com.stcodesapp.documentscanner.ui.adapters.SavedFileListAdapter
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
@@ -43,8 +44,6 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
         }
     }
 
-
-
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
@@ -67,18 +66,6 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
         observeSavedFiles()
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
     private fun initUI()
     {
         savedFileListAdapter = SavedFileListAdapter(requireContext(), this)
@@ -90,20 +77,34 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
     private fun observeSavedFiles()
     {
         viewModel.fetchSavedFiles().observe(viewLifecycleOwner, Observer {
-            if(it != null && it.isNotEmpty()) savedFileListAdapter.setSavedFiles(it)
+            if(it != null && it.isNotEmpty())
+            {
+                if(it.isEmpty())
+                {
+                    dataBinding.loadingView.visibility = View.GONE
+                    dataBinding.noSavedFileFoundView.visibility = View.VISIBLE
+                }
+                else
+                {
+                    dataBinding.loadingView.visibility = View.GONE
+                    dataBinding.noSavedFileFoundView.visibility = View.GONE
+                    savedFileListAdapter.setSavedFiles(it)
+                }
+
+            }
         })
     }
 
-    override fun onItemClick(savedFile: File)
+    override fun onItemClick(savedFile: SavedFile)
     {
         val args = Bundle()
         args.putSerializable(Tags.SAVED_FILE_NAME,savedFile)
         val options = SavedFileOptionBottomSheet.newInstance(args)
-        options.clickListener = { file: File?, option: Int -> onSavedFileOptionClicked(file, option)}
+        options.clickListener = { file: SavedFile?, option: Int -> onSavedFileOptionClicked(savedFile, option)}
         options.show(childFragmentManager,Tags.SAVED_FILE_OPTIONS)
     }
 
-    private fun onSavedFileOptionClicked(file: File? , option : Int)
+    private fun onSavedFileOptionClicked(file: SavedFile? , option : Int)
     {
         when (option) {
             ConstValues.OPEN_FILE -> file?.let { activityNavigator.toDocumentViewerActivity(it) }
@@ -113,13 +114,13 @@ class SavedFilesFragment : BaseFragment(), SavedFileListAdapter.Listener
 
     }
 
-    private fun showDeleteConfirmationDialog(file: File)
+    private fun showDeleteConfirmationDialog(file: SavedFile)
     {
         dialogHelper.showWarningDialog(getString(R.string.file_delete_warning_msg)) {onDeleteFileConfirmed(file)}
 
     }
 
-    private fun onDeleteFileConfirmed(file: File)
+    private fun onDeleteFileConfirmed(file: SavedFile)
     {
         dialogHelper.showProgressDialog(getString(R.string.deleting_file))
         viewModel.deleteFile(file).observe(viewLifecycleOwner, Observer {

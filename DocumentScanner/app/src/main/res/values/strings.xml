@@ -38,4 +38,6 @@
     <string name="deleting_file">Deleting file…</string>
     <string name="file_deleted">File is deleted!</string>
     <string name="saving">Saving…</string>
+    <string name="fetching_saved_files">Fetching saved files…</string>
+    <string name="no_saved_file_found">No saved file found!</string>
 </resources>

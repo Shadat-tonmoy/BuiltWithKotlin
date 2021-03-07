@@ -9,6 +9,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.models.SavedFile
 import kotlinx.android.synthetic.main.saved_file_option_layout.*
 import kotlinx.android.synthetic.main.saved_file_option_layout.view.*
 import java.io.File
@@ -24,8 +25,8 @@ class SavedFileOptionBottomSheet : BottomSheetDialogFragment()
         }
     }
 
-    lateinit var clickListener : (File?, Int) -> Unit
-    var chosenFile : File? = null
+    lateinit var clickListener : (SavedFile?, Int) -> Unit
+    var chosenFile : SavedFile? = null
 
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
@@ -59,8 +60,8 @@ class SavedFileOptionBottomSheet : BottomSheetDialogFragment()
     {
         if(arguments != null)
         {
-            chosenFile = requireArguments().getSerializable(Tags.SAVED_FILE_NAME) as File?
-            if(chosenFile != null) savedFileName.text = chosenFile?.name
+            chosenFile = requireArguments().getSerializable(Tags.SAVED_FILE_NAME) as SavedFile?
+            if(chosenFile != null) savedFileName.text = chosenFile?.displayName
         }
     }
 

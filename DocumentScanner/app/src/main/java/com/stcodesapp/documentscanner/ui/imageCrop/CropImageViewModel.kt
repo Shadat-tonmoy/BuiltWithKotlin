@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
@@ -58,6 +59,9 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         val liveData = MutableLiveData<Int>()
         ioCoroutine.launch {
             val deletedRows = imageManager.deleteImageById(chosenImage.id)
+            val imageFile = File(chosenImage.path)
+            val deleteResult = imageFile.delete()
+            Log.e(TAG, "deleteImage: FileDeleteFor ${chosenImage.path}, result is : $deleteResult")
             val document = documentManager.getDocumentById(chosenImage.docId)
             Log.e(TAG, "deleteImage: deletedRow : $deletedRows")
             if(document != null)

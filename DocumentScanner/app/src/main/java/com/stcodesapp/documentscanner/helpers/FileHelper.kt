@@ -12,7 +12,20 @@ import java.io.File
 class FileHelper(private val context: Context)
 {
     fun getSavedFilePath(): String {
-        return Environment.getExternalStorageDirectory().path + "/" + context.packageName
+        val externalStorage = Environment.getExternalStorageDirectory()
+        val externalStoragePath = externalStorage.absolutePath
+        val appPublicDirPath = "$externalStoragePath/$SAVE_DIRECTORY_NAME"
+        val appPublicDir = File(appPublicDirPath)
+        if(!appPublicDir.exists())
+        {
+            appPublicDir.mkdirs()
+        }
+        val fileBaseDir = File("$appPublicDir/$OUTPUT_DIRECTORY_NAME")
+        if(!fileBaseDir.exists())
+        {
+            fileBaseDir.mkdirs()
+        }
+        return fileBaseDir.absolutePath
     }
 
     fun getPDFFullPathToSave(fileTitle: String): String
@@ -42,6 +55,15 @@ class FileHelper(private val context: Context)
         return outputFile
     }
 
+    fun getSavedFileDir(persistableStorageUri : Uri) : DocumentFile?
+    {
+        val permittedDir = DocumentFile.fromTreeUri(context, persistableStorageUri)
+        val baseDirName = OUTPUT_DIRECTORY_NAME
+        var baseDir = permittedDir?.findFile(baseDirName)
+        if(baseDir == null) baseDir = permittedDir?.createDirectory(baseDirName)
+        return baseDir
+    }
+
     fun isFileAlreadyExists(fileName : String) : Boolean
     {
         val externalStorage = Environment.getExternalStorageDirectory()
@@ -68,26 +90,15 @@ class FileHelper(private val context: Context)
 
     fun getFileForSaving(fileName : String) : File?
     {
-        val externalStorage = Environment.getExternalStorageDirectory()
-        if(externalStorage != null)
+        val fileBaseDir = File(getSavedFilePath())
+        if(!fileBaseDir.exists())
         {
-            val externalStoragePath = externalStorage.absolutePath
-            val appPublicDirPath = "$externalStoragePath/$SAVE_DIRECTORY_NAME"
-            val appPublicDir = File(appPublicDirPath)
-            if(!appPublicDir.exists())
-            {
-                appPublicDir.mkdirs()
-            }
-            val fileBaseDir = File("$appPublicDir/$OUTPUT_DIRECTORY_NAME")
-            if(!fileBaseDir.exists())
-            {
-                fileBaseDir.mkdirs()
-            }
-            val outputFile = File(fileBaseDir, "$fileName.pdf")
-            if(!outputFile.exists()) outputFile.createNewFile()
-            return outputFile
+            fileBaseDir.mkdirs()
         }
-        return null
+
+        val outputFile = File(fileBaseDir, "$fileName.pdf")
+        if(!outputFile.exists()) outputFile.createNewFile()
+        return outputFile
     }
 
 

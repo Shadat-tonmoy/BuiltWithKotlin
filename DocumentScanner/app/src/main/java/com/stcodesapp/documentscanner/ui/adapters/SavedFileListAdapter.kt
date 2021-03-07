@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.SavedFileItemLayoutBinding
+import com.stcodesapp.documentscanner.models.SavedFile
 import java.io.File
 
 class SavedFileListAdapter (private val context: Context, private val listener : Listener) : RecyclerView.Adapter<SavedFileListAdapter.SavedFileViewHolder>()
@@ -18,10 +19,10 @@ class SavedFileListAdapter (private val context: Context, private val listener :
     }
     interface Listener
     {
-        fun onItemClick(savedFile: File)
+        fun onItemClick(savedFile: SavedFile)
     }
 
-    private var savedFiles = ArrayList<File>()
+    private var savedFiles = ArrayList<SavedFile>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SavedFileViewHolder {
         val inflater = LayoutInflater.from(context)
@@ -40,13 +41,13 @@ class SavedFileListAdapter (private val context: Context, private val listener :
         holder.dataBinding.root.setOnClickListener { listener.onItemClick(savedFile) }
     }
 
-    fun setSavedFiles(savedFiles : List<File>)
+    fun setSavedFiles(savedFiles : List<SavedFile>)
     {
-        this.savedFiles = savedFiles as ArrayList<File>
+        this.savedFiles = savedFiles as ArrayList<SavedFile>
         notifyDataSetChanged()
     }
 
-    fun removeFile(file: File) {
+    fun removeFile(file: SavedFile) {
         val position = savedFiles.indexOf(file)
         if(position >= 0)
         {
@@ -57,7 +58,7 @@ class SavedFileListAdapter (private val context: Context, private val listener :
 
     inner class SavedFileViewHolder(val dataBinding : SavedFileItemLayoutBinding) : RecyclerView.ViewHolder(dataBinding.root)
     {
-        fun bind(savedFile: File)
+        fun bind(savedFile: SavedFile)
         {
             dataBinding.file = savedFile
             dataBinding.executePendingBindings()
