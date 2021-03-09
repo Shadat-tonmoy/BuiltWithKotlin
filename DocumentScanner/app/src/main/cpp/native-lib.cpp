@@ -81,11 +81,11 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_updateBrightnessOfImage(JNIEnv *env,jclass clazz,jobject input_image,jobject output_image,jint brightness_value) {
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_updateBrightnessAndContrastOfImage(JNIEnv *env, jclass clazz, jobject input_image, jobject output_image, jint brightness_value, jfloat contrast_value) {
     Mat filteredImage;
     Mat inputImageMat;
     bitmapToMat(env,input_image,inputImageMat, false);
-    filteredImage = setBrightness(inputImageMat,brightness_value);
+    filteredImage = setBrightnessAndContrast(inputImageMat,brightness_value, contrast_value);
     matToBitmap(env,filteredImage,output_image,false);
 }
 

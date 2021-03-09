@@ -3,7 +3,6 @@ package com.stcodesapp.documentscanner.ui.imageCrop
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
-import android.widget.SeekBar
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
 import com.stcodesapp.documentscanner.R
@@ -11,7 +10,7 @@ import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
-import com.stcodesapp.documentscanner.scanner.updateBrightnessOfImage
+import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.helpers.*
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
@@ -192,7 +191,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    private fun setBrightnessOfCurrentImage(brightnessValue : Int)
+    private fun setBrightnessOfCurrentImage(brightnessValue : Int, contrastValue : Float)
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
@@ -201,7 +200,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
             if(viewModel.originalImageBitmap == null) viewModel.originalImageBitmap = currentFragment.getImageBitmap()
             val srcBitmap = viewModel.originalImageBitmap
             val dstBitmap = srcBitmap!!.copy(srcBitmap.config,true)
-            updateBrightnessOfImage(srcBitmap,dstBitmap,brightnessValue)
+            updateBrightnessAndContrastOfImage(srcBitmap,dstBitmap,brightnessValue, contrastValue)
             currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
             cropImageView.isShowCropOverlay = false
         }
@@ -237,9 +236,9 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
     private val imageEffectListener = object  : ImageEffectFragment.Listener{
 
-        override fun onEffectValueChanged(brightness: Int, hue: Int, saturtion: Int)
+        override fun onEffectValueChanged(brightness: Int, contrast : Float, hue: Int, saturtion: Int)
         {
-            setBrightnessOfCurrentImage(brightness)
+            setBrightnessOfCurrentImage(brightness,contrast)
         }
     }
 

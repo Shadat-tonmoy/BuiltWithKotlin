@@ -2,6 +2,7 @@ package com.stcodesapp.documentscanner.ui.imageEffect
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ class ImageEffectFragment : BaseFragment() {
 
     companion object {
         fun newInstance() = ImageEffectFragment()
+        private const val TAG = "ImageEffectFragment"
     }
 
     @Inject lateinit var viewModel : ImageEffectViewModel
@@ -23,7 +25,7 @@ class ImageEffectFragment : BaseFragment() {
 
     interface Listener
     {
-        fun onEffectValueChanged(brightness: Int, hue : Int, saturtion : Int)
+        fun onEffectValueChanged(brightness: Int, contrast : Float, hue : Int, saturtion : Int)
     }
 
     var listener : Listener? = null
@@ -59,8 +61,7 @@ class ImageEffectFragment : BaseFragment() {
     private fun initUserInteraction()
     {
         brightnessSeekBar.setOnSeekBarChangeListener(seekBarListener)
-        hueSeekBar.setOnSeekBarChangeListener(seekBarListener)
-        saturationSeekBar.setOnSeekBarChangeListener(seekBarListener)
+        contrastSeekBar.setOnSeekBarChangeListener(seekBarListener)
     }
 
     private val seekBarListener = object : SeekBar.OnSeekBarChangeListener{
@@ -74,7 +75,11 @@ class ImageEffectFragment : BaseFragment() {
             {
                 var brightness = brightnessSeekBar.progress - 50
                 if(brightness < 0) brightness *= 2
-                listener?.onEffectValueChanged(brightness,2,3)
+                val contrast = contrastSeekBar.progress - 50
+                val finalContrastValue = 1 + (contrast.toFloat()/100)*2
+                listener?.onEffectValueChanged(brightness, finalContrastValue, 2,3)
+
+                Log.e(TAG, "onStopTrackingTouch: contrast : $finalContrastValue")
             }
 
         }

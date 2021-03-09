@@ -11,8 +11,9 @@
         android:id="@+id/headerText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/apply_paper_effect"
+        android:text="@string/improve_image_quality"
         android:layout_margin="@dimen/dimen_8"
+        android:paddingVertical="@dimen/dimen_4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -32,64 +33,48 @@
         android:id="@+id/brightnessText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:text="@string/brightness"
-        android:layout_margin="@dimen/dimen_8"
+        android:layout_marginHorizontal="@dimen/dimen_8"
+        android:layout_marginVertical="@dimen/dimen_16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/divider" />
 
     <SeekBar
         android:id="@+id/brightnessSeekBar"
         android:layout_width="0dp"
-        android:max="100"
-        android:progress="50"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_8"
+        android:max="100"
         android:paddingStart="@dimen/dimen_8"
+        android:progress="50"
+        app:layout_constraintBottom_toBottomOf="@+id/brightnessText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/brightnessText" />
+        app:layout_constraintStart_toEndOf="@+id/brightnessText"
+        app:layout_constraintTop_toTopOf="@+id/brightnessText" />
 
     <TextView
-        android:id="@+id/hueText"
+        android:id="@+id/contrastText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/hue"
-        android:layout_margin="@dimen/dimen_8"
+        android:text="@string/contrast"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:layout_marginHorizontal="@dimen/dimen_8"
+        android:layout_marginVertical="@dimen/dimen_16"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/brightnessSeekBar" />
 
     <SeekBar
-        android:id="@+id/hueSeekBar"
+        android:id="@+id/contrastSeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dimen_8"
         android:max="100"
         android:paddingStart="@dimen/dimen_8"
-        android:progress="5"
+        android:progress="50"
+        app:layout_constraintBottom_toBottomOf="@id/contrastText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/hueText" />
-
-    <TextView
-        android:id="@+id/saturationText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="@string/saturation"
-        android:layout_margin="@dimen/dimen_8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/hueSeekBar" />
-
-    <SeekBar
-        android:id="@+id/saturationSeekBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dimen_8"
-        android:max="100"
-        android:progress="5"
-        android:paddingStart="@dimen/dimen_8"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saturationText" />
+        app:layout_constraintStart_toEndOf="@+id/brightnessText"
+        app:layout_constraintTop_toTopOf="@id/contrastText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
