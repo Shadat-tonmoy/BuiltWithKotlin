@@ -44,4 +44,7 @@
     <string name="apply_paper_effect">Apply Paper Effect</string>
     <string name="improve_text">Improve Text</string>
     <string name="improve_background">Improve Background</string>
+    <string name="brightness">Brightness</string>
+    <string name="hue">Hue</string>
+    <string name="saturation">Saturation</string>
 </resources>

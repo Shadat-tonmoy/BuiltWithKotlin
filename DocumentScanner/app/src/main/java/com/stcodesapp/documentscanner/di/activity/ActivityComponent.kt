@@ -8,6 +8,7 @@ import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
 import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
 import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
+import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
 import com.stcodesapp.documentscanner.ui.more.MoreFragment
 import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
 import com.stcodesapp.documentscanner.ui.savedFiles.SavedFilesFragment
@@ -25,6 +26,7 @@ interface ActivityComponent
     fun inject(imageCropActivity: ImageCropActivity)
     fun inject(cropImageSingleItemFragment: CropImageSingleItemFragment)
     fun inject(paperEffectFragment: PaperEffectFragment)
+    fun inject(imageEffectFragment: ImageEffectFragment)
 
 
 }

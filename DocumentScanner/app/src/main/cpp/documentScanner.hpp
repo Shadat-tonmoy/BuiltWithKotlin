@@ -186,6 +186,12 @@ Mat applyAdaptiveThreshold(Mat warpedImage,int blockSize, double c)
     return thresholdImage;
 }
 
+Mat setBrightness(Mat inputImage, int brightnessValue)
+{
+    inputImage.convertTo(inputImage,-1,1,brightnessValue);
+    return inputImage;
+}
+
 
 
 int main()

@@ -11,8 +11,10 @@ import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
+import com.stcodesapp.documentscanner.scanner.updateBrightnessOfImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.helpers.*
+import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
 import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
 import kotlinx.android.synthetic.main.activity_image_crop.*
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
@@ -107,6 +109,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
 
         filterButton.setOnClickListener {
+            showImageEffectFragment()
         }
 
         paperEffectButton.setOnClickListener {
@@ -189,9 +192,29 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
+    private fun setBrightnessOfCurrentImage(brightnessValue : Int)
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            if(viewModel.originalImageBitmap == null) viewModel.originalImageBitmap = currentFragment.getImageBitmap()
+            val srcBitmap = viewModel.originalImageBitmap
+            val dstBitmap = srcBitmap!!.copy(srcBitmap.config,true)
+            updateBrightnessOfImage(srcBitmap,dstBitmap,brightnessValue)
+            currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
+            cropImageView.isShowCropOverlay = false
+        }
+    }
+
     private fun showPaperEffectFragment()
     {
         fragmentNavigator.loadPaperEffectFragment(paperEffectListener)
+    }
+
+    private fun showImageEffectFragment()
+    {
+        fragmentNavigator.loadImageEffectFragment(imageEffectListener)
     }
 
     override fun getFragmentFrame(): FrameLayout? {
@@ -209,6 +232,14 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         override fun onBackgroundSeekBarChanged(blockSize: Int, c : Int)
         {
             applyMagicFilter(blockSize,c.toDouble())
+        }
+    }
+
+    private val imageEffectListener = object  : ImageEffectFragment.Listener{
+
+        override fun onEffectValueChanged(brightness: Int, hue: Int, saturtion: Int)
+        {
+            setBrightnessOfCurrentImage(brightness)
         }
     }
 
