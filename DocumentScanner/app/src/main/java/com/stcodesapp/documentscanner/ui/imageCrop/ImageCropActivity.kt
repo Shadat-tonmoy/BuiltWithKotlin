@@ -1,8 +1,9 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
-import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.widget.FrameLayout
+import android.widget.SeekBar
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
 import com.stcodesapp.documentscanner.R
@@ -10,16 +11,14 @@ import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
-import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
-import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
-import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
-import com.stcodesapp.documentscanner.ui.helpers.showToast
+import com.stcodesapp.documentscanner.ui.helpers.*
+import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
 import kotlinx.android.synthetic.main.activity_image_crop.*
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import javax.inject.Inject
 
-class ImageCropActivity : BaseActivity()
+class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 {
     companion object{
         private const val TAG = "ImageCropActivity"
@@ -30,6 +29,7 @@ class ImageCropActivity : BaseActivity()
 
     @Inject lateinit var viewModel : CropImageViewModel
     @Inject lateinit var activityNavigator: ActivityNavigator
+    @Inject lateinit var fragmentNavigator: FragmentNavigator
     private lateinit var viewPagerAdapter: ImageViewPagerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?)
@@ -64,7 +64,6 @@ class ImageCropActivity : BaseActivity()
         if(it.isEmpty())
         {
             deleteDocAndExit()
-
         }
         else
         {
@@ -105,15 +104,13 @@ class ImageCropActivity : BaseActivity()
 
         deleteButton.setOnClickListener {
             showDeleteImageWarning()
-
         }
 
         filterButton.setOnClickListener {
-            applyMagicFilter()
         }
 
-        saveButton.setOnClickListener {
-            saveCurrentImage()
+        paperEffectButton.setOnClickListener {
+            showPaperEffectFragment()
         }
 
     }
@@ -172,19 +169,48 @@ class ImageCropActivity : BaseActivity()
         }
     }
 
-    private fun applyMagicFilter()
+    private fun applyMagicFilter(blockSize: Int, c : Double)
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
-            val srcBitmap = currentFragment.cropImageView.bitmap
-            val dstBitmap = srcBitmap.copy(srcBitmap.config,true)
-            getFilteredImage(srcBitmap, dstBitmap)
+            if(viewModel.originalImageBitmap == null) viewModel.originalImageBitmap = currentFragment.getImageBitmap()
+            val srcBitmap = viewModel.originalImageBitmap
+            val dstBitmap = srcBitmap!!.copy(srcBitmap.config,true)
+            var finalBlockSize = blockSize
+            var finalC = c
+            if(finalBlockSize % 2 == 0 ) finalBlockSize += 1
+            Log.e(TAG, "applyMagicFilter: with BlockSize : $finalBlockSize, C : $finalC")
+            getFilteredImage(srcBitmap, dstBitmap,finalBlockSize,finalC)
             currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
             cropImageView.isShowCropOverlay = false
 
         }
     }
+
+    private fun showPaperEffectFragment()
+    {
+        fragmentNavigator.loadPaperEffectFragment(paperEffectListener)
+    }
+
+    override fun getFragmentFrame(): FrameLayout? {
+        return filterOptionContainer
+    }
+
+    private val paperEffectListener = object  : PaperEffectFragment.Listener{
+
+        override fun onTextColorSeekBarChanged(blockSize: Int, c : Int)
+        {
+            applyMagicFilter(blockSize,c.toDouble())
+
+        }
+
+        override fun onBackgroundSeekBarChanged(blockSize: Int, c : Int)
+        {
+            applyMagicFilter(blockSize,c.toDouble())
+        }
+    }
+
 
 }

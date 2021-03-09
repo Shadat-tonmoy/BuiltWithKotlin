@@ -172,14 +172,14 @@ Mat removeNoise(Mat thresholdImage)
     return thresholdImage;
 }
 
-Mat applyAdaptiveThreshold(Mat warpedImage)
+Mat applyAdaptiveThreshold(Mat warpedImage,int blockSize, double c)
 {
     Mat grayScaleImage, thresholdImage, blurredImage,edges, dilatedImage, erodedImage;
 
     //convert image to grayscale
     cvtColor(warpedImage,grayScaleImage,COLOR_BGR2GRAY);
 
-    adaptiveThreshold(grayScaleImage,thresholdImage,255,ADAPTIVE_THRESH_GAUSSIAN_C,THRESH_BINARY,15,5);
+    adaptiveThreshold(grayScaleImage,thresholdImage,255,ADAPTIVE_THRESH_GAUSSIAN_C,THRESH_BINARY,blockSize,c);
     //thresholdImage = removeNoise(thresholdImage);
     //bitwise_not(thresholdImage, thresholdImage);
     //medianBlur(thresholdImage, thresholdImage, 3);

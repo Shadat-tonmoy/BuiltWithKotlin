@@ -70,12 +70,12 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getWarpedImage(JNIEnv *
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage)
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage,jint blockSize, jdouble c)
 {
     Mat filteredImage;
     Mat inputImageMat;
     bitmapToMat(env,inputImage,inputImageMat, false);
-    filteredImage = applyAdaptiveThreshold(inputImageMat);
+    filteredImage = applyAdaptiveThreshold(inputImageMat,blockSize,c);
     matToBitmap(env,filteredImage,outputImage,false);
 }
 

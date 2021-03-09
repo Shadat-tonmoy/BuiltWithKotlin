@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.content.Intent
+import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,7 @@ import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.core.AppDatabase
+import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
@@ -28,6 +30,7 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
     @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
+    var originalImageBitmap: Bitmap? = null
 
     var documentPages : List<Image>? = null
 
@@ -48,10 +51,30 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
     {
         val liveData = MutableLiveData<Int>()
         ioCoroutine.launch {
+            val documentWithId = documentManager.getDocumentById(documentId)
             val rowAffected = documentManager.deleteDocumentById(documentId)
+            deleteDocFilesAndFolder(documentWithId)
             liveData.postValue(rowAffected)
         }
         return liveData
+    }
+
+    private suspend fun deleteDocFilesAndFolder(documentWithId : Document?)
+    {
+        if (documentWithId != null)
+        {
+            val documentFolder = File(documentWithId.path)
+            val allFiles = documentFolder.listFiles()
+            if (allFiles != null) {
+                for (file in allFiles)
+                {
+                    val fileDeleteResult = file.delete()
+                    Log.e(TAG, "deleteDocFilesAndFolder: fileDeleteResult: $fileDeleteResult")
+                }
+            }
+            val folderDeleteResult = documentFolder.delete()
+            Log.e(TAG, "deleteDocFilesAndFolder: folderDeleteResult : $folderDeleteResult")
+        }
     }
 
     fun deleteImage(chosenImage : Image) : LiveData<Int>

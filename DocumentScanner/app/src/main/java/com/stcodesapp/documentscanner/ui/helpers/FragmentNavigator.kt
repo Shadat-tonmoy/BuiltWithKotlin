@@ -10,6 +10,7 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.more.MoreFragment
+import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
 import com.stcodesapp.documentscanner.ui.savedFiles.SavedFilesFragment
 
 
@@ -52,6 +53,17 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
             return
         }
         addFragment(FilterOptionFragment.newInstance(Bundle().apply { putString(Tags.IMAGE_PATH, chosenImagePath) }),true, false, Tags.FILTER_OPTION_FRAGMENT)
+    }
+
+    fun loadPaperEffectFragment(listener : PaperEffectFragment.Listener)
+    {
+        getCurrentFragment()?.let { if(it.tag == Tags.PAPER_EFFECT_FRAGMENT)
+            fragmentManager?.popBackStack()
+            return
+        }
+        val fragment = PaperEffectFragment.newInstance()
+        fragment.listener = listener
+        addFragment(fragment,true, false, Tags.PAPER_EFFECT_FRAGMENT)
     }
 
     fun isHomeFragmentLoaded() : Boolean

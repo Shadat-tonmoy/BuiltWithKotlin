@@ -7,6 +7,7 @@ class Tags
         const val SAVED_FILES_FRAGMENT = "SAVED_FILES_FRAGMENT"
         const val MORE_FRAGMENT = "MORE_FRAGMENT"
         const val FILTER_OPTION_FRAGMENT = "FILTER_OPTION_FRAGMENT"
+        const val PAPER_EFFECT_FRAGMENT = "PAPER_EFFECT_FRAGMENT"
         const val IMAGE_PATH = "image_path"
         const val DOCUMENT_ID = "document_id"
         const val IMAGE_ID = "image_id"

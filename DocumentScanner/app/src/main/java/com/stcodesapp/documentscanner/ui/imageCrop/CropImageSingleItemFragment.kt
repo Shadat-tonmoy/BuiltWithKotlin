@@ -71,6 +71,7 @@ class CropImageSingleItemFragment : BaseFragment() {
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
                 setSavedValue(serializedImage)
+
             }
 
             cropImageView.setOnCropWindowChangedListener {
@@ -146,5 +147,10 @@ class CropImageSingleItemFragment : BaseFragment() {
         {
              cropImageView.rotateImage(savedRotationAngle)
         }
+    }
+
+    fun getImageBitmap() : Bitmap
+    {
+        return cropImageView.bitmap
     }
 }

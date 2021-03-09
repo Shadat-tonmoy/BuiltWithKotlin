@@ -43,6 +43,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
             app:layout_constraintStart_toEndOf="@id/rotateButton" />
 
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/paperEffectButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/done_white_24"
+            android:text="@string/paper_effect"
+            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filterButton" />
+
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filterButton"
             style="@style/imagePreviewButtonStyle"
@@ -71,17 +82,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/filterButton" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/saveButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/done_white_24"
-            android:text="@string/save"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
-
 
     </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/filterOptionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imageOptionContainer"
+        />
 
 
 

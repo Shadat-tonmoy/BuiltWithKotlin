@@ -40,4 +40,8 @@
     <string name="saving">Saving…</string>
     <string name="fetching_saved_files">Fetching saved files…</string>
     <string name="no_saved_file_found">No saved file found!</string>
+    <string name="paper_effect">Paperify</string>
+    <string name="apply_paper_effect">Apply Paper Effect</string>
+    <string name="improve_text">Improve Text</string>
+    <string name="improve_background">Improve Background</string>
 </resources>
