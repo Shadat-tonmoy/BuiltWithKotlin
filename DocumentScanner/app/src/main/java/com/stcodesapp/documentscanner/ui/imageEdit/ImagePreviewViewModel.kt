@@ -89,7 +89,7 @@ class ImagePreviewViewModel @Inject constructor(app : DocumentScannerApp) : Base
             {
                 if(!isSameFilterAlreadyApplied(filter))
                 {
-                    imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter.type!!)
+                    imageBitmap = FilterHelper(context).applyFilter(originalBitmap!!, filter)
                     updateFilterNameInDB(filter)
                 }
                 imageBitmapLiveData.postValue(imageBitmap)

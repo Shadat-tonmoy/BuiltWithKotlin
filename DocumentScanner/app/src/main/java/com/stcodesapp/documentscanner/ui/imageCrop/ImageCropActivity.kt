@@ -108,7 +108,8 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
 
         filterButton.setOnClickListener {
-            showImageEffectFragment()
+            showFilterFragment()
+            //showImageEffectFragment()
         }
 
         paperEffectButton.setOnClickListener {
@@ -214,6 +215,20 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     private fun showImageEffectFragment()
     {
         fragmentNavigator.loadImageEffectFragment(imageEffectListener)
+    }
+
+    private fun showFilterFragment()
+    {
+        val chosenImagePosition = viewPager.currentItem
+        if(chosenImagePosition >= 0)
+        {
+            val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
+            if(imageAtPosition != null)
+            {
+                fragmentNavigator.loadFilterFragment(imageAtPosition.path)
+            }
+        }
+
     }
 
     override fun getFragmentFrame(): FrameLayout? {

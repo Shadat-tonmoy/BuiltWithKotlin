@@ -16,6 +16,15 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getGrayscaleImage(JNIEn
 {
     Mat srcImage;
     bitmapToMat(env,inputImage,srcImage,false);
+    Mat processedImage = getGrayscaleImage(srcImage);
+    matToBitmap(env,processedImage,outputImage,false);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getBlackAndWhiteImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage)
+{
+    Mat srcImage;
+    bitmapToMat(env,inputImage,srcImage,false);
     Mat processedImage = preprocessImage(srcImage);
     matToBitmap(env,processedImage,outputImage,false);
 }

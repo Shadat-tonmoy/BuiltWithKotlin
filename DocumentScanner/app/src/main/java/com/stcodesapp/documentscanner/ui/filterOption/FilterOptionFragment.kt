@@ -1,21 +1,19 @@
 package com.stcodesapp.documentscanner.ui.filterOption
 
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.Tags
-import com.stcodesapp.documentscanner.constants.enums.FilterType
+import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.adapters.FilterListAdapter
+import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
 import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
-import com.zomato.photofilters.FilterPack
 import kotlinx.android.synthetic.main.filter_option_fragment.*
 
 class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
@@ -25,6 +23,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
     }
 
     private lateinit var viewModel: FilterOptionViewModel
+    private val filterHelper by lazy { FilterHelper(requireContext()) }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -39,12 +38,12 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
         filterOptionList.layoutManager = layoutManager
         filterOptionList.adapter = filterListAdapter
         if(imagePath != null) filterListAdapter.setFilters(getFilters(imagePath))
-        (requireActivity() as ImagePreviewActivity).onFilterMenuLoad()
+        //(requireActivity() as ImageCropActivity).onFilterMenuLoad()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        (requireActivity() as ImagePreviewActivity).onFilterMenuClosed()
+        //(requireActivity() as ImageCropActivity).onFilterMenuClosed()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -59,13 +58,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
     private fun getFilters(imagePath : String) : List<Filter>
     {
-        val filters = ArrayList<Filter>()
-        for(filter in FilterPack.getFilterPack(requireContext()))
-        {
-            filters.add(Filter(filter.name,imagePath,filter))
-        }
-        filters.add(Filter("Default",imagePath,null))
-        return filters.reversed()
+        return filterHelper.getFilterList(imagePath)
     }
 
 }

@@ -192,6 +192,15 @@ Mat setBrightnessAndContrast(Mat inputImage, int brightnessValue, float contrast
     return inputImage;
 }
 
+Mat getGrayscaleImage(Mat inputImage)
+{
+    Mat grayScaleImage;
+    cvtColor(inputImage,grayScaleImage,COLOR_BGR2GRAY);
+    return inputImage;
+}
+
+
+
 
 
 int main()

@@ -2,22 +2,33 @@ package com.stcodesapp.documentscanner.helpers
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.graphics.Color
-import android.util.Log
-import com.stcodesapp.documentscanner.constants.enums.FilterType
-import com.stcodesapp.documentscanner.models.RGBAValue
+import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.models.FilterType
+import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
 import com.zomato.photofilters.FilterPack
-import com.zomato.photofilters.imageprocessors.Filter
 
 class FilterHelper(private val context: Context)
 {
-    suspend fun applyFilter(oldBitmap : Bitmap, filter: Filter) : Bitmap
+    /*suspend fun applyFilter(oldBitmap : Bitmap, filter: Filter) : Bitmap
     {
         // copying to newBitmap for manipulation
         var newBitmap: Bitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
 
         newBitmap = filter.processFilter(newBitmap)
 
+        return newBitmap
+    }*/
+
+    suspend fun applyFilter(oldBitmap : Bitmap, filter: Filter) : Bitmap
+    {
+        // copying to newBitmap for manipulation
+        var newBitmap: Bitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
+
+        when(filter.type)
+        {
+            FilterType.GRAY_SCALE -> getGrayscaleImage(oldBitmap, newBitmap)
+
+        }
         return newBitmap
     }
 
@@ -36,5 +47,15 @@ class FilterHelper(private val context: Context)
             }
         }
         return oldBitmap
+    }
+
+    fun getFilterList(imagePath : String) : List<Filter>
+    {
+        val filterList = mutableListOf<Filter>()
+        filterList.add(Filter("Custom Filter",imagePath,FilterType.CUSTOM_FILTER))
+        filterList.add(Filter("Default",imagePath,FilterType.DEFAULT))
+        filterList.add(Filter("Gray Scale",imagePath,FilterType.GRAY_SCALE))
+        filterList.add(Filter("B&W",imagePath,FilterType.BLACK_AND_WHITE))
+        return filterList
     }
 }

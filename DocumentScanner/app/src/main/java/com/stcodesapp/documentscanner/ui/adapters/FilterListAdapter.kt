@@ -74,7 +74,7 @@ class FilterListAdapter (private val context: Context, private val listener : Li
                 if (bitmapFromImage != null) {
                     if(filter.type != null)
                     {
-                        val filteredBitmap = FilterHelper(context).applyFilter(bitmapFromImage, filter.type!!)
+                        val filteredBitmap = FilterHelper(context).applyFilter(bitmapFromImage, filter)
                         uiCoroutine.launch { filterPreview(filteredBitmap, imageRequestOption) }
                     }
                     else {

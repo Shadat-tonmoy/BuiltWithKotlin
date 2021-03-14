@@ -77,6 +77,8 @@ class ImageEffectFragment : BaseFragment() {
                 if(brightness < 0) brightness *= 2
                 val contrast = contrastSeekBar.progress - 50
                 val finalContrastValue = 1 + (contrast.toFloat()/100)*2
+                brightnessText.text = "Brightness ($brightness)"
+                contrastText.text = "Contrast ($finalContrastValue)"
                 listener?.onEffectValueChanged(brightness, finalContrastValue, 2,3)
 
                 Log.e(TAG, "onStopTrackingTouch: contrast : $finalContrastValue")
