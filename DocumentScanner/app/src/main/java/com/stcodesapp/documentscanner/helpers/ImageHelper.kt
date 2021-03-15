@@ -72,7 +72,11 @@ class ImageHelper(private val context: Context)
         //val bitmap = getBitmapFromURI(imageUri)
         var bitmap = decodeBitmapFromUri(imageUri, REQ_IMAGE_DIMEN, REQ_IMAGE_DIMEN)
         if(bitmap != null){bitmap = adjustRotatedBitmap(bitmap,imageUri)}
+        return getResizedBitmapByThreshold(bitmap,dimensionThreshold)
+    }
 
+    fun getResizedBitmapByThreshold(bitmap: Bitmap?, dimensionThreshold: Int): Bitmap?
+    {
         if(bitmap != null)
         {
             val originalWidth = bitmap.width

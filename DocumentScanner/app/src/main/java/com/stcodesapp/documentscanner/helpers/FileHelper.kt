@@ -101,5 +101,24 @@ class FileHelper(private val context: Context)
         return outputFile
     }
 
+    fun getThumbDirectory(documentDirPath : String) : File
+    {
+        val thumbDirPath = "$documentDirPath${File.separator}thumbs"
+        val thumbDir = File(thumbDirPath)
+        if(!thumbDir.exists()) thumbDir.mkdirs()
+        return thumbDir
+    }
+
+    fun getThumbFile(documentDirPath : String, fileName : String) : File
+    {
+        val thumbDirPath = "$documentDirPath${File.separator}thumbs"
+        val thumbDir = getThumbDirectory(thumbDirPath)
+        val thumbFilePath = "${thumbDir.absolutePath}${File.separator}$fileName"
+        val thumbFile = File(thumbFilePath)
+        if(!thumbFile.exists()) thumbFile.createNewFile()
+        return thumbFile
+
+    }
+
 
 }

@@ -124,13 +124,10 @@ class CropImageSingleItemFragment : BaseFragment() {
     fun cropImage()
     {
         val srcBitmap = cropImageView.bitmap
-        val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888) //srcBitmap.copy(srcBitmap.config,true)
-        Log.e(TAG, "grayScaleCurrentImage: BitmapWidth : ${srcBitmap.width} BitmapHeight : ${srcBitmap.height}")
-        Log.e(TAG, "grayScaleCurrentImage: cropPolygon : ${cropImageView.cropPolygon}")
-        Log.e(TAG, "grayScaleCurrentImage: imageViewWidth : ${cropImageView.width}, imageViewHeight : ${cropImageView.height}")
-        Log.e(TAG, "grayScaleCurrentImage: overlayWidth : ${cropImageView.getmCropOverlayView().width}, overlayHeight : ${cropImageView.getmCropOverlayView().width}")
+        val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
         getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRation)
         cropImageView.setImageBitmap(dstBitmap,false)
+        //viewModel.saveImageThumbnail(dstBitmap)
         cropImageView.isShowCropOverlay = false
         setCroppedFlag(true)
     }

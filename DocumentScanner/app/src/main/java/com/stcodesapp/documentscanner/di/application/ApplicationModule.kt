@@ -9,6 +9,7 @@ import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.CacheHelper
 import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.helpers.FilterHelper
+import com.stcodesapp.documentscanner.helpers.ImageHelper
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFNotificationHelper
 import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFServiceHelper
@@ -90,6 +91,12 @@ class ApplicationModule(private val context: Context)
     fun provideFilterHelper(context: Context) : FilterHelper
     {
         return FilterHelper(context)
+    }
+
+    @Provides
+    fun provideImageHelper(context: Context) : ImageHelper
+    {
+        return ImageHelper(context)
     }
 
 
