@@ -111,8 +111,7 @@ class FileHelper(private val context: Context)
 
     fun getThumbFile(documentDirPath : String, fileName : String) : File
     {
-        val thumbDirPath = "$documentDirPath${File.separator}thumbs"
-        val thumbDir = getThumbDirectory(thumbDirPath)
+        val thumbDir = getThumbDirectory(documentDirPath)
         val thumbFilePath = "${thumbDir.absolutePath}${File.separator}$fileName"
         val thumbFile = File(thumbFilePath)
         if(!thumbFile.exists()) thumbFile.createNewFile()

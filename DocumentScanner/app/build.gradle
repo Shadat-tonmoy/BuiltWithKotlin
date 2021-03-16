@@ -84,8 +84,8 @@ dependencies {
 
     //android image picker
     implementation project(path: ':imagepickerforandroid')
-    implementation project(path: ':documentscanner')
-    implementation project(path: ':openCVLibrary')
+    //implementation project(path: ':documentscanner')
+    //implementation project(path: ':openCVLibrary')
 
     //room DB
     implementation "androidx.room:room-runtime:2.2.6"
@@ -93,7 +93,7 @@ dependencies {
     implementation "androidx.room:room-ktx:2.2.6"
 
     //image filtering library
-    implementation 'info.androidhive:imagefilters:1.0.7'
+    //implementation 'info.androidhive:imagefilters:1.0.7'
 
     //circular progress bar library
     implementation 'com.mikhaellopez:circularprogressbar:3.0.3'

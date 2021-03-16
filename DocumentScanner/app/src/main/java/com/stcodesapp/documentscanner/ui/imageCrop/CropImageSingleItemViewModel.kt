@@ -1,6 +1,8 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.graphics.Bitmap
+import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
@@ -8,10 +10,12 @@ import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
-import com.stcodesapp.documentscanner.helpers.FileHelper
-import com.stcodesapp.documentscanner.helpers.ImageHelper
-import com.stcodesapp.documentscanner.helpers.getCropAreaJsonFromPolygon
-import com.stcodesapp.documentscanner.helpers.getFileNameFromPath
+import com.stcodesapp.documentscanner.helpers.*
+import com.stcodesapp.documentscanner.models.FilterType
+import com.stcodesapp.documentscanner.scanner.getBlackAndWhiteImage
+import com.stcodesapp.documentscanner.scanner.getBrightenImage
+import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
+import com.stcodesapp.documentscanner.scanner.getLightenImage
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -19,7 +23,10 @@ import javax.inject.Inject
 class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
     companion object{
-        const val THUMB_SIZE = 64
+        const val THUMB_SIZE = 256
+        const val BRIGHTEN_FILTER_VALUE = 15
+        const val LIGHTEN_FILTER_VALUE = 1.6F
+        private const val TAG = "CropImageSingleItemView"
     }
 
     var chosenImage : Image? = null
@@ -29,6 +36,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
     @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageHelper: ImageHelper
     @Inject lateinit var fileHelper: FileHelper
+    @Inject lateinit var filterHelper: FilterHelper
 
     fun deleteImage() : LiveData<Int>
     {
@@ -113,20 +121,40 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
                 if(document != null)
                 {
                     val documentPath = document.path
-                    val thumbFile = fileHelper.getThumbFile(documentPath,getFileNameFromPath(chosenImage!!.path))
-                    val thumbBitmap = imageHelper.getResizedBitmapByThreshold(imageBitmap, THUMB_SIZE)
-                    val thumbFilePath = thumbFile.absolutePath
-                    if(thumbBitmap != null)
+                    val filterList = filterHelper.getFilterList(chosenImage!!.path)
+                    for(filter in filterList)
                     {
-                        imageHelper.saveBitmapInFile(thumbBitmap, thumbFilePath,quality = 50)
+                        val thumbFileName = filterHelper.getFilteredThumbFileName(chosenImage!!.path,filter.type)
+                        Log.e(TAG, "saveImageThumbnail: thumbFileName : $thumbFileName")
+                        val thumbFile = fileHelper.getThumbFile(documentPath,thumbFileName)
+                        Log.e(TAG, "saveImageThumbnail: thumbFile : $thumbFile")
+                        val thumbBitmap = imageHelper.getResizedBitmapByThreshold(imageBitmap, THUMB_SIZE)
+                        val thumbFilePath = thumbFile.absolutePath
+                        if(thumbBitmap != null)
+                        {
+                            val filteredBitmap = getFilteredThumbBitmap(filter.type, thumbBitmap)
+                            imageHelper.saveBitmapInFile(filteredBitmap, thumbFilePath,quality = 100)
+                            //filteredBitmap.recycle()
+                        }
                     }
+
                 }
             }
-
-
         }
+    }
 
-
+    private fun getFilteredThumbBitmap(filterType: FilterType, srcBitmap : Bitmap) : Bitmap
+    {
+        val dstBitmap = Bitmap.createBitmap(srcBitmap.width,srcBitmap.height, Bitmap.Config.ARGB_8888)
+        when(filterType)
+        {
+            FilterType.GRAY_SCALE -> getGrayscaleImage(srcBitmap,dstBitmap)
+            //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
+            FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, BRIGHTEN_FILTER_VALUE)
+            FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, LIGHTEN_FILTER_VALUE)
+            else -> return srcBitmap
+        }
+        return dstBitmap
 
 
 

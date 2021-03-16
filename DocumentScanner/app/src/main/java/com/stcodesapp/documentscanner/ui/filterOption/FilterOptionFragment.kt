@@ -1,43 +1,66 @@
 package com.stcodesapp.documentscanner.ui.filterOption
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.adapters.FilterListAdapter
-import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
-import com.stcodesapp.documentscanner.ui.imageEdit.ImagePreviewActivity
+import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
+import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import kotlinx.android.synthetic.main.filter_option_fragment.*
+import java.io.File
+import javax.inject.Inject
 
 class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
-    companion object {
-        fun newInstance(arg : Bundle) = FilterOptionFragment().apply { arguments = arg }
+    companion object
+    {
+        fun newInstance(image : Image, imagePosition : Int) : FilterOptionFragment
+        {
+            val fragment = FilterOptionFragment()
+            val args = Bundle()
+            args.putSerializable(Tags.SERIALIZED_IMAGE,image)
+            args.putInt(Tags.IMAGE_POSITION,imagePosition)
+            fragment.arguments = args
+            return fragment
+        }
     }
 
-    private lateinit var viewModel: FilterOptionViewModel
+    @Inject lateinit var viewModel: FilterOptionViewModel
     private val filterHelper by lazy { FilterHelper(requireContext()) }
+    private var adapter : FilterListAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.filter_option_fragment, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        activityComponent.inject(this)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        initUI()
         val imagePath = arguments?.getString(Tags.IMAGE_PATH)
-        val filterListAdapter = FilterListAdapter(requireContext(),this,imagePath)
+        adapter = FilterListAdapter(requireContext(),this,imagePath)
         val layoutManager = LinearLayoutManager(requireContext(),LinearLayoutManager.HORIZONTAL,false)
         filterOptionList.layoutManager = layoutManager
-        filterOptionList.adapter = filterListAdapter
-        if(imagePath != null) filterListAdapter.setFilters(getFilters(imagePath))
+        filterOptionList.adapter = adapter
+        getFilters()
+
         //(requireActivity() as ImageCropActivity).onFilterMenuLoad()
     }
 
@@ -48,17 +71,27 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(FilterOptionViewModel::class.java)
+//        viewModel = ViewModelProvider(this).get(FilterOptionViewModel::class.java)
     }
 
     override fun onFilterOptionClick(filter: Filter)
     {
-        (requireActivity() as ImagePreviewActivity).onFilterClicked(filter)
+
     }
 
-    private fun getFilters(imagePath : String) : List<Filter>
+    private fun initUI()
     {
-        return filterHelper.getFilterList(imagePath)
+        val serializedImage = arguments?.getSerializable(Tags.SERIALIZED_IMAGE) as Image?
+        viewModel.chosenImage = serializedImage
+        val imagePosition = arguments?.getInt(Tags.IMAGE_POSITION)
+        viewModel.chosenImagePosition = imagePosition ?: -1
+    }
+
+    private fun getFilters()
+    {
+        viewModel.getFilters().observe(viewLifecycleOwner, Observer {
+            adapter?.setFilters(it)
+        })
     }
 
 }

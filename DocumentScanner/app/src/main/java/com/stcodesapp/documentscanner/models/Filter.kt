@@ -8,5 +8,7 @@ enum class FilterType{
     CUSTOM_FILTER,
     DEFAULT,
     GRAY_SCALE,
-    BLACK_AND_WHITE
+    BLACK_AND_WHITE,
+    BRIGHTEN,
+    LIGHTEN
 }

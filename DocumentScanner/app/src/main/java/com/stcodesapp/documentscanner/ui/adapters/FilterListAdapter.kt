@@ -1,22 +1,15 @@
 package com.stcodesapp.documentscanner.ui.adapters
 
 import android.content.Context
-import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.databinding.FilterItemLayoutBinding
-import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.ui.helpers.getGlideImageRequestOption
-import com.stcodesapp.documentscanner.utils.BitmapUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class FilterListAdapter (private val context: Context, private val listener : Listener, private val sourceImagePath : String?) : RecyclerView.Adapter<FilterListAdapter.FilterViewHolder>()
 {
@@ -61,37 +54,6 @@ class FilterListAdapter (private val context: Context, private val listener : Li
         {
             dataBinding.filter = filter
             dataBinding.executePendingBindings()
-            applyFilter(filter)
-
-
-        }
-
-        private fun applyFilter(filter: Filter)
-        {
-            ioCoroutine.launch {
-                val bitmapFromImage = BitmapUtil(context).getBitmapFromPath(filter.imagepath, 100, 100)
-                val imageRequestOption = getGlideImageRequestOption(R.drawable.image_placeholder)
-                if (bitmapFromImage != null) {
-                    if(filter.type != null)
-                    {
-                        val filteredBitmap = FilterHelper(context).applyFilter(bitmapFromImage, filter)
-                        uiCoroutine.launch { filterPreview(filteredBitmap, imageRequestOption) }
-                    }
-                    else {
-                        uiCoroutine.launch { filterPreview(bitmapFromImage, imageRequestOption) }
-                    }
-
-                }
-            }
-
-        }
-
-        private fun filterPreview(bitmapFromImage: Bitmap?, imageRequestOption: RequestOptions)
-        {
-            Glide.with(context)
-                .load(bitmapFromImage)
-                .apply(imageRequestOption)
-                .into(dataBinding.filterPreview)
         }
     }
 }

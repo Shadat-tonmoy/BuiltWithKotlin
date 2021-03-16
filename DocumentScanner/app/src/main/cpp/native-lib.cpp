@@ -21,6 +21,24 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getGrayscaleImage(JNIEn
 }
 
 extern "C" JNIEXPORT void JNICALL
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getBrightenImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage,jint brightness_value)
+{
+    Mat srcImage;
+    bitmapToMat(env,inputImage,srcImage,false);
+    Mat processedImage = getBrightenImage(srcImage,brightness_value);
+    matToBitmap(env,processedImage,outputImage,false);
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getLightenImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage,jfloat contrast_value)
+{
+    Mat srcImage;
+    bitmapToMat(env,inputImage,srcImage,false);
+    Mat processedImage = getLightenImage(srcImage,contrast_value);
+    matToBitmap(env,processedImage,outputImage,false);
+}
+
+extern "C" JNIEXPORT void JNICALL
 Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getBlackAndWhiteImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage)
 {
     Mat srcImage;

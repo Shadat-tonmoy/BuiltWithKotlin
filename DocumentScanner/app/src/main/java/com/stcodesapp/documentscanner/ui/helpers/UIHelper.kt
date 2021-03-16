@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.appbar.MaterialToolbar
 import com.stcodesapp.documentscanner.R
@@ -34,6 +35,8 @@ fun loadImage(view: AppCompatImageView, url: String?)
     val imageRequestOption = getGlideImageRequestOption(R.drawable.image_placeholder)
     Glide.with(view.context)
         .load(url)
+        .diskCacheStrategy(DiskCacheStrategy.NONE)
+        .skipMemoryCache(true)
         .apply(imageRequestOption)
         .into(view)
 }

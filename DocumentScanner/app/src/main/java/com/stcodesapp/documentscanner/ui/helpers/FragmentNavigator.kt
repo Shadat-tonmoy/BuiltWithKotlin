@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.transition.Slide
 import com.stcodesapp.documentscanner.constants.Tags
+import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
@@ -47,13 +48,13 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         replaceFragment(moreFragment!!,Tags.MORE_FRAGMENT)
     }
 
-    fun loadFilterFragment(chosenImagePath : String)
+    fun loadFilterFragment(chosenImage : Image, imagePosition : Int)
     {
         getCurrentFragment()?.let { if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
             fragmentManager?.popBackStack()
             return
         }
-        addFragment(FilterOptionFragment.newInstance(Bundle().apply { putString(Tags.IMAGE_PATH, chosenImagePath) }),true, false, Tags.FILTER_OPTION_FRAGMENT)
+        addFragment(FilterOptionFragment.newInstance(chosenImage,imagePosition),true, false, Tags.FILTER_OPTION_FRAGMENT)
     }
 
     fun loadPaperEffectFragment(listener : PaperEffectFragment.Listener)

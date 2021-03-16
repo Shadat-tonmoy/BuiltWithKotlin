@@ -127,7 +127,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
         getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRation)
         cropImageView.setImageBitmap(dstBitmap,false)
-        //viewModel.saveImageThumbnail(dstBitmap)
+        viewModel.saveImageThumbnail(dstBitmap)
         cropImageView.isShowCropOverlay = false
         setCroppedFlag(true)
     }

@@ -196,6 +196,18 @@ Mat getGrayscaleImage(Mat inputImage)
 {
     Mat grayScaleImage;
     cvtColor(inputImage,grayScaleImage,COLOR_BGR2GRAY);
+    return grayScaleImage;
+}
+
+Mat getBrightenImage(Mat inputImage, int brightnessValue)
+{
+    inputImage.convertTo(inputImage,-1,1,brightnessValue);
+    return inputImage;
+}
+
+Mat getLightenImage(Mat inputImage, float contrastValue)
+{
+    inputImage.convertTo(inputImage,-1,contrastValue,0);
     return inputImage;
 }
 

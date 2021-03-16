@@ -225,7 +225,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
             val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
             if(imageAtPosition != null)
             {
-                fragmentNavigator.loadFilterFragment(imageAtPosition.path)
+                fragmentNavigator.loadFilterFragment(imageAtPosition,chosenImagePosition)
             }
         }
 

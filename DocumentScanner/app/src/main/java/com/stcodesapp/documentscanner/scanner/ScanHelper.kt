@@ -12,3 +12,7 @@ external fun getWarpedImage(inputImage : Bitmap, outputImage : Bitmap, polygon: 
 external fun getFilteredImage(inputImage : Bitmap, outputImage : Bitmap, blockSize: Int, c : Double)
 
 external fun updateBrightnessAndContrastOfImage(inputImage : Bitmap, outputImage : Bitmap, brightnessValue: Int, contrastValue : Float)
+
+external fun getBrightenImage(inputImage : Bitmap, outputImage : Bitmap, brightnessValue: Int)
+
+external fun getLightenImage(inputImage : Bitmap, outputImage : Bitmap, contrastValue: Float)

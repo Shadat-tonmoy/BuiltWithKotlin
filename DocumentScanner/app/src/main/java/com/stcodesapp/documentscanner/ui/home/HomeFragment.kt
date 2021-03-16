@@ -25,7 +25,6 @@ import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
 import com.stcodesapp.documentscanner.ui.helpers.showToast
 import kotlinx.android.synthetic.main.home_layout.*
 import kotlinx.android.synthetic.main.home_layout.view.*
-import org.opencv.android.OpenCVLoader
 import javax.inject.Inject
 
 class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionListener, ImagePickerForAndroid.BatchImageSelectionListener, DocumentListAdapter.Listener
@@ -52,14 +51,6 @@ class HomeFragment : BaseFragment(), ImagePickerForAndroid.SingleImageSelectionL
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        if(OpenCVLoader.initDebug())
-        {
-            Log.e(TAG, "onCreate: OpenCVLoadedSuccess")
-        }
-        else
-        {
-            Log.e(TAG, "onCreate: OpenCVLoadedFailed")
-        }
     }
 
     override fun onAttach(context: Context)
