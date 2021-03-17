@@ -11,4 +11,5 @@
     <color name="transparentBlack">#A6000000</color>
     <color name="grey">#717171</color>
     <color name="red">#FF0000</color>
+    <color name="iconColor">#000</color>
 </resources>

@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import kotlinx.coroutines.launch
 import java.io.File
@@ -30,6 +31,8 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
     @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
+    @Inject lateinit var fileHelper: FileHelper
+
     var originalImageBitmap: Bitmap? = null
 
     var documentPages : List<Image>? = null
@@ -59,21 +62,12 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         return liveData
     }
 
-    private suspend fun deleteDocFilesAndFolder(documentWithId : Document?)
+    private fun deleteDocFilesAndFolder(documentWithId : Document?)
     {
         if (documentWithId != null)
         {
             val documentFolder = File(documentWithId.path)
-            val allFiles = documentFolder.listFiles()
-            if (allFiles != null) {
-                for (file in allFiles)
-                {
-                    val fileDeleteResult = file.delete()
-                    Log.e(TAG, "deleteDocFilesAndFolder: fileDeleteResult: $fileDeleteResult")
-                }
-            }
-            val folderDeleteResult = documentFolder.delete()
-            Log.e(TAG, "deleteDocFilesAndFolder: folderDeleteResult : $folderDeleteResult")
+            fileHelper.deleteData(documentFolder)
         }
     }
 

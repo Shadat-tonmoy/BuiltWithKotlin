@@ -3,8 +3,12 @@ package com.stcodesapp.documentscanner.ui.documentPages
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
+import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.RequestCode
 import com.stcodesapp.documentscanner.constants.RequestCode.Companion.REQUEST_PERSISTABLE_STORAGE_PERMISSION
@@ -17,9 +21,13 @@ import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFService
 import com.stcodesapp.documentscanner.tasks.imageToPDF.ImageToPDFServiceHelper
 import com.stcodesapp.documentscanner.ui.adapters.DocumentPageAdapter
+import com.stcodesapp.documentscanner.ui.dialogs.DocumentNameDialog
 import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
+import com.stcodesapp.documentscanner.ui.helpers.showToast
 import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
+import kotlinx.android.synthetic.main.app_toolbar.*
+import kotlinx.android.synthetic.main.app_toolbar.view.*
 import kotlinx.android.synthetic.main.document_pages_layout.*
 import javax.inject.Inject
 
@@ -35,6 +43,8 @@ class DocumentPagesActivity : BaseActivity()
 
     lateinit var adapter : DocumentPageAdapter
     private val imageToPDFNameDialog : ImageToPDFNameDialog by lazy { ImageToPDFNameDialog(this, imageToPDFNameDialogListener) }
+
+    private val documentNameDialog : DocumentNameDialog by lazy { DocumentNameDialog(this, documentNameDialogListener) }
 
     companion object{
         private const val TAG = "DocumentPagesActivity"
@@ -52,7 +62,9 @@ class DocumentPagesActivity : BaseActivity()
         viewModel.bindValueFromIntent(intent)
         serviceHelper.initService(serviceConnectionListener)
         initUI()
+        observeDocumentDetails()
         observeDocumentPages()
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -64,7 +76,23 @@ class DocumentPagesActivity : BaseActivity()
                 REQUEST_PERSISTABLE_STORAGE_PERMISSION -> grantPersistableStorageUriPermission(data)
             }
         }
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean
+    {
+        Log.e(TAG, "onCreateOptionsMenu: called")
+        menuInflater.inflate(R.menu.document_pages_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean
+    {
+        when(item.itemId)
+        {
+            R.id.edit_menu -> showDocumentNameDialog()
+            R.id.delete_menu -> showDocumentDeleteWarningDialog()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 
@@ -72,6 +100,7 @@ class DocumentPagesActivity : BaseActivity()
     private fun initUI()
     {
         setContentView(dataBinding.root)
+        setSupportActionBar(dataBinding.root.appToolbar)
         dataBinding.viewModel = viewModel
         saveFab.isIconAnimated = false
         adapter = DocumentPageAdapter(this){ image: Image, position: Int -> onDocumentPageClicked(image,position)}
@@ -97,6 +126,19 @@ class DocumentPagesActivity : BaseActivity()
         saveFab.close(true)
         imageToPDFNameDialog.showDialog()
     }
+
+    private fun showDocumentNameDialog()
+    {
+        saveFab.close(true)
+        documentNameDialog.showDialog(viewModel.selectedDocument)
+    }
+
+    private fun showDocumentDeleteWarningDialog()
+    {
+        dialogHelper.showAlertDialog("Are you sure to delete the document?",documentDeleteWarningListener)
+    }
+
+
 
     private fun showPersistableStoragePermissionDialog()
     {
@@ -145,6 +187,32 @@ class DocumentPagesActivity : BaseActivity()
         })
     }
 
+    private fun observeDocumentDetails()
+    {
+        viewModel.getLiveDocumentDetail().observe(this, Observer {
+            if(it!=null)
+            {
+                viewModel.selectedDocument = it
+                appToolbar.title = it.title
+            }
+            else
+            {
+                finish()
+            }
+        })
+    }
+
+    private fun deleteDocAndExit()
+    {
+        viewModel.deleteDoc().observe(this, Observer {
+            if(it > 0)
+            {
+                showToast("Document is deleted!")
+                finish()
+            }
+        })
+    }
+
     private fun onDocumentPageClicked(documentPage : Image, position : Int)
     {
         val intent = Intent(this,ImageCropActivity::class.java)
@@ -182,6 +250,12 @@ class DocumentPagesActivity : BaseActivity()
         override fun onShowOutputButtonClicked() {openOutputList()}
     }
 
+    private val documentNameDialogListener = object : DocumentNameDialog.Listener{
+        override fun onSaveButtonClicked(name: String) {
+
+        }
+    }
+
     private val serviceConnectionListener = object : ImageToPDFServiceHelper.Listener{
         override fun onServiceConnected() {
             if(serviceHelper.imageToPDFService?.isConversionRunning == true)
@@ -189,10 +263,20 @@ class DocumentPagesActivity : BaseActivity()
                 serviceHelper.imageToPDFService?.listener =imageToPDFServiceListener
                 showPDFNameDialog()
                 imageToPDFNameDialog.updateProgress(serviceHelper.imageToPDFService?.lastProgress)
-
             }
-
         }
+    }
+
+    private val documentDeleteWarningListener = object : DialogHelper.AlertDialogListener
+    {
+        override fun onPositiveButtonClicked()
+        {
+            deleteDocAndExit()
+        }
+
+        override fun onNegativeButtonClicked()
+        {}
+
     }
 
 }

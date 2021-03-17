@@ -1,21 +1,21 @@
 package com.stcodesapp.documentscanner.ui.documentPages
 
 import android.content.Intent
-import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.github.clans.fab.FloatingActionMenu
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.core.AppDatabase
+import com.stcodesapp.documentscanner.database.entities.Document
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
+import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.models.ImageToPDFProgress
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
-import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class DocumentPagesViewModel @Inject constructor(private val app: DocumentScannerApp) : BaseViewModel(app)
@@ -30,8 +30,10 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
     @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
+    @Inject lateinit var fileHelper: FileHelper
 
     var selectedImages : List<Image>? = null
+    var selectedDocument : Document? = null
 
     var documentId : Long = 0
 
@@ -45,6 +47,11 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         return imageManager.getDocumentPagesLiveData(documentId)
     }
 
+    fun getLiveDocumentDetail() : LiveData<Document>
+    {
+        return documentManager.getLiveDocumentById(documentId)
+    }
+
     fun createPDF(fileName: String) : LiveData<ImageToPDFProgress>
     {
         val liveData = MutableLiveData<ImageToPDFProgress>()
@@ -55,6 +62,27 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
             }
         }
         return liveData
+    }
+
+    fun deleteDoc() : LiveData<Int>
+    {
+        val liveData = MutableLiveData<Int>()
+        ioCoroutine.launch {
+            val documentWithId = documentManager.getDocumentById(documentId)
+            val rowAffected = documentManager.deleteDocumentById(documentId)
+            deleteDocFilesAndFolder(documentWithId)
+            liveData.postValue(rowAffected)
+        }
+        return liveData
+    }
+
+    private fun deleteDocFilesAndFolder(documentWithId : Document?)
+    {
+        if (documentWithId != null)
+        {
+            val documentFolder = File(documentWithId.path)
+            fileHelper.deleteData(documentFolder)
+        }
     }
 
 }

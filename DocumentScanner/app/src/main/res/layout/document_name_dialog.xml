@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout android:id="@+id/saveAsPDFFieldLayout"
+    android:padding="@dimen/dimen_8"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/outputNameLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/document_name"
+        android:layout_marginHorizontal="@dimen/dimen_8"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="?android:attr/listDivider"
+        app:layout_constraintTop_toBottomOf="@id/outputNameLabel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginVertical="@dimen/dimen_8"
+        />
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/nameInputLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/dimen_8"
+        android:layout_marginTop="@dimen/dimen_8"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        android:hint="@string/enter_name_here">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/documentNameField"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/documentNameSaveButton"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.45"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:text="@string/save"
+        app:layout_constraintEnd_toEndOf="@+id/nameInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/nameInputLayout"
+        />
+
+    <Button
+        android:id="@+id/documentNameCancelButton"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_8"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/nameInputLayout"
+        app:layout_constraintTop_toBottomOf="@+id/nameInputLayout"
+        app:layout_constraintWidth_percent="0.45" />
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

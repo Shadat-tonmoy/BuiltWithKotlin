@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#36A1E8</color>
+    <color name="colorSecondary">#36A1E8</color>
+    <color name="colorPrimaryDark">#36A1E8</color>
+    <color name="colorAccent">#03DAC5</color>
     <color name="toolbarBackButton">#FFF</color>
     <color name="grey">#717171</color>
+    <color name="iconColor">#FFF</color>
 </resources>

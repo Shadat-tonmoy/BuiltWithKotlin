@@ -3,6 +3,7 @@ package com.stcodesapp.documentscanner.helpers
 import android.content.Context
 import android.net.Uri
 import android.os.Environment
+import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.OUTPUT_DIRECTORY_NAME
@@ -11,6 +12,10 @@ import java.io.File
 
 class FileHelper(private val context: Context)
 {
+    companion object{
+        private const val TAG = "FileHelper"
+    }
+
     fun getSavedFilePath(): String {
         val externalStorage = Environment.getExternalStorageDirectory()
         val externalStoragePath = externalStorage.absolutePath
@@ -117,6 +122,29 @@ class FileHelper(private val context: Context)
         if(!thumbFile.exists()) thumbFile.createNewFile()
         return thumbFile
 
+    }
+
+    fun deleteData(fileOrDir : File)
+    {
+        if(fileOrDir.isDirectory)
+        {
+            val allFiles = fileOrDir.listFiles()
+            if(allFiles != null)
+            {
+                for(file in allFiles)
+                {
+                    if(file.isFile)
+                    {
+                        val result = file.delete()
+                        Log.e(TAG, "deleteData: DeletingFile : ${file.absolutePath}, result : $result")
+                    }
+                    else deleteData(file)
+                }
+            }
+            val result = fileOrDir.delete()
+            Log.e(TAG, "deleteData: DeletingFileOrDir : ${fileOrDir.absolutePath}, result : $result")
+        }
+        else fileOrDir.delete()
     }
 
 

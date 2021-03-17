@@ -30,6 +30,11 @@ class DocumentManager(private val context: Context, private val dao : DocumentDa
         return dao.getDocumentById(id)
     }
 
+    fun getLiveDocumentById(id : Long) : LiveData<Document>
+    {
+        return dao.getLiveDocumentById(id)
+    }
+
     suspend fun deleteDocumentById(id : Long) : Int
     {
         return dao.deleteDocumentById(id)
