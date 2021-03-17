@@ -7,6 +7,6 @@ import androidx.room.PrimaryKey
 data class Document (
     @PrimaryKey(autoGenerate = true) var id : Long = 0,
     val path : String,
-    val title : String,
+    var title : String,
     var thumbPath : String = "",
     val lastModified : Long)

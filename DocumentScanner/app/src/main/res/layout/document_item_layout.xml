@@ -32,7 +32,7 @@
             android:ellipsize="middle"
             android:singleLine="true"
             android:layout_marginTop="@dimen/dimen_8"
-            android:text="@{UIHelperKt.getFileNameFromPath(document.path)}"
+            android:text="@{document.title}"
             android:textAppearance="@style/TextAppearance.AppCompat"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/documentIcon"

@@ -230,6 +230,23 @@ class DocumentPagesActivity : BaseActivity()
         serviceHelper.imageToPDFService?.listener =imageToPDFServiceListener
     }
 
+    private fun updateDocumentName(name: String)
+    {
+        viewModel.updateDocumentName(name).observe(this, Observer {
+            if(it != null && it > 0)
+            {
+                documentNameDialog.hideDialog()
+                showToast("Name updated successfully!")
+            }
+            else
+            {
+                documentNameDialog.hideDialog()
+                showToast("Could not update name. Please try again!")
+            }
+        })
+
+    }
+
     private fun openOutputList()
     {
         val resultIntent = Intent()
@@ -251,8 +268,9 @@ class DocumentPagesActivity : BaseActivity()
     }
 
     private val documentNameDialogListener = object : DocumentNameDialog.Listener{
-        override fun onSaveButtonClicked(name: String) {
-
+        override fun onSaveButtonClicked(name: String)
+        {
+            updateDocumentName(name)
         }
     }
 

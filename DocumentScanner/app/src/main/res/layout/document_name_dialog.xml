@@ -35,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/dimen_8"
         android:layout_marginTop="@dimen/dimen_8"
+        app:endIconMode="clear_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

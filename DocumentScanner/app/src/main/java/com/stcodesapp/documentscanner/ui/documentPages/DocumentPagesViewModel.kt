@@ -52,6 +52,23 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         return documentManager.getLiveDocumentById(documentId)
     }
 
+    fun updateDocumentName(name: String) : LiveData<Long>
+    {
+        val liveData = MutableLiveData<Long>()
+        ioCoroutine.launch {
+            if(selectedDocument != null)
+            {
+                selectedDocument?.apply { title = name }
+                val updatedRows = documentManager.updateDocument(selectedDocument!!)
+                liveData.postValue(updatedRows)
+            }
+            else liveData.postValue(-1L)
+        }
+
+        return liveData
+
+    }
+
     fun createPDF(fileName: String) : LiveData<ImageToPDFProgress>
     {
         val liveData = MutableLiveData<ImageToPDFProgress>()

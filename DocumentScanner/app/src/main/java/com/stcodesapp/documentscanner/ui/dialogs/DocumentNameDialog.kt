@@ -70,16 +70,8 @@ class DocumentNameDialog(private val context: Context, private val listener : Li
         else
         {
             hideErrorMessage()
-            val fileName = "$text.pdf"
-            if(isFileAlreadyExists(fileName))
-            {
-                showErrorMessage("File Already Exists! Please choose a different name!")
-            }
-            else
-            {
-                listener.onSaveButtonClicked(fileName)
-                showProgress()
-            }
+            listener.onSaveButtonClicked(text)
+            //showProgress()
         }
 
     }
@@ -97,13 +89,6 @@ class DocumentNameDialog(private val context: Context, private val listener : Li
     fun onCancelButtonClicked()
     {
         hideDialog()
-    }
-
-    private fun isFileAlreadyExists(fileName : String) : Boolean
-    {
-        val filePath = FileHelper(context).getPDFFullPathToSave(fileName)
-        val file = File(filePath)
-        return file.exists()
     }
 
     private fun showProgress()
