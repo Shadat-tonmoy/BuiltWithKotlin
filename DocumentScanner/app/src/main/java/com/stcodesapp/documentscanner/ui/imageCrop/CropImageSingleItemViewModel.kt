@@ -11,6 +11,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.*
+import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.FilterType
 import com.stcodesapp.documentscanner.scanner.getBlackAndWhiteImage
 import com.stcodesapp.documentscanner.scanner.getBrightenImage
@@ -112,7 +113,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
         return liveData
     }
 
-    fun saveImageThumbnail(imageBitmap : Bitmap)
+    fun saveImageCropData(imageBitmap : Bitmap)
     {
         ioCoroutine.launch {
             if(chosenImage != null)
@@ -124,22 +125,33 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
                     val filterList = filterHelper.getFilterList(chosenImage!!.path)
                     for(filter in filterList)
                     {
-                        val thumbFileName = filterHelper.getFilteredThumbFileName(chosenImage!!.path,filter.type)
-                        Log.e(TAG, "saveImageThumbnail: thumbFileName : $thumbFileName")
-                        val thumbFile = fileHelper.getThumbFile(documentPath,thumbFileName)
-                        Log.e(TAG, "saveImageThumbnail: thumbFile : $thumbFile")
-                        val thumbBitmap = imageHelper.getResizedBitmapByThreshold(imageBitmap, THUMB_SIZE)
-                        val thumbFilePath = thumbFile.absolutePath
-                        if(thumbBitmap != null)
-                        {
-                            val filteredBitmap = getFilteredThumbBitmap(filter.type, thumbBitmap)
-                            imageHelper.saveBitmapInFile(filteredBitmap, thumbFilePath,quality = 100)
-                            //filteredBitmap.recycle()
-                        }
+                        saveThumbWithFilter(filter, documentPath, imageBitmap)
                     }
-
+                    //setImageCropFlag(true)
                 }
             }
+        }
+    }
+
+    private fun saveThumbWithFilter(filter: Filter, documentPath: String, imageBitmap: Bitmap)
+    {
+        val thumbFileName = filterHelper.getFilteredThumbFileName(chosenImage!!.path, filter.type)
+        val thumbFile = fileHelper.getThumbFile(documentPath, thumbFileName)
+        val thumbBitmap = imageHelper.getResizedBitmapByThreshold(imageBitmap, THUMB_SIZE)
+        val thumbFilePath = thumbFile.absolutePath
+        if (thumbBitmap != null)
+        {
+            val filteredBitmap = getFilteredThumbBitmap(filter.type, thumbBitmap)
+            imageHelper.saveBitmapInFile(filteredBitmap, thumbFilePath, quality = 100)
+        }
+    }
+
+    private suspend fun setImageCropFlag(flag: Boolean)
+    {
+        if(chosenImage != null)
+        {
+            chosenImage?.apply { isCropped = flag }
+            imageManager.updateImage(chosenImage!!)
         }
     }
 

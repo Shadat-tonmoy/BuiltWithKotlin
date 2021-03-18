@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.database.core.AppDatabase
+import com.stcodesapp.documentscanner.database.core.migrationScripts
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.CacheHelper
@@ -38,7 +39,7 @@ class ApplicationModule(private val context: Context)
     fun provideAppDB(context: Context) : AppDatabase
     {
         val db = Room.databaseBuilder(context, AppDatabase::class.java,"DocumentScannerDB")
-            .fallbackToDestructiveMigration()
+            .addMigrations(*migrationScripts)
             .build()
         return db
     }

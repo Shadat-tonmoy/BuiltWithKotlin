@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.adapters
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -52,6 +53,7 @@ class FilterListAdapter (private val context: Context, private val listener : Li
     {
         fun bind(filter: Filter)
         {
+            Log.e(TAG, "bind: filter : $filter")
             dataBinding.filter = filter
             dataBinding.executePendingBindings()
         }

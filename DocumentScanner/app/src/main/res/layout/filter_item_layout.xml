@@ -7,6 +7,7 @@
             name="filter"
             type="com.stcodesapp.documentscanner.models.Filter" />
         <import type="com.stcodesapp.documentscanner.ui.helpers.UIHelperKt"/>
+        <import type="android.view.View"/>
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,6 +25,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/premiumBadge"
+            android:layout_width="@dimen/dimen_24"
+            android:layout_height="@dimen/dimen_24"
+            android:scaleType="centerCrop"
+            android:visibility="@{filter.paid ? View.VISIBLE : View.GONE}"
+            android:layout_margin="@dimen/dimen_8"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/crown" />
         
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filterTitle"

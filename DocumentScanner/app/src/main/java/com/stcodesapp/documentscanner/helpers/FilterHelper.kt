@@ -52,24 +52,14 @@ class FilterHelper(private val context: Context)
     fun getFilterList(imagePath : String) : List<Filter>
     {
         val filterList = mutableListOf<Filter>()
-        filterList.add(Filter("Custom Filter",imagePath,FilterType.CUSTOM_FILTER))
+        filterList.add(Filter("Custom Filter",imagePath,FilterType.CUSTOM_FILTER,true))
         filterList.add(Filter("Default",imagePath,FilterType.DEFAULT))
         filterList.add(Filter("Gray Scale",imagePath,FilterType.GRAY_SCALE))
         filterList.add(Filter("B&W",imagePath,FilterType.BLACK_AND_WHITE))
+        filterList.add(Filter("Paper",imagePath,FilterType.PAPER,true))
+        filterList.add(Filter("Polish",imagePath,FilterType.POLISH,true))
         filterList.add(Filter("Brighten",imagePath,FilterType.BRIGHTEN))
         filterList.add(Filter("Lighten",imagePath,FilterType.LIGHTEN))
-        return filterList
-    }
-
-    fun getFilteredThumbList(imagePath : String) : List<Filter>
-    {
-        val filterList = mutableListOf<Filter>()
-        filterList.add(Filter("Custom Filter",getFilteredThumbFilePath(imagePath,FilterType.CUSTOM_FILTER),FilterType.CUSTOM_FILTER))
-        filterList.add(Filter("Default",getFilteredThumbFilePath(imagePath,FilterType.DEFAULT),FilterType.DEFAULT))
-        filterList.add(Filter("Gray Scale",getFilteredThumbFilePath(imagePath,FilterType.GRAY_SCALE),FilterType.GRAY_SCALE))
-        filterList.add(Filter("B&W",getFilteredThumbFilePath(imagePath,FilterType.BLACK_AND_WHITE),FilterType.BLACK_AND_WHITE))
-        filterList.add(Filter("Brighten",getFilteredThumbFilePath(imagePath,FilterType.BRIGHTEN),FilterType.BRIGHTEN))
-        filterList.add(Filter("Lighten",getFilteredThumbFilePath(imagePath,FilterType.LIGHTEN),FilterType.LIGHTEN))
         return filterList
     }
 

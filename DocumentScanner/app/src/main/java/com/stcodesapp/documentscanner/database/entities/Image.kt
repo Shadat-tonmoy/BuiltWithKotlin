@@ -14,4 +14,6 @@ data class Image(
     var cropArea: String? = null,
     var croppingRatio : Double = 1.0,
     var isCropped : Boolean = false,
-    var filterName : String = "") : Serializable
+    var filterName : String = "",
+    var filterJson : String = ""
+    ) : Serializable

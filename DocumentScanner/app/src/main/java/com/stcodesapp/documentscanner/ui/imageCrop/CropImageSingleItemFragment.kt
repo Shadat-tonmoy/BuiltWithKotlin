@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +15,6 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
-import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
@@ -98,6 +96,10 @@ class CropImageSingleItemFragment : BaseFragment() {
             {
                 cropImageView.cropPolygon = polygon
             }
+            if(serializedImage.isCropped)
+            {
+                cropImageFromSavedValue(cropImageView.cropPolygonByRation)
+            }
         }
         cropImageView.guidelines = CropImageView.Guidelines.OFF
     }
@@ -127,9 +129,18 @@ class CropImageSingleItemFragment : BaseFragment() {
         val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
         getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRation)
         cropImageView.setImageBitmap(dstBitmap,false)
-        viewModel.saveImageThumbnail(dstBitmap)
+        viewModel.saveImageCropData(dstBitmap)
         cropImageView.isShowCropOverlay = false
         setCroppedFlag(true)
+    }
+
+    fun cropImageFromSavedValue(cropPolygon: Polygon)
+    {
+        val srcBitmap = cropImageView.bitmap
+        val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
+        getWarpedImage(srcBitmap, dstBitmap,cropPolygon)
+        cropImageView.setImageBitmap(dstBitmap,false)
+        cropImageView.isShowCropOverlay = false
     }
 
     fun setCroppedFlag(flag : Boolean)
