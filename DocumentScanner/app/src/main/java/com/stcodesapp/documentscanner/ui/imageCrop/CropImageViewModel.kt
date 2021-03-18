@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.Tags
@@ -15,6 +16,13 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.FileHelper
+import com.stcodesapp.documentscanner.models.BrightenFilter
+import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.models.FilterType
+import com.stcodesapp.documentscanner.models.LightenFilter
+import com.stcodesapp.documentscanner.scanner.getBrightenImage
+import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
+import com.stcodesapp.documentscanner.scanner.getLightenImage
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import kotlinx.coroutines.launch
 import java.io.File
@@ -97,6 +105,34 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
             liveData.postValue(deletedRows)
         }
         return liveData
+    }
+
+    fun saveCurrentImageFilterInfo(image: Image, filter : Filter) : LiveData<Long>
+    {
+        val liveData = MutableLiveData<Long>()
+        ioCoroutine.launch {
+            image.apply {
+                filterName = filter.type.toString()
+                filterJson = getFilterJSON(filter.type)
+            }
+            val affectedRow = imageManager.updateImage(image)
+            liveData.postValue(affectedRow)
+        }
+        liveData.postValue(-1L)
+        return liveData
+    }
+
+    private fun getFilterJSON(filterType: FilterType) : String
+    {
+        when(filterType)
+        {
+            FilterType.GRAY_SCALE -> ""
+            //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
+            FilterType.BRIGHTEN -> Gson().toJson(BrightenFilter(CropImageSingleItemViewModel.BRIGHTEN_FILTER_VALUE))
+            FilterType.LIGHTEN -> Gson().toJson(LightenFilter(CropImageSingleItemViewModel.LIGHTEN_FILTER_VALUE))
+            else -> return ""
+        }
+        return ""
     }
 
 

@@ -1,17 +1,21 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import android.widget.FrameLayout
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
 import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
+import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.helpers.*
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
 import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
@@ -49,10 +53,18 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
         viewModel.bindValueFromIntent(intent)
 
-        viewPagerAdapter = ImageViewPagerAdapter(this)
+        viewPagerAdapter = ImageViewPagerAdapter(this,imageLoadListener)
 
         viewPager.adapter = viewPagerAdapter
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback()
+        {
+            override fun onPageSelected(position: Int)
+            {
+                super.onPageSelected(position)
+                updateCurrentImage()
+            }
+        })
         fetchDocumentPages()
     }
 
@@ -225,10 +237,35 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
             val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
             if(imageAtPosition != null)
             {
-                fragmentNavigator.loadFilterFragment(imageAtPosition,chosenImagePosition)
+                fragmentNavigator.loadFilterFragment(imageAtPosition,chosenImagePosition,imageFilterListener)
             }
         }
+    }
 
+    private fun applyFilterToCurrentImage(filter: Filter)
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            currentFragment.applyFilter(filter, viewModel.originalImageBitmap)
+            val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
+            if(currentImage != null)
+            {
+                viewModel.saveCurrentImageFilterInfo(currentImage, filter)
+            }
+
+        }
+    }
+
+    private fun updateCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        {
+            viewModel.originalImageBitmap = currentFragment.getImageBitmap()
+        }
     }
 
     override fun getFragmentFrame(): FrameLayout? {
@@ -255,6 +292,22 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         {
             setBrightnessOfCurrentImage(brightness,contrast)
         }
+    }
+
+    private val imageFilterListener = object : FilterOptionFragment.Listener{
+        override fun onFilterOptionClicked(filter: Filter)
+        {
+            applyFilterToCurrentImage(filter)
+        }
+    }
+
+    private val imageLoadListener = object : CropImageSingleItemFragment.ImageLoadListener{
+        override fun onImageBitmapLoaded(imageBitmap: Bitmap)
+        {
+            Log.e(TAG, "onImageBitmapLoaded: setting")
+            viewModel.originalImageBitmap = imageBitmap
+        }
+
     }
 
 

@@ -5,7 +5,7 @@ data class Filter (var title : String, var imagepath : String, var type : Filter
 data class RGBAValue(var red : Double, var green : Double, var blue : Double, var alpha : Double = 1.0)
 
 data class BrightenFilter(var brightnessValue : Int)
-data class LightenFilter(var contrastValue : Int)
+data class LightenFilter(var contrastValue : Float)
 data class CustomFilter(var brightnessValue : Int, var contrastValue : Int)
 
 enum class FilterType{

@@ -1,8 +1,10 @@
 package com.stcodesapp.documentscanner.ui.filterOption
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +28,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
     companion object
     {
+        private const val TAG = "FilterOptionFragment"
         fun newInstance(image : Image, imagePosition : Int) : FilterOptionFragment
         {
             val fragment = FilterOptionFragment()
@@ -37,9 +40,14 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
         }
     }
 
+    interface Listener{
+        fun onFilterOptionClicked(filter: Filter)
+    }
+
     @Inject lateinit var viewModel: FilterOptionViewModel
     private val filterHelper by lazy { FilterHelper(requireContext()) }
     private var adapter : FilterListAdapter? = null
+    var listener : Listener? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?): View? {
@@ -76,7 +84,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
 
     override fun onFilterOptionClick(filter: Filter)
     {
-
+        listener?.onFilterOptionClicked(filter)
     }
 
     private fun initUI()
@@ -93,5 +101,7 @@ class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {
             adapter?.setFilters(it)
         })
     }
+
+
 
 }

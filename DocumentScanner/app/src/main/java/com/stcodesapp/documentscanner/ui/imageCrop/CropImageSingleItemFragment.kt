@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
+import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
@@ -40,8 +41,13 @@ class CropImageSingleItemFragment : BaseFragment() {
         fun onItemDeleted(position : Int)
     }
 
+    interface ImageLoadListener{
+        fun onImageBitmapLoaded(imageBitmap: Bitmap)
+    }
+
     @Inject lateinit var viewModel: CropImageSingleItemViewModel
     var listener : Listener? = null
+    var imageLoadListener : ImageLoadListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -69,6 +75,7 @@ class CropImageSingleItemFragment : BaseFragment() {
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
                 setSavedValue(serializedImage)
+                imageLoadListener?.onImageBitmapLoaded(cropImageView.bitmap)
 
             }
 
@@ -84,6 +91,7 @@ class CropImageSingleItemFragment : BaseFragment() {
     {
         setSavedCropArea(serializedImage)
         setSavedRotation()
+        setSavedFilter(serializedImage)
     }
 
     private fun setSavedCropArea(serializedImage: Image)
@@ -102,6 +110,16 @@ class CropImageSingleItemFragment : BaseFragment() {
             }
         }
         cropImageView.guidelines = CropImageView.Guidelines.OFF
+    }
+
+    private fun setSavedFilter(serializedImage: Image)
+    {
+
+        val savedFilterName = serializedImage.filterName
+        if (!savedFilterName.isNullOrEmpty())
+        {
+            viewModel.applySavedFilter(serializedImage,cropImageView.bitmap)
+        }
     }
 
     fun saveUpdatedCropArea()
@@ -134,6 +152,20 @@ class CropImageSingleItemFragment : BaseFragment() {
         setCroppedFlag(true)
     }
 
+    fun applyFilter(filter : Filter, originalBitmap : Bitmap?)
+    {
+        if(originalBitmap != null)
+        {
+            viewModel.applyFilterToCurrentImage(filter,originalBitmap).observe(viewLifecycleOwner,
+                Observer {
+                    cropImageView.setImageBitmap(it,false)
+                })
+
+
+        }
+
+    }
+
     fun cropImageFromSavedValue(cropPolygon: Polygon)
     {
         val srcBitmap = cropImageView.bitmap
@@ -157,7 +189,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         }
     }
 
-    fun getImageBitmap() : Bitmap
+    fun getImageBitmap() : Bitmap?
     {
         return cropImageView.bitmap
     }

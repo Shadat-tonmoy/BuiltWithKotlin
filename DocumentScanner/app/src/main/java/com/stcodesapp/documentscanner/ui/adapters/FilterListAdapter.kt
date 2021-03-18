@@ -38,9 +38,9 @@ class FilterListAdapter (private val context: Context, private val listener : Li
     }
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
-        val document = filters[position]
-        holder.bind(document)
-        holder.dataBinding.root.setOnClickListener { listener.onFilterOptionClick(document) }
+        val filter = filters[position]
+        holder.bind(filter)
+        holder.dataBinding.root.setOnClickListener { listener.onFilterOptionClick(filter) }
     }
 
     fun setFilters(filters : List<Filter>)

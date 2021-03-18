@@ -48,13 +48,15 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
         replaceFragment(moreFragment!!,Tags.MORE_FRAGMENT)
     }
 
-    fun loadFilterFragment(chosenImage : Image, imagePosition : Int)
+    fun loadFilterFragment(chosenImage : Image, imagePosition : Int, listener : FilterOptionFragment.Listener)
     {
         getCurrentFragment()?.let { if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
             fragmentManager?.popBackStack()
             return
         }
-        addFragment(FilterOptionFragment.newInstance(chosenImage,imagePosition),true, false, Tags.FILTER_OPTION_FRAGMENT)
+        val fragment = FilterOptionFragment.newInstance(chosenImage,imagePosition)
+        fragment.listener = listener
+        addFragment(fragment,true, false, Tags.FILTER_OPTION_FRAGMENT)
     }
 
     fun loadPaperEffectFragment(listener : PaperEffectFragment.Listener)

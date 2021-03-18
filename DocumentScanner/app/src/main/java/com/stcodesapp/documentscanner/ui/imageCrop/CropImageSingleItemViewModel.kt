@@ -1,19 +1,19 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.graphics.Bitmap
-import android.util.Log
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.*
+import com.stcodesapp.documentscanner.models.BrightenFilter
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.scanner.getBlackAndWhiteImage
+import com.stcodesapp.documentscanner.models.LightenFilter
 import com.stcodesapp.documentscanner.scanner.getBrightenImage
 import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
 import com.stcodesapp.documentscanner.scanner.getLightenImage
@@ -141,7 +141,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
         val thumbFilePath = thumbFile.absolutePath
         if (thumbBitmap != null)
         {
-            val filteredBitmap = getFilteredThumbBitmap(filter.type, thumbBitmap)
+            val filteredBitmap = getFilteredBitmap(filter.type, thumbBitmap)
             imageHelper.saveBitmapInFile(filteredBitmap, thumbFilePath, quality = 100)
         }
     }
@@ -155,7 +155,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
         }
     }
 
-    private fun getFilteredThumbBitmap(filterType: FilterType, srcBitmap : Bitmap) : Bitmap
+    private fun getFilteredBitmap(filterType: FilterType, srcBitmap : Bitmap) : Bitmap
     {
         val dstBitmap = Bitmap.createBitmap(srcBitmap.width,srcBitmap.height, Bitmap.Config.ARGB_8888)
         when(filterType)
@@ -167,9 +167,54 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
             else -> return srcBitmap
         }
         return dstBitmap
+    }
+
+    fun applyFilterToCurrentImage(filter: Filter, srcBitmap : Bitmap) : LiveData<Bitmap>
+    {
+        val liveData = MutableLiveData<Bitmap>()
+
+        val filteredBitmap = getFilteredBitmap(filter.type,srcBitmap)
+        liveData.postValue(filteredBitmap)
+
+        return liveData
+
+    }
+
+    fun applySavedFilter(image: Image, srcBitmap: Bitmap) : Bitmap
+    {
+        val filterName = image.filterName
+        when(filterName)
+        {
+            FilterType.CUSTOM_FILTER.toString() -> {
+
+            }
+            FilterType.DEFAULT.toString() -> {
 
 
+            }
+            FilterType.GRAY_SCALE.toString() -> {
+                getGrayscaleImage(srcBitmap,srcBitmap)
+            }
+            FilterType.BLACK_AND_WHITE.toString() -> {
 
+            }
+            FilterType.PAPER.toString() -> {
+
+            }
+            FilterType.POLISH.toString() -> {
+
+            }
+            FilterType.BRIGHTEN.toString() ->
+            {
+                val filter = Gson().fromJson(image.filterJson,BrightenFilter::class.java)
+                getBrightenImage(srcBitmap,srcBitmap, filter.brightnessValue)
+            }
+            FilterType.LIGHTEN.toString() -> {
+                val filter = Gson().fromJson(image.filterJson,LightenFilter::class.java)
+                getLightenImage(srcBitmap,srcBitmap, filter.contrastValue)
+            }
+        }
+        return srcBitmap
     }
 
 }

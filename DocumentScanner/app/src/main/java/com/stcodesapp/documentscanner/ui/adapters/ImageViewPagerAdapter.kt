@@ -10,7 +10,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
 import java.lang.Exception
 
-class ImageViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateAdapter(fragmentActivity)
+class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadListener: CropImageSingleItemFragment.ImageLoadListener) : FragmentStateAdapter(fragmentActivity)
 {
 
     companion object{
@@ -25,6 +25,7 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity) : FragmentStateA
         val currentDocPage = mDiffer.currentList[position]
         val fragment = CropImageSingleItemFragment.newInstance(currentDocPage,position)
         fragment.listener = object  : CropImageSingleItemFragment.Listener{ override fun onItemDeleted(position: Int) { notifyItemRemoved(position) } }
+        fragment.imageLoadListener = imageLoadListener
         return fragment
     }
 
