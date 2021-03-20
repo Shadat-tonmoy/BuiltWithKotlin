@@ -50,35 +50,44 @@ class FragmentNavigator(private val fragmentFrameWrapper: FragmentFrameWrapper?,
 
     fun loadFilterFragment(chosenImage : Image, imagePosition : Int, listener : FilterOptionFragment.Listener)
     {
-        getCurrentFragment()?.let { if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
-            fragmentManager?.popBackStack()
-            return
+        getCurrentFragment()?.let {
+            if(it.tag == Tags.FILTER_OPTION_FRAGMENT)
+            {
+                fragmentManager?.popBackStack()
+                return
+            }
         }
         val fragment = FilterOptionFragment.newInstance(chosenImage,imagePosition)
         fragment.listener = listener
-        addFragment(fragment,true, false, Tags.FILTER_OPTION_FRAGMENT)
+        replaceFragment(fragment,true, true, Tags.FILTER_OPTION_FRAGMENT)
     }
 
     fun loadPaperEffectFragment(listener : PaperEffectFragment.Listener)
     {
-        getCurrentFragment()?.let { if(it.tag == Tags.PAPER_EFFECT_FRAGMENT)
-            fragmentManager?.popBackStack()
-            return
+        getCurrentFragment()?.let {
+            if(it.tag == Tags.PAPER_EFFECT_FRAGMENT)
+            {
+                fragmentManager?.popBackStack()
+                return
+            }
         }
         val fragment = PaperEffectFragment.newInstance()
         fragment.listener = listener
-        addFragment(fragment,true, false, Tags.PAPER_EFFECT_FRAGMENT)
+        replaceFragment(fragment,true, true, Tags.PAPER_EFFECT_FRAGMENT)
     }
 
     fun loadImageEffectFragment(listener : ImageEffectFragment.Listener)
     {
-        getCurrentFragment()?.let { if(it.tag == Tags.IMAGE_EFFECT_FRAGMENT)
-            fragmentManager?.popBackStack()
-            return
+        getCurrentFragment()?.let {
+            if(it.tag == Tags.IMAGE_EFFECT_FRAGMENT)
+            {
+                fragmentManager?.popBackStack()
+                return
+            }
         }
         val fragment = ImageEffectFragment.newInstance()
         fragment.listener = listener
-        addFragment(fragment,true, false, Tags.IMAGE_EFFECT_FRAGMENT)
+        replaceFragment(fragment,true, true, Tags.IMAGE_EFFECT_FRAGMENT)
     }
 
     fun isHomeFragmentLoaded() : Boolean

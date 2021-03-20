@@ -15,5 +15,6 @@ data class Image(
     var croppingRatio : Double = 1.0,
     var isCropped : Boolean = false,
     var filterName : String = "",
-    var filterJson : String = ""
+    var filterJson : String = "",
+    var customFilterJson : String = ""
     ) : Serializable

@@ -52,7 +52,6 @@ class FilterHelper(private val context: Context)
     fun getFilterList(imagePath : String) : List<Filter>
     {
         val filterList = mutableListOf<Filter>()
-        filterList.add(Filter("Custom Filter",imagePath,FilterType.CUSTOM_FILTER,true))
         filterList.add(Filter("Default",imagePath,FilterType.DEFAULT))
         filterList.add(Filter("Gray Scale",imagePath,FilterType.GRAY_SCALE))
         filterList.add(Filter("B&W",imagePath,FilterType.BLACK_AND_WHITE))

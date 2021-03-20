@@ -16,10 +16,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.FileHelper
-import com.stcodesapp.documentscanner.models.BrightenFilter
-import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.models.LightenFilter
+import com.stcodesapp.documentscanner.models.*
 import com.stcodesapp.documentscanner.scanner.getBrightenImage
 import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
 import com.stcodesapp.documentscanner.scanner.getLightenImage
@@ -114,6 +111,20 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
             image.apply {
                 filterName = filter.type.toString()
                 filterJson = getFilterJSON(filter.type)
+            }
+            val affectedRow = imageManager.updateImage(image)
+            liveData.postValue(affectedRow)
+        }
+        liveData.postValue(-1L)
+        return liveData
+    }
+    fun saveCustomImageFilterInfo(image: Image, filter : CustomFilter) : LiveData<Long>
+    {
+        val liveData = MutableLiveData<Long>()
+        ioCoroutine.launch {
+            val filterJSON = Gson().toJson(filter, CustomFilter::class.java)
+            image.apply {
+                customFilterJson = filterJSON
             }
             val affectedRow = imageManager.updateImage(image)
             liveData.postValue(affectedRow)

@@ -8,14 +8,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
+import com.google.gson.Gson
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
+import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
+import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
@@ -92,6 +95,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         setSavedCropArea(serializedImage)
         setSavedRotation()
         setSavedFilter(serializedImage)
+        applySavedCustomFilter(serializedImage)
     }
 
     private fun setSavedCropArea(serializedImage: Image)
@@ -120,6 +124,23 @@ class CropImageSingleItemFragment : BaseFragment() {
         {
             viewModel.applySavedFilter(serializedImage,cropImageView.bitmap)
         }
+    }
+
+
+
+    fun applySavedCustomFilter(serializedImage: Image)
+    {
+        if(!serializedImage.customFilterJson.isNullOrEmpty())
+        {
+            val customFilter = Gson().fromJson(serializedImage.customFilterJson,CustomFilter::class.java)
+            val srcBitmap = cropImageView.bitmap
+            val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
+            updateBrightnessAndContrastOfImage(srcBitmap, dstBitmap, customFilter.brightnessValue, customFilter.contrastValue)
+            cropImageView.setImageBitmap(dstBitmap, false)
+            cropImageView.isShowCropOverlay = false
+        }
+
+
     }
 
     fun saveUpdatedCropArea()
@@ -160,10 +181,15 @@ class CropImageSingleItemFragment : BaseFragment() {
                 Observer {
                     cropImageView.setImageBitmap(it,false)
                 })
-
-
         }
+    }
 
+    fun applyBrightnessAndContrast(brightnessValue: Int, contrastValue: Float, originalBitmap: Bitmap) {
+        val srcBitmap = originalBitmap
+        val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
+        updateBrightnessAndContrastOfImage(srcBitmap, dstBitmap, brightnessValue, contrastValue)
+        cropImageView.setImageBitmap(dstBitmap, false)
+        cropImageView.isShowCropOverlay = false
     }
 
     fun cropImageFromSavedValue(cropPolygon: Polygon)

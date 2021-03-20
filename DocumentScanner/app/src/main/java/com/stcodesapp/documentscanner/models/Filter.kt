@@ -6,7 +6,7 @@ data class RGBAValue(var red : Double, var green : Double, var blue : Double, va
 
 data class BrightenFilter(var brightnessValue : Int)
 data class LightenFilter(var contrastValue : Float)
-data class CustomFilter(var brightnessValue : Int, var contrastValue : Int)
+data class CustomFilter(var brightnessValue : Int, var contrastValue : Float)
 
 enum class FilterType{
     CUSTOM_FILTER,

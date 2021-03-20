@@ -11,7 +11,9 @@ import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.models.FilterType
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
 import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
@@ -121,11 +123,14 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
         filterButton.setOnClickListener {
             showFilterFragment()
-            //showImageEffectFragment()
         }
 
         paperEffectButton.setOnClickListener {
             showPaperEffectFragment()
+        }
+
+        imageEnrichButton.setOnClickListener {
+            showImageEffectFragment()
         }
 
     }
@@ -210,12 +215,15 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
-            if(viewModel.originalImageBitmap == null) viewModel.originalImageBitmap = currentFragment.getImageBitmap()
-            val srcBitmap = viewModel.originalImageBitmap
-            val dstBitmap = srcBitmap!!.copy(srcBitmap.config,true)
-            updateBrightnessAndContrastOfImage(srcBitmap,dstBitmap,brightnessValue, contrastValue)
-            currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
-            cropImageView.isShowCropOverlay = false
+            if(viewModel.originalImageBitmap != null)
+            {
+                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,viewModel.originalImageBitmap!!)
+                val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
+                if(currentImage != null)
+                {
+                    viewModel.saveCustomImageFilterInfo(currentImage, CustomFilter(brightnessValue,contrastValue))
+                }
+            }
         }
     }
 
@@ -297,7 +305,9 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     private val imageFilterListener = object : FilterOptionFragment.Listener{
         override fun onFilterOptionClicked(filter: Filter)
         {
+            Log.e(TAG, "onFilterOptionClicked: filterType : ${filter.type}")
             applyFilterToCurrentImage(filter)
+
         }
     }
 
