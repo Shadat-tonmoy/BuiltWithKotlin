@@ -18,6 +18,7 @@ import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.models.PaperEffectFilter
 import com.stcodesapp.documentscanner.scanner.getFilteredImage
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
@@ -98,6 +99,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         setSavedRotation()
         setSavedFilter(serializedImage)
         applySavedCustomFilter(serializedImage)
+        applySavedPaperEffect(serializedImage)
     }
 
     private fun setSavedCropArea(serializedImage: Image)
@@ -141,8 +143,16 @@ class CropImageSingleItemFragment : BaseFragment() {
             cropImageView.setImageBitmap(dstBitmap, false)
             cropImageView.isShowCropOverlay = false
         }
+    }
 
 
+    fun applySavedPaperEffect(serializedImage: Image)
+    {
+        if(!serializedImage.paperEffectJson.isNullOrEmpty())
+        {
+            val paperEffect = Gson().fromJson(serializedImage.paperEffectJson,PaperEffectFilter::class.java)
+            applyPaperEffect(paperEffect.blockSize,paperEffect.c,cropImageView.bitmap)
+        }
     }
 
     fun saveUpdatedCropArea()
