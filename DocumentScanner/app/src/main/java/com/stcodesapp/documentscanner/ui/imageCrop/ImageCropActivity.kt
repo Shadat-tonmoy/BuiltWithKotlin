@@ -13,16 +13,13 @@ import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.scanner.getFilteredImage
-import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
+import com.stcodesapp.documentscanner.models.PaperEffectFilter
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
 import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.helpers.*
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
 import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
 import kotlinx.android.synthetic.main.activity_image_crop.*
-import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import javax.inject.Inject
 
 class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
@@ -179,33 +176,21 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    private fun saveCurrentImage()
+    private fun applyPaperEffect(blockSize: Int, c : Double)
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
-            currentFragment.saveUpdatedCropArea()
-        }
-    }
-
-    private fun applyMagicFilter(blockSize: Int, c : Double)
-    {
-        val currentPosition = viewPager.currentItem
-        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
-        {
-            if(viewModel.originalImageBitmap == null) viewModel.originalImageBitmap = currentFragment.getImageBitmap()
-            val srcBitmap = viewModel.originalImageBitmap
-            val dstBitmap = srcBitmap!!.copy(srcBitmap.config,true)
-            var finalBlockSize = blockSize
-            var finalC = c
-            if(finalBlockSize % 2 == 0 ) finalBlockSize += 1
-            Log.e(TAG, "applyMagicFilter: with BlockSize : $finalBlockSize, C : $finalC")
-            getFilteredImage(srcBitmap, dstBitmap,finalBlockSize,finalC)
-            currentFragment.cropImageView.setImageBitmap(dstBitmap,false)
-            cropImageView.isShowCropOverlay = false
-
+            if(viewModel.originalImageBitmap != null)
+            {
+                currentFragment.applyPaperEffect(blockSize,c,viewModel.originalImageBitmap!!)
+                val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
+                if(currentImage != null)
+                {
+                    viewModel.savePaperEffectFilterInfo(currentImage, PaperEffectFilter(blockSize,c))
+                }
+            }
         }
     }
 
@@ -284,13 +269,13 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
         override fun onTextColorSeekBarChanged(blockSize: Int, c : Int)
         {
-            applyMagicFilter(blockSize,c.toDouble())
+            applyPaperEffect(blockSize,c.toDouble())
 
         }
 
         override fun onBackgroundSeekBarChanged(blockSize: Int, c : Int)
         {
-            applyMagicFilter(blockSize,c.toDouble())
+            applyPaperEffect(blockSize,c.toDouble())
         }
     }
 

@@ -16,5 +16,6 @@ data class Image(
     var isCropped : Boolean = false,
     var filterName : String = "",
     var filterJson : String = "",
-    var customFilterJson : String = ""
+    var customFilterJson : String = "",
+    var paperEffectJson : String = "",
     ) : Serializable

@@ -118,6 +118,8 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         liveData.postValue(-1L)
         return liveData
     }
+
+
     fun saveCustomImageFilterInfo(image: Image, filter : CustomFilter) : LiveData<Long>
     {
         val liveData = MutableLiveData<Long>()
@@ -125,6 +127,21 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
             val filterJSON = Gson().toJson(filter, CustomFilter::class.java)
             image.apply {
                 customFilterJson = filterJSON
+            }
+            val affectedRow = imageManager.updateImage(image)
+            liveData.postValue(affectedRow)
+        }
+        liveData.postValue(-1L)
+        return liveData
+    }
+
+    fun savePaperEffectFilterInfo(image: Image, filter : PaperEffectFilter) : LiveData<Long>
+    {
+        val liveData = MutableLiveData<Long>()
+        ioCoroutine.launch {
+            val filterJSON = Gson().toJson(filter, PaperEffectFilter::class.java)
+            image.apply {
+                paperEffectJson = filterJSON
             }
             val affectedRow = imageManager.updateImage(image)
             liveData.postValue(affectedRow)

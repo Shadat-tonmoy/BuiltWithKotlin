@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
+import com.stcodesapp.documentscanner.scanner.getFilteredImage
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
 import com.theartofdev.edmodo.cropper.CropImageView
@@ -189,6 +191,17 @@ class CropImageSingleItemFragment : BaseFragment() {
         val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
         updateBrightnessAndContrastOfImage(srcBitmap, dstBitmap, brightnessValue, contrastValue)
         cropImageView.setImageBitmap(dstBitmap, false)
+        cropImageView.isShowCropOverlay = false
+    }
+
+    fun applyPaperEffect(blockSize: Int, c: Double, originalBitmap: Bitmap) {
+        val srcBitmap = originalBitmap
+        val dstBitmap = srcBitmap.copy(srcBitmap.config,true)
+        var finalBlockSize = blockSize
+        var finalC = c
+        if(finalBlockSize % 2 == 0 ) finalBlockSize += 1
+        getFilteredImage(srcBitmap, dstBitmap,finalBlockSize,finalC)
+        cropImageView.setImageBitmap(dstBitmap,false)
         cropImageView.isShowCropOverlay = false
     }
 
