@@ -28,43 +28,6 @@ class ImageHelper(private val context: Context)
             return true
         }
         return false
-
-        /*val outputFile = File(destination)
-        outputFile.deleteOnExit()
-        var inputStream: InputStream? = null
-        var out: OutputStream? = null
-        val maxBufferSize = 8 * 1024 * 1024
-        try
-        {
-            inputStream = context.contentResolver.openInputStream(source)
-            //inputStream = FileInputStream(source)
-            if(inputStream != null)
-            {
-                val bytesAvailable = inputStream.available()
-                val bufferSize = min(bytesAvailable, maxBufferSize)
-                out = FileOutputStream(outputFile)
-                val buffer = ByteArray(bufferSize)
-                var len = 0
-                while (inputStream.read(buffer).also {
-                        len = it
-                    } != -1) {
-                    out.write(buffer, 0, len)
-                }
-                return true
-            }
-
-
-        }
-        catch (e : Exception)
-        {
-            e.printStackTrace()
-        }
-        finally
-        {
-            inputStream?.close()
-            out?.close()
-        }
-        return false*/
     }
 
     fun getResizedImageByThreshold(imageUri: Uri, dimensionThreshold: Int): Bitmap?
@@ -132,7 +95,7 @@ class ImageHelper(private val context: Context)
 
 
 
-    private fun decodeBitmapFromUri(uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap?
+    fun decodeBitmapFromUri(uri: Uri, reqWidth: Int, reqHeight: Int): Bitmap?
     {
         return try
         {

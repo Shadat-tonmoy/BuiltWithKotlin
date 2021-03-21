@@ -5,7 +5,10 @@ import android.graphics.Bitmap
 import android.webkit.MimeTypeMap
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.FilterType
+import com.stcodesapp.documentscanner.scanner.getBrightenImage
 import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
+import com.stcodesapp.documentscanner.scanner.getLightenImage
+import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemViewModel
 
 class FilterHelper(private val context: Context)
 {
@@ -76,5 +79,19 @@ class FilterHelper(private val context: Context)
         val fileNameWithoutExtension = fileName.replace(extension,"")
         val thumbFilePath = "${imagePath.replace(fileName,fileNameWithoutExtension)}_$filterType.$extension"
         return thumbFilePath
+    }
+
+    fun getFilteredBitmap(filterType: FilterType, srcBitmap : Bitmap) : Bitmap
+    {
+        val dstBitmap = Bitmap.createBitmap(srcBitmap.width,srcBitmap.height, Bitmap.Config.ARGB_8888)
+        when(filterType)
+        {
+            FilterType.GRAY_SCALE -> getGrayscaleImage(srcBitmap,dstBitmap)
+            //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
+            FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.BRIGHTEN_FILTER_VALUE)
+            FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.LIGHTEN_FILTER_VALUE)
+            else -> return srcBitmap
+        }
+        return dstBitmap
     }
 }

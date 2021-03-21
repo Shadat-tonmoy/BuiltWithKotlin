@@ -54,6 +54,7 @@ class ConstValues
         const val DELETE_FILE = 3
         const val SAVE_DIRECTORY_NAME = "DocumentScanner~STCodesApp"
         const val OUTPUT_DIRECTORY_NAME = "Output"
+        const val THUMB_SIZE = 256
 
     }
 }

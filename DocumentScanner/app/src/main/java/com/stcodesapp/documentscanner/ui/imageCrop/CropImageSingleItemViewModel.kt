@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.THUMB_SIZE
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
@@ -24,7 +25,6 @@ import javax.inject.Inject
 class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
     companion object{
-        const val THUMB_SIZE = 256
         const val BRIGHTEN_FILTER_VALUE = 15
         const val LIGHTEN_FILTER_VALUE = 1.6F
         private const val TAG = "CropImageSingleItemView"
@@ -157,16 +157,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
 
     private fun getFilteredBitmap(filterType: FilterType, srcBitmap : Bitmap) : Bitmap
     {
-        val dstBitmap = Bitmap.createBitmap(srcBitmap.width,srcBitmap.height, Bitmap.Config.ARGB_8888)
-        when(filterType)
-        {
-            FilterType.GRAY_SCALE -> getGrayscaleImage(srcBitmap,dstBitmap)
-            //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
-            FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, BRIGHTEN_FILTER_VALUE)
-            FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, LIGHTEN_FILTER_VALUE)
-            else -> return srcBitmap
-        }
-        return dstBitmap
+        return filterHelper.getFilteredBitmap(filterType,srcBitmap)
     }
 
     fun applyFilterToCurrentImage(filter: Filter, srcBitmap : Bitmap) : LiveData<Bitmap>

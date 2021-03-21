@@ -33,6 +33,9 @@ class MainActivity : BaseActivity(), FragmentFrameWrapper
 
     companion object{
         private const val TAG = "MainActivity"
+        init {
+            System.loadLibrary("native-lib")
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?)
