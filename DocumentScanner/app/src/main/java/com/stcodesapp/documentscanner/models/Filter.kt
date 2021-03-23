@@ -19,3 +19,19 @@ enum class FilterType{
     BRIGHTEN,
     LIGHTEN
 }
+
+fun getFilterTypeFromName(filterName : String) : FilterType
+{
+    when(filterName)
+    {
+        "CUSTOM_FILTER" -> return FilterType.CUSTOM_FILTER
+        "DEFAULT" -> return FilterType.DEFAULT
+        "GRAY_SCALE" -> return FilterType.GRAY_SCALE
+        "BLACK_AND_WHITE" -> return FilterType.BLACK_AND_WHITE
+        "PAPER" -> return FilterType.PAPER
+        "POLISH" -> return FilterType.POLISH
+        "BRIGHTEN" -> return FilterType.BRIGHTEN
+        "LIGHTEN" -> return FilterType.LIGHTEN
+    }
+    return FilterType.DEFAULT
+}

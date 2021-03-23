@@ -202,7 +202,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         {
             if(viewModel.originalImageBitmap != null)
             {
-                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,viewModel.originalImageBitmap!!)
+                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,viewModel.originalImageBitmap)
                 val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
                 if(currentImage != null)
                 {

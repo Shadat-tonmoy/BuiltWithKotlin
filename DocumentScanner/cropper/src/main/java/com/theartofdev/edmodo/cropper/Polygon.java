@@ -4,12 +4,13 @@ package com.theartofdev.edmodo.cropper;
 import androidx.annotation.NonNull;
 
 public class Polygon {
-    public float topLeftX = -1, topLeftY = -1, topRightX = -1, topRightY = -1, bottomLeftX = -1, bottomLeftY = -1, bottomRightX = -1, bottomRightY = -1;
+    public float topLeftX = -1, topLeftY = -1, topRightX = -1, topRightY = -1, bottomLeftX = -1, bottomLeftY = -1, bottomRightX = -1, bottomRightY = -1, xRatio = 1, yRatio = 1;
 
     public Polygon() {
     }
 
-    public Polygon(float topLeftX, float topLeftY, float topRightX, float topRightY, float bottomLeftX, float bottomLeftY, float bottomRightX, float bottomRightY) {
+    public Polygon(float topLeftX, float topLeftY, float topRightX, float topRightY, float bottomLeftX, float bottomLeftY, float bottomRightX, float bottomRightY, float xRatio, float yRatio)
+    {
         this.topLeftX = topLeftX;
         this.topLeftY = topLeftY;
         this.topRightX = topRightX;
@@ -18,6 +19,8 @@ public class Polygon {
         this.bottomLeftY = bottomLeftY;
         this.bottomRightX = bottomRightX;
         this.bottomRightY = bottomRightY;
+        this.xRatio = xRatio;
+        this.yRatio = yRatio;
     }
 
     public float getTopLeftX() {
@@ -106,6 +109,8 @@ public class Polygon {
                 ", bottomLeftY=" + bottomLeftY +
                 ", bottomRightX=" + bottomRightX +
                 ", bottomRightY=" + bottomRightY +
+                ", xRatio=" + xRatio +
+                ", yRatio=" + yRatio +
                 '}';
     }
 
@@ -132,5 +137,34 @@ public class Polygon {
     public float rightHeight()
     {
         return bottomRightY - topRightY;
+    }
+
+    public float getxRatio() {
+        return xRatio;
+    }
+
+    public void setxRatio(float xRatio) {
+        this.xRatio = xRatio;
+    }
+
+    public float getyRatio() {
+        return yRatio;
+    }
+
+    public void setyRatio(float yRatio) {
+        this.yRatio = yRatio;
+    }
+
+    public void multiplyWithRatio()
+    {
+        topLeftX *= xRatio;
+        topRightX *= xRatio;
+        bottomLeftX *= xRatio;
+        bottomRightX *= xRatio;
+
+        topLeftY *= yRatio;
+        topRightY *= yRatio;
+        bottomLeftY *= yRatio;
+        bottomRightY *= yRatio;
     }
 }

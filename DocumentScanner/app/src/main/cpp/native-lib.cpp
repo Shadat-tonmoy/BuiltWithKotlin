@@ -97,7 +97,7 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getWarpedImage(JNIEnv *
 
 
 extern "C" JNIEXPORT void JNICALL
-Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage,jint blockSize, jdouble c)
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getPaperEffectImage(JNIEnv *env, jobject, jobject inputImage, jobject outputImage, jint blockSize, jdouble c)
 {
     Mat filteredImage;
     Mat inputImageMat;
@@ -108,7 +108,7 @@ Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getFilteredImage(JNIEnv
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_updateBrightnessAndContrastOfImage(JNIEnv *env, jclass clazz, jobject input_image, jobject output_image, jint brightness_value, jfloat contrast_value) {
+Java_com_stcodesapp_documentscanner_scanner_ScanHelperKt_getCustomBrightnessAndContrastImage(JNIEnv *env, jclass clazz, jobject input_image, jobject output_image, jint brightness_value, jfloat contrast_value) {
     Mat filteredImage;
     Mat inputImageMat;
     bitmapToMat(env,input_image,inputImageMat, false);

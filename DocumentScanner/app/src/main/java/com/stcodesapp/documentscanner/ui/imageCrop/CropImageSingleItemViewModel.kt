@@ -11,11 +11,9 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.*
-import com.stcodesapp.documentscanner.models.BrightenFilter
-import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.models.LightenFilter
+import com.stcodesapp.documentscanner.models.*
 import com.stcodesapp.documentscanner.scanner.getBrightenImage
+import com.stcodesapp.documentscanner.scanner.getCustomBrightnessAndContrastImage
 import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
 import com.stcodesapp.documentscanner.scanner.getLightenImage
 import com.theartofdev.edmodo.cropper.Polygon
@@ -171,41 +169,64 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
 
     }
 
-    fun applySavedFilter(image: Image, srcBitmap: Bitmap) : Bitmap
+    fun applySavedFilter(image: Image, srcBitmap: Bitmap, dstBitmap: Bitmap) : Bitmap
     {
         val filterName = image.filterName
-        when(filterName)
+        val filterType = getFilterTypeFromName(filterName)
+        when(filterType)
         {
-            FilterType.CUSTOM_FILTER.toString() -> {
+            FilterType.CUSTOM_FILTER -> {
 
             }
-            FilterType.DEFAULT.toString() -> {
+            FilterType.DEFAULT -> {
 
 
             }
-            FilterType.GRAY_SCALE.toString() -> {
-                getGrayscaleImage(srcBitmap,srcBitmap)
+            FilterType.GRAY_SCALE -> {
+                getGrayscaleImage(srcBitmap,dstBitmap)
             }
-            FilterType.BLACK_AND_WHITE.toString() -> {
+            FilterType.BLACK_AND_WHITE -> {
 
             }
-            FilterType.PAPER.toString() -> {
+            FilterType.PAPER -> {
 
             }
-            FilterType.POLISH.toString() -> {
+            FilterType.POLISH -> {
 
             }
-            FilterType.BRIGHTEN.toString() ->
+            FilterType.BRIGHTEN ->
             {
                 val filter = Gson().fromJson(image.filterJson,BrightenFilter::class.java)
-                getBrightenImage(srcBitmap,srcBitmap, filter.brightnessValue)
+                getBrightenImage(srcBitmap,dstBitmap, filter.brightnessValue)
             }
-            FilterType.LIGHTEN.toString() -> {
+            FilterType.LIGHTEN -> {
                 val filter = Gson().fromJson(image.filterJson,LightenFilter::class.java)
-                getLightenImage(srcBitmap,srcBitmap, filter.contrastValue)
+                getLightenImage(srcBitmap,dstBitmap, filter.contrastValue)
             }
         }
         return srcBitmap
+    }
+
+    fun applyBrightnessAndContrast(brightnessValue: Int, contrastValue: Float, srcBitmap: Bitmap?) : LiveData<Bitmap>
+    {
+        val liveData = MutableLiveData<Bitmap>()
+        if(srcBitmap != null && chosenImage != null)
+        {
+            ioCoroutine.launch {
+                val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
+                val imageId = chosenImage!!.id
+                chosenImage = imageManager.getImageById(imageId)
+                if(chosenImage != null)
+                {
+                    FilterHelper(context).applyFilterByName(dstBitmap,chosenImage!!)
+                }
+                getCustomBrightnessAndContrastImage(dstBitmap, dstBitmap, brightnessValue, contrastValue)
+                liveData.postValue(dstBitmap)
+            }
+        }
+        return liveData
+
+
     }
 
 }

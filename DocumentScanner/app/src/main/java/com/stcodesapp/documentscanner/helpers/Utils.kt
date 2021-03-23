@@ -18,7 +18,7 @@ fun getFileNameFromPath(path:String) : String
 
 fun getCropAreaFromPolygon(polygon: Polygon) : CropArea
 {
-    return CropArea(polygon.topLeftX,polygon.topLeftY,polygon.topRightX,polygon.topRightY,polygon.bottomLeftX,polygon.bottomLeftY,polygon.bottomRightX,polygon.bottomRightY)
+    return CropArea(polygon.topLeftX,polygon.topLeftY,polygon.topRightX,polygon.topRightY,polygon.bottomLeftX,polygon.bottomLeftY,polygon.bottomRightX,polygon.bottomRightY,polygon.xRatio,polygon.yRatio)
 }
 
 fun getCropAreaJsonFromPolygon(polygon: Polygon) : String
@@ -28,7 +28,7 @@ fun getCropAreaJsonFromPolygon(polygon: Polygon) : String
 
 fun getPolygonFromCropArea(cropArea: CropArea) : Polygon
 {
-    return Polygon(cropArea.topLeftX,cropArea.topLeftY,cropArea.topRightX,cropArea.topRightY,cropArea.bottomLeftX,cropArea.bottomLeftY,cropArea.bottomRightX,cropArea.bottomRightY)
+    return Polygon(cropArea.topLeftX,cropArea.topLeftY,cropArea.topRightX,cropArea.topRightY,cropArea.bottomLeftX,cropArea.bottomLeftY,cropArea.bottomRightX,cropArea.bottomRightY,cropArea.xRatio,cropArea.yRatio)
 }
 
 fun getPolygonFromCropAreaJson(cropAreaJSON: String) : Polygon

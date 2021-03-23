@@ -7,15 +7,15 @@ import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.graphics.pdf.PdfDocument.PageInfo
 import android.net.Uri
-import com.google.gson.Gson
-import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_HEIGHT
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_WIDTH
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.FilterHelper
-import com.stcodesapp.documentscanner.models.CropArea
+import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.models.ImageToPDFProgress
+import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.utils.BitmapUtil
-import kotlinx.coroutines.delay
 import java.io.IOException
 
 class ImageToPdfTask(private val context : Context)
@@ -28,6 +28,7 @@ class ImageToPdfTask(private val context : Context)
         const val PADDING = 40
         const val MARGIN = 20
         private const val TAG = "ImageToPdfTask"
+        init { System.loadLibrary("native-lib") }
     }
 
     suspend fun createPdf(imageList : List<Image>, pdfFileUri : Uri, callBack : Listener): Boolean
@@ -49,8 +50,12 @@ class ImageToPdfTask(private val context : Context)
 
             if (cropAreaJson!=null && cropAreaJson.isNotEmpty())
             {
-                val cropArea = Gson().fromJson(cropAreaJson,CropArea::class.java)
-                bitmap = bitmapUtil.getCroppedBitmap(bitmap, cropArea)
+                val polygon = getPolygonFromCropAreaJson(cropAreaJson)
+                val srcBitmap = bitmap
+                val dstBitmap = Bitmap.createBitmap(A4_PAPER_WIDTH,A4_PAPER_HEIGHT, Bitmap.Config.ARGB_8888)
+                polygon.multiplyWithRatio()
+                getWarpedImage(srcBitmap, dstBitmap, polygon)
+                bitmap = dstBitmap
             }
 
             if (image.rotationAngle > 0f)
@@ -58,10 +63,7 @@ class ImageToPdfTask(private val context : Context)
                 bitmap = bitmap?.let { bitmapUtil.rotateBitmap(it, image.rotationAngle.toFloat()) }
             }
 
-            if(image.filterName.isNotEmpty() && image.filterName != ConstValues.DEFAULT_FILTER)
-            {
-                bitmap = bitmap?.let { FilterHelper(context).applyFilterByName(it,image.filterName) }
-            }
+            bitmap = bitmap?.let { FilterHelper(context).applyFilter(it,image) }
 
             val pageInfo = PageInfo.Builder(bitmap!!.width + PADDING, bitmap.height + PADDING, pdfPageNumber).create()
             val page = document.startPage(pageInfo)
@@ -73,7 +75,7 @@ class ImageToPdfTask(private val context : Context)
             document.finishPage(page)
             callBack.onImageToPDFProgressUpdate(ImageToPDFProgress(pdfPageNumber,imageList.size))
             pdfPageNumber++
-            delay(5000)
+            //delay(5000)
         }
         try
         {

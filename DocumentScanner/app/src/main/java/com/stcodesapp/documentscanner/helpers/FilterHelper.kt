@@ -3,11 +3,10 @@ package com.stcodesapp.documentscanner.helpers
 import android.content.Context
 import android.graphics.Bitmap
 import android.webkit.MimeTypeMap
-import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.scanner.getBrightenImage
-import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
-import com.stcodesapp.documentscanner.scanner.getLightenImage
+import com.google.gson.Gson
+import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.models.*
+import com.stcodesapp.documentscanner.scanner.*
 import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemViewModel
 
 class FilterHelper(private val context: Context)
@@ -35,22 +34,53 @@ class FilterHelper(private val context: Context)
         return newBitmap
     }
 
-    suspend fun applyFilterByName(oldBitmap : Bitmap, filterName: String) : Bitmap
+    fun applyFilter(oldBitmap : Bitmap, image : Image) : Bitmap
     {
-        // copying to newBitmap for manipulation
-        /*for(filter in FilterPack.getFilterPack(context))
+        val filterName = image.filterName
+        val filterJson = image.filterJson
+        val paperEffectJson = image.paperEffectJson
+        val customFilterJson = image.customFilterJson
+        val filterType = getFilterTypeFromName(filterName)
+        when(filterType)
         {
-            if(filter.name == filterName)
+            FilterType.GRAY_SCALE -> getGrayscaleImage(oldBitmap,oldBitmap)
+            FilterType.LIGHTEN ->
             {
-                var newBitmap: Bitmap = oldBitmap.copy(Bitmap.Config.ARGB_8888, true)
-
-                newBitmap = filter.processFilter(newBitmap)
-
-                return newBitmap
+                val filter = Gson().fromJson(filterJson,LightenFilter::class.java)
+                getLightenImage(oldBitmap,oldBitmap,filter.contrastValue)
             }
-        }*/
+            FilterType.BRIGHTEN ->
+            {
+                val filter = Gson().fromJson(filterJson,BrightenFilter::class.java)
+                getBrightenImage(oldBitmap,oldBitmap,filter.brightnessValue)
+            }
+        }
         return oldBitmap
     }
+
+    fun applyFilterByName(oldBitmap : Bitmap, image : Image) : Bitmap
+    {
+        val filterName = image.filterName
+        val filterJson = image.filterJson
+        val filterType = getFilterTypeFromName(filterName)
+        when(filterType)
+        {
+            FilterType.GRAY_SCALE -> getGrayscaleImage(oldBitmap,oldBitmap)
+            FilterType.LIGHTEN ->
+            {
+                val filter = Gson().fromJson(filterJson,LightenFilter::class.java)
+                getLightenImage(oldBitmap,oldBitmap,filter.contrastValue)
+            }
+            FilterType.BRIGHTEN ->
+            {
+                val filter = Gson().fromJson(filterJson,BrightenFilter::class.java)
+                getBrightenImage(oldBitmap,oldBitmap,filter.brightnessValue)
+            }
+        }
+        return oldBitmap
+    }
+
+
 
     fun getFilterList(imagePath : String) : List<Filter>
     {
@@ -87,7 +117,6 @@ class FilterHelper(private val context: Context)
         when(filterType)
         {
             FilterType.GRAY_SCALE -> getGrayscaleImage(srcBitmap,dstBitmap)
-            //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
             FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.BRIGHTEN_FILTER_VALUE)
             FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.LIGHTEN_FILTER_VALUE)
             else -> return srcBitmap

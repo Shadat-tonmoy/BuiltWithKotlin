@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +11,20 @@ import androidx.lifecycle.Observer
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_HEIGHT
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_WIDTH
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.PaperEffectFilter
-import com.stcodesapp.documentscanner.scanner.getFilteredImage
+import com.stcodesapp.documentscanner.models.getFilterTypeFromName
+import com.stcodesapp.documentscanner.scanner.getPaperEffectImage
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
-import com.stcodesapp.documentscanner.scanner.updateBrightnessAndContrastOfImage
+import com.stcodesapp.documentscanner.scanner.getCustomBrightnessAndContrastImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
@@ -126,7 +129,11 @@ class CropImageSingleItemFragment : BaseFragment() {
         val savedFilterName = serializedImage.filterName
         if (!savedFilterName.isNullOrEmpty())
         {
-            viewModel.applySavedFilter(serializedImage,cropImageView.bitmap)
+            val srcBitmap = cropImageView.bitmap
+            val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
+            viewModel.applySavedFilter(serializedImage,srcBitmap,dstBitmap)
+            cropImageView.setImageBitmap(dstBitmap,false)
+            cropImageView.isShowCropOverlay = false
         }
     }
 
@@ -139,7 +146,7 @@ class CropImageSingleItemFragment : BaseFragment() {
             val customFilter = Gson().fromJson(serializedImage.customFilterJson,CustomFilter::class.java)
             val srcBitmap = cropImageView.bitmap
             val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
-            updateBrightnessAndContrastOfImage(srcBitmap, dstBitmap, customFilter.brightnessValue, customFilter.contrastValue)
+            getCustomBrightnessAndContrastImage(srcBitmap, dstBitmap, customFilter.brightnessValue, customFilter.contrastValue)
             cropImageView.setImageBitmap(dstBitmap, false)
             cropImageView.isShowCropOverlay = false
         }
@@ -177,7 +184,7 @@ class CropImageSingleItemFragment : BaseFragment() {
     fun cropImage()
     {
         val srcBitmap = cropImageView.bitmap
-        val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
+        val dstBitmap = Bitmap.createBitmap(A4_PAPER_WIDTH,A4_PAPER_HEIGHT, Bitmap.Config.ARGB_8888)
         getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRation)
         cropImageView.setImageBitmap(dstBitmap,false)
         viewModel.saveImageCropData(dstBitmap)
@@ -196,12 +203,16 @@ class CropImageSingleItemFragment : BaseFragment() {
         }
     }
 
-    fun applyBrightnessAndContrast(brightnessValue: Int, contrastValue: Float, originalBitmap: Bitmap) {
-        val srcBitmap = originalBitmap
-        val dstBitmap = srcBitmap.copy(srcBitmap.config, true)
-        updateBrightnessAndContrastOfImage(srcBitmap, dstBitmap, brightnessValue, contrastValue)
-        cropImageView.setImageBitmap(dstBitmap, false)
-        cropImageView.isShowCropOverlay = false
+    fun applyBrightnessAndContrast(brightnessValue: Int, contrastValue: Float, srcBitmap: Bitmap?) {
+        if(srcBitmap != null)
+        {
+            viewModel.applyBrightnessAndContrast(brightnessValue,contrastValue,srcBitmap).observe(viewLifecycleOwner,
+                Observer {
+                    cropImageView.setImageBitmap(it, false)
+                    cropImageView.isShowCropOverlay = false
+                })
+        }
+
     }
 
     fun applyPaperEffect(blockSize: Int, c: Double, originalBitmap: Bitmap) {
@@ -210,7 +221,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         var finalBlockSize = blockSize
         var finalC = c
         if(finalBlockSize % 2 == 0 ) finalBlockSize += 1
-        getFilteredImage(srcBitmap, dstBitmap,finalBlockSize,finalC)
+        getPaperEffectImage(srcBitmap, dstBitmap,finalBlockSize,finalC)
         cropImageView.setImageBitmap(dstBitmap,false)
         cropImageView.isShowCropOverlay = false
     }
@@ -218,7 +229,7 @@ class CropImageSingleItemFragment : BaseFragment() {
     fun cropImageFromSavedValue(cropPolygon: Polygon)
     {
         val srcBitmap = cropImageView.bitmap
-        val dstBitmap = Bitmap.createBitmap(420,596, Bitmap.Config.ARGB_8888)
+        val dstBitmap = Bitmap.createBitmap(A4_PAPER_WIDTH,A4_PAPER_HEIGHT, Bitmap.Config.ARGB_8888)
         getWarpedImage(srcBitmap, dstBitmap,cropPolygon)
         cropImageView.setImageBitmap(dstBitmap,false)
         cropImageView.isShowCropOverlay = false

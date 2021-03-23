@@ -9,9 +9,9 @@ external fun getBlackAndWhiteImage(inputImage : Bitmap, outputImage : Bitmap)
 
 external fun getWarpedImage(inputImage : Bitmap, outputImage : Bitmap, polygon: Polygon)
 
-external fun getFilteredImage(inputImage : Bitmap, outputImage : Bitmap, blockSize: Int, c : Double)
+external fun getPaperEffectImage(inputImage : Bitmap, outputImage : Bitmap, blockSize: Int, c : Double)
 
-external fun updateBrightnessAndContrastOfImage(inputImage : Bitmap, outputImage : Bitmap, brightnessValue: Int, contrastValue : Float)
+external fun getCustomBrightnessAndContrastImage(inputImage : Bitmap, outputImage : Bitmap, brightnessValue: Int, contrastValue : Float)
 
 external fun getBrightenImage(inputImage : Bitmap, outputImage : Bitmap, brightnessValue: Int)
 

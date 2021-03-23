@@ -2386,29 +2386,91 @@ public class CropImageView extends FrameLayout {
 
   public Polygon getCropPolygon()
   {
-    return mCropOverlayView.getCropPolygon();
+    Polygon polygon = mCropOverlayView.getCropPolygon();
+    polygon.setxRatio(getXRatio());
+    polygon.setyRatio(getYRatio());
+    return polygon;
   }
 
   public Polygon getCropPolygonByRation()
   {
     Polygon polygon = mCropOverlayView.getCropPolygon();
+    /*Matrix inverse = new Matrix();
+    mImageView.getImageMatrix().invert(inverse);*/
     float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
     float yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();
 
-    /*if(mImageView.getHeight() > mBitmap.getHeight())
-      yRatio =  (float) mImageView.getHeight() / mBitmap.getHeight();
-    else yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();*/
+    int orgWidth = mBitmap.getWidth() * mLoadedSampleSize;
+    int orgHeight = mBitmap.getHeight() * mLoadedSampleSize;
 
-    polygon.topLeftX *= xRatio;
+    float[] points =
+            new float[] {
+                    polygon.topLeftX,
+                    polygon.topLeftY,
+                    polygon.topRightX,
+                    polygon.topRightY,
+                    polygon.bottomRightX,
+                    polygon.bottomRightY,
+                    polygon.bottomLeftX,
+                    polygon.bottomLeftY};
+
+
+    /*float[] points =
+            new float[] {
+                    cropWindowRect.left,
+                    cropWindowRect.top,
+                    cropWindowRect.right,
+                    cropWindowRect.top,
+                    cropWindowRect.right,
+                    cropWindowRect.bottom,
+                    cropWindowRect.left,
+                    cropWindowRect.bottom
+            };*/
+
+    //mImageMatrix.invert(mImageInverseMatrix);
+    mImageMatrix.invert(mImageInverseMatrix);
+    mImageInverseMatrix.mapPoints(points);
+
+    for (int i = 0; i < points.length; i++) {
+      points[i] *= mLoadedSampleSize;
+    }
+
+    //inverse.mapPoints(points);
+
+
+
+
+    /*polygon.topLeftX *= xRatio;
     polygon.topRightX *= xRatio;
     polygon.bottomLeftX *= xRatio;
     polygon.bottomRightX *= xRatio;
     polygon.topLeftY *= yRatio;
     polygon.topRightY *= yRatio;
     polygon.bottomLeftY *= yRatio;
-    polygon.bottomRightY *= yRatio;
+    polygon.bottomRightY *= yRatio;*/
+
+    polygon.topLeftX = points[0];
+    polygon.topLeftY = points[1];
+    polygon.topRightX = points[2];
+    polygon.topRightY = points[3];
+    polygon.bottomRightX = points[4];
+    polygon.bottomRightY = points[5];
+    polygon.bottomLeftX = points[6];
+    polygon.bottomLeftY = points[7];
 
     return polygon;
+  }
+
+  public float getXRatio()
+  {
+    float xRatio = (float) mBitmap.getWidth() / mImageView.getWidth();
+    return xRatio;
+  }
+
+  public float getYRatio()
+  {
+    float yRatio = (float) mBitmap.getHeight() / mImageView.getHeight();
+    return yRatio;
   }
 
   public void setCropPolygon(Polygon polygon)

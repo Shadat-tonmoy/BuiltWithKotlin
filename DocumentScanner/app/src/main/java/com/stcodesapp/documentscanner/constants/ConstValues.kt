@@ -55,6 +55,8 @@ class ConstValues
         const val SAVE_DIRECTORY_NAME = "DocumentScanner~STCodesApp"
         const val OUTPUT_DIRECTORY_NAME = "Output"
         const val THUMB_SIZE = 256
+        const val A4_PAPER_WIDTH = 420
+        const val A4_PAPER_HEIGHT = 596
 
     }
 }
