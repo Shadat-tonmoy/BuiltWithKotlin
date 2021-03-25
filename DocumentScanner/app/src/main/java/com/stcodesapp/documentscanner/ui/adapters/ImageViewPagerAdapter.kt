@@ -52,12 +52,16 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadLis
     private val diffCallback : DiffUtil.ItemCallback<Image> = object : DiffUtil.ItemCallback<Image>(){
 
         override fun areItemsTheSame(oldItem: Image, newItem: Image): Boolean {
-            return oldItem.id == newItem.id
+            val result = oldItem.id == newItem.id
+            Log.e(TAG, "areItemsTheSame: result : $result")
+            return result
         }
 
         override fun areContentsTheSame(oldItem: Image, newItem: Image): Boolean
         {
-            return (oldItem.isCropped == newItem.isCropped && oldItem.rotationAngle == newItem.rotationAngle && oldItem.position == newItem.position && oldItem.path == newItem.path)
+            val result = (oldItem.isCropped == newItem.isCropped && oldItem.rotationAngle == newItem.rotationAngle && oldItem.position == newItem.position && oldItem.path == newItem.path)
+            Log.e(TAG, "areContentsTheSame: result : $result")
+            return result
         }
     }
 

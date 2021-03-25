@@ -241,7 +241,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
-            currentFragment.applyFilter(filter, viewModel.originalImageBitmap)
+            currentFragment.applyFilter(filter)
             val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
             if(currentImage != null)
             {
@@ -257,6 +257,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
         {
+            Log.e(TAG, "updateCurrentImage: called")
             viewModel.originalImageBitmap = currentFragment.getImageBitmap()
         }
     }

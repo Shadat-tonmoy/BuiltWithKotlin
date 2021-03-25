@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         if(serializedImage != null)
         {
             viewModel.chosenImage = serializedImage
+            viewModel.chosenImageId = serializedImage.id
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
                 setSavedValue(serializedImage)
@@ -98,11 +100,12 @@ class CropImageSingleItemFragment : BaseFragment() {
 
     private fun setSavedValue(serializedImage: Image)
     {
+        Log.e(TAG, "setSavedValue: called")
         setSavedCropArea(serializedImage)
         setSavedRotation()
         setSavedFilter(serializedImage)
-        applySavedCustomFilter(serializedImage)
-        applySavedPaperEffect(serializedImage)
+        //applySavedCustomFilter(serializedImage)
+        //applySavedPaperEffect(serializedImage)
     }
 
     private fun setSavedCropArea(serializedImage: Image)
@@ -117,7 +120,7 @@ class CropImageSingleItemFragment : BaseFragment() {
             }
             if(serializedImage.isCropped)
             {
-                cropImageFromSavedValue(cropImageView.cropPolygonByRation)
+                cropImageFromSavedValue(polygon)
             }
         }
         cropImageView.guidelines = CropImageView.Guidelines.OFF
@@ -172,7 +175,7 @@ class CropImageSingleItemFragment : BaseFragment() {
 
     fun getCropPolygon() : Polygon
     {
-        return cropImageView.cropPolygon
+        return cropImageView.cropPolygonByRation
     }
 
     fun rotateImage()
@@ -192,15 +195,12 @@ class CropImageSingleItemFragment : BaseFragment() {
         setCroppedFlag(true)
     }
 
-    fun applyFilter(filter : Filter, originalBitmap : Bitmap?)
+    fun applyFilter(filter : Filter)
     {
-        if(originalBitmap != null)
-        {
-            viewModel.applyFilterToCurrentImage(filter,originalBitmap).observe(viewLifecycleOwner,
-                Observer {
-                    cropImageView.setImageBitmap(it,false)
-                })
-        }
+        viewModel.applyFilterToCurrentImage(filter).observe(viewLifecycleOwner,
+            Observer {
+                cropImageView.setImageBitmap(it,false)
+            })
     }
 
     fun applyBrightnessAndContrast(brightnessValue: Int, contrastValue: Float, srcBitmap: Bitmap?) {

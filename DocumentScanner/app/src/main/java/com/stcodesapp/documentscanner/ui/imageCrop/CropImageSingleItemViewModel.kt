@@ -1,23 +1,26 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.graphics.Bitmap
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
+import com.stcodesapp.documentscanner.constants.ConstValues
+import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.THUMB_SIZE
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.*
 import com.stcodesapp.documentscanner.models.*
-import com.stcodesapp.documentscanner.scanner.getBrightenImage
-import com.stcodesapp.documentscanner.scanner.getCustomBrightnessAndContrastImage
-import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
-import com.stcodesapp.documentscanner.scanner.getLightenImage
+import com.stcodesapp.documentscanner.scanner.*
+import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
@@ -29,6 +32,7 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
     }
 
     var chosenImage : Image? = null
+    var chosenImageId : Long = -1
     var chosenImagePosition : Int = -1
 
     @Inject lateinit var imageManager: ImageManager
@@ -158,13 +162,29 @@ class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerA
         return filterHelper.getFilteredBitmap(filterType,srcBitmap)
     }
 
-    fun applyFilterToCurrentImage(filter: Filter, srcBitmap : Bitmap) : LiveData<Bitmap>
+    fun applyFilterToCurrentImage(filter: Filter) : LiveData<Bitmap>
     {
         val liveData = MutableLiveData<Bitmap>()
 
-        val filteredBitmap = getFilteredBitmap(filter.type,srcBitmap)
-        liveData.postValue(filteredBitmap)
-
+        if(chosenImage != null)
+        {
+            val imagePath = chosenImage!!.path
+            var srcBitmap = imageHelper.decodeBitmapFromUri(Uri.fromFile(File(imagePath)),MIN_IMAGE_DIMEN,MIN_IMAGE_DIMEN)
+            if(srcBitmap != null)
+            {
+                if(!chosenImage!!.cropArea.isNullOrEmpty())
+                {
+                    Log.e(TAG, "getCropPolygonByRation: bitmapW : " + srcBitmap.getWidth() + " bitmapH : " + srcBitmap.getHeight()
+                    )
+                    val cropPolygon = getPolygonFromCropAreaJson(chosenImage!!.cropArea!!)
+                    val dstBitmap = Bitmap.createBitmap(ConstValues.A4_PAPER_WIDTH, ConstValues.A4_PAPER_HEIGHT, Bitmap.Config.ARGB_8888)
+                    getWarpedImage(srcBitmap, dstBitmap,cropPolygon)
+                    srcBitmap = dstBitmap
+                }
+                val filteredBitmap = getFilteredBitmap(filter.type,srcBitmap!!)
+                liveData.postValue(filteredBitmap)
+            }
+        }
         return liveData
 
     }
