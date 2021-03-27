@@ -84,6 +84,7 @@ class ImageEditItemFragment : BaseFragment() {
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
                 setSavedValue(serializedImage)
+                imageLoadListener?.onImageBitmapLoaded(view.bitmap)
             }
 
             cropImageView.setOnCropWindowChangedListener {

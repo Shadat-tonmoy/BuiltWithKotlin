@@ -13,6 +13,7 @@ import com.stcodesapp.documentscanner.constants.RequestCode
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.models.SavedFile
 import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
+import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
 import java.io.File
 
 class ActivityNavigator(private val activity:Activity)
@@ -34,6 +35,14 @@ class ActivityNavigator(private val activity:Activity)
         val intent = Intent(activity, DocumentPagesActivity::class.java)
         intent.putExtra(Tags.DOCUMENT_ID,docId)
         activity.startActivityForResult(intent,RequestCode.OPEN_DOCUMENT_PAGES_SCREEN)
+    }
+
+    fun openImageReCropScreen(imageId: Long, docId : Long)
+    {
+        val intent = Intent(activity, ImageCropActivity::class.java)
+        intent.putExtra(Tags.DOCUMENT_ID,docId)
+        intent.putExtra(Tags.IMAGE_ID,imageId)
+        activity.startActivityForResult(intent,RequestCode.OPEN_IMAGE_RE_CROP_SCREEN)
     }
 
     fun toDocumentViewerActivity(file: SavedFile) {

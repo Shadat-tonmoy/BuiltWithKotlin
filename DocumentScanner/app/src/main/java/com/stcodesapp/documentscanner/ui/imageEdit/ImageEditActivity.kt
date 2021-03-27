@@ -3,6 +3,7 @@ package com.stcodesapp.documentscanner.ui.imageEdit
 import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
@@ -31,7 +32,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    @Inject lateinit var editViewModel : ImageEditViewModel
+    @Inject lateinit var viewModel : ImageEditViewModel
     @Inject lateinit var activityNavigator: ActivityNavigator
     @Inject lateinit var fragmentNavigator: FragmentNavigator
     private lateinit var viewPagerAdapter: ImageViewPagerAdapter
@@ -50,7 +51,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
 
         initClickListener()
 
-        editViewModel.bindValueFromIntent(intent)
+        viewModel.bindValueFromIntent(intent)
 
         viewPagerAdapter = ImageViewPagerAdapter(this,imageLoadListener)
 
@@ -62,6 +63,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
             {
                 super.onPageSelected(position)
                 updateCurrentImage()
+                imagePositionChip.text = "${position+1}/${viewPagerAdapter.itemCount}"
             }
         })
         fetchDocumentPages()
@@ -69,7 +71,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun fetchDocumentPages()
     {
-        editViewModel.fetchDocumentPages().observe(this, documentPagesObserver)
+        viewModel.fetchDocumentPages().observe(this, documentPagesObserver)
     }
 
     private val documentPagesObserver = Observer<List<Image>> {
@@ -86,7 +88,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun deleteDocAndExit()
     {
-        editViewModel.deleteDoc().observe(this, Observer {
+        viewModel.deleteDoc().observe(this, Observer {
             if(it > 0) finish()
         })
     }
@@ -130,6 +132,10 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
             showImageEffectFragment()
         }
 
+        reCropButton.setOnClickListener {
+            openImageCropActivity()
+        }
+
     }
 
     private fun showDeleteImageWarning()
@@ -146,7 +152,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
             val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
             if(imageAtPosition != null)
             {
-                editViewModel.deleteImage(imageAtPosition).observe(this, Observer {
+                viewModel.deleteImage(imageAtPosition).observe(this, Observer {
                     if(it != null && it > 0)
                     {
                         showToast("Image is removed!")
@@ -156,48 +162,15 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    private fun rotateCurrentImage()
-    {
-        val currentPosition = viewPager.currentItem
-        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is ImageEditItemFragment)
-        {
-            currentFragment.rotateImage()
-        }
-    }
-
-    private fun cropCurrentImage()
-    {
-        val currentPosition = viewPager.currentItem
-        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is ImageEditItemFragment)
-        {
-            if(currentFragment.isImageCropped())
-            {
-                showToast("Will show re-crop option")
-            }
-            else
-            {
-                currentFragment.cropImage()
-            }
-        }
-    }
-
     private fun applyPaperEffect(blockSize: Int, c : Double)
     {
-        val currentPosition = viewPager.currentItem
-        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is ImageEditItemFragment)
+        val currentFragment = getCurrentFragment()
+        val currentImage = getCurrentImage()
+        // should not use viewModel.originalImageBitmap. As it is always null now
+        if(currentFragment != null && currentImage != null && viewModel.originalImageBitmap != null )
         {
-            if(editViewModel.originalImageBitmap != null)
-            {
-                currentFragment.applyPaperEffect(blockSize,c,editViewModel.originalImageBitmap!!)
-                val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
-                if(currentImage != null)
-                {
-                    editViewModel.savePaperEffectFilterInfo(currentImage, PaperEffectFilter(blockSize,c))
-                }
-            }
+            currentFragment.applyPaperEffect(blockSize,c,viewModel.originalImageBitmap!!)
+            viewModel.savePaperEffectFilterInfo(currentImage, PaperEffectFilter(blockSize,c))
         }
     }
 
@@ -207,13 +180,13 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
-            if(editViewModel.originalImageBitmap != null)
+            if(viewModel.originalImageBitmap != null)
             {
-                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,editViewModel.originalImageBitmap)
+                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,viewModel.originalImageBitmap)
                 val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
                 if(currentImage != null)
                 {
-                    editViewModel.saveCustomImageFilterInfo(currentImage, CustomFilter(brightnessValue,contrastValue))
+                    viewModel.saveCustomImageFilterInfo(currentImage, CustomFilter(brightnessValue,contrastValue))
                 }
             }
         }
@@ -244,18 +217,48 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun applyFilterToCurrentImage(filter: Filter)
     {
+        val currentFragment = getCurrentFragment()
+        if(currentFragment != null)
+        {
+            currentFragment.applyFilter(filter)
+            val currentImage = getCurrentImage()
+            if(currentImage != null)
+            {
+                viewModel.saveCurrentImageFilterInfo(currentImage, filter)
+            }
+        }
+    }
+
+    private fun openImageCropActivity()
+    {
+        val currentImage = getCurrentImage()
+        if(currentImage != null)
+        {
+            activityNavigator.openImageReCropScreen(currentImage.id, currentImage.docId)
+        }
+    }
+
+    private fun isCurrentImageCropped() : Boolean
+    {
+        val currentImage = getCurrentImage()
+        return currentImage?.isCropped == true
+    }
+
+    private fun getCurrentImage() : Image?
+    {
+        val currentPosition = viewPager.currentItem
+        return viewPagerAdapter.getDocumentPageAt(currentPosition)
+    }
+
+    private fun getCurrentFragment() : ImageEditItemFragment?
+    {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
         if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
-            currentFragment.applyFilter(filter)
-            val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
-            if(currentImage != null)
-            {
-                editViewModel.saveCurrentImageFilterInfo(currentImage, filter)
-            }
-
+            return currentFragment
         }
+        return null
     }
 
     private fun updateCurrentImage()
@@ -265,7 +268,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
             Log.e(TAG, "updateCurrentImage: called")
-            editViewModel.originalImageBitmap = currentFragment.getImageBitmap()
+            viewModel.originalImageBitmap = currentFragment.getImageBitmap()
         }
     }
 
@@ -307,10 +310,9 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
     private val imageLoadListener = object : ImageEditItemFragment.ImageLoadListener{
         override fun onImageBitmapLoaded(imageBitmap: Bitmap)
         {
-            Log.e(TAG, "onImageBitmapLoaded: setting")
-            editViewModel.originalImageBitmap = imageBitmap
+            imagePositionChip.visibility = View.VISIBLE
+            reCropButton.visibility = if(isCurrentImageCropped())  View.VISIBLE else View.GONE
         }
-
     }
 
 

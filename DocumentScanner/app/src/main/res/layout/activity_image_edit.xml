@@ -17,6 +17,30 @@
         app:layout_constraintBottom_toTopOf="@id/imageOptionContainer"
         android:layout_margin="@dimen/dimen_8" />
 
+    <com.google.android.material.chip.Chip
+        android:id="@+id/imagePositionChip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imageOptionContainer"
+        android:layout_margin="@dimen/dimen_32"
+        android:visibility="gone"
+        android:backgroundTint="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+    <Button
+        android:id="@+id/reCropButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_16"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        android:text="@string/re_crop"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/imageOptionContainer"
         android:layout_width="match_parent"
