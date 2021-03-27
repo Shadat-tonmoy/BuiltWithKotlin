@@ -1,17 +1,40 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
-import androidx.appcompat.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import androidx.lifecycle.Observer
 import com.stcodesapp.documentscanner.R
-import com.stcodesapp.documentscanner.ui.helpers.showToast
-import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemFragment
-import kotlinx.android.synthetic.main.activity_image_edit.*
+import com.stcodesapp.documentscanner.base.BaseActivity
+import com.stcodesapp.documentscanner.database.entities.Image
+import kotlinx.android.synthetic.main.image_edit_item_fragment.*
+import java.io.File
+import javax.inject.Inject
 
-class ImageCropActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+class ImageCropActivity : BaseActivity()
+{
+
+    @Inject lateinit var viewModel: ImageCropViewModel
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_image_crop)
+        activityComponent.inject(this)
+        init()
+
     }
+
+    private fun init()
+    {
+        setContentView(R.layout.activity_image_crop)
+        initClickListener()
+        viewModel.bindValueFromIntent(intent)
+        viewModel.fetchChosenImageToReCrop().observe(this,chosenImageObserver)
+    }
+
+    private fun initClickListener()
+    {
+
+    }
+
 
 
 
@@ -41,4 +64,11 @@ class ImageCropActivity : AppCompatActivity() {
             }
         }
     }*/
+
+    private val chosenImageObserver = Observer<Image?> {
+        if(it != null)
+        {
+            cropImageView.setImageUriAsync(Uri.fromFile(File(it.path)))
+        }
+    }
 }

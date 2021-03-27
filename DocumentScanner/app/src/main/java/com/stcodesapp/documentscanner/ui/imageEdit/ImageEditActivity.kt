@@ -234,7 +234,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         val currentImage = getCurrentImage()
         if(currentImage != null)
         {
-            activityNavigator.openImageReCropScreen(currentImage.id, currentImage.docId)
+            activityNavigator.openImageReCropScreenForSingleImage(currentImage.id, currentImage.docId)
         }
     }
 
