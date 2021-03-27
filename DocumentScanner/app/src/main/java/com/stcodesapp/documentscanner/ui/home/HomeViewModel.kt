@@ -3,11 +3,9 @@ package com.stcodesapp.documentscanner.ui.home
 import android.graphics.Bitmap
 import android.net.Uri
 import android.util.Log
-import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.shadattonmoy.imagepickerforandroid.model.ImageFile
-import com.stcodesapp.documentscanner.BuildConfig
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
@@ -23,7 +21,6 @@ import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.helpers.ImageHelper
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.FilterType
-import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemViewModel
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject

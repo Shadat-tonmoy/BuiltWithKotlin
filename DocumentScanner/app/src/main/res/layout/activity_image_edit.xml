@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.imageCrop.ImageCropActivity">
+    tools:context=".ui.imageEdit.ImageEditActivity">
 
 
     <androidx.viewpager2.widget.ViewPager2
@@ -27,67 +27,42 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <!--<androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/rotateButton"
             style="@style/imagePreviewButtonStyle"
             android:drawableTop="@drawable/rotate_left_white_24"
-            android:text="@string/rotate"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toStartOf="parent" />
+            android:text="@string/rotate" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cropButton"
             style="@style/imagePreviewButtonStyle"
             android:drawableTop="@drawable/crop_white_24"
-            android:text="@string/crop"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toEndOf="@id/rotateButton" />
+            android:text="@string/crop" />-->
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/paperEffectButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/adjust_background"
-            android:text="@string/paper_effect"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/imageEnrichButton"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/adjust_background"
-            android:text="@string/enrich"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/filterButton"
             style="@style/imagePreviewButtonStyle"
             android:drawableTop="@drawable/filter_white_24"
-            android:text="@string/filter"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintStart_toEndOf="@id/cropButton" />
+            android:text="@string/filter" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/paperEffectButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/adjust_background"
+            android:text="@string/paper_effect" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/imageEnrichButton"
+            style="@style/imagePreviewButtonStyle"
+            android:drawableTop="@drawable/adjust_background"
+            android:text="@string/enrich"/>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/deleteButton"
             style="@style/imagePreviewButtonStyle"
             android:drawableTop="@drawable/delete_white_24"
-            android:text="@string/delete"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/detectEdge"
-            style="@style/imagePreviewButtonStyle"
-            android:drawableTop="@drawable/pdf_white_16"
-            android:onClick="@{() -> viewModel.detectEdges()}"
-            android:text="Edges"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="@+id/chosenImageView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/filterButton" />
+            android:text="@string/delete" />
 
 
     </LinearLayout>

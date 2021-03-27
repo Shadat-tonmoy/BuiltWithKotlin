@@ -17,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.imageCrop.ImageCropActivity"/>
+        <activity android:name=".ui.imageEdit.ImageEditActivity"/>
         <activity android:name=".ui.imageEdit.ImagePreviewActivity" />
         <activity
             android:name=".ui.documentPages.DocumentPagesActivity"

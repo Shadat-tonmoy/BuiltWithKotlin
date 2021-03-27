@@ -12,7 +12,6 @@ import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.helpers.ImageHelper
 import com.stcodesapp.documentscanner.models.Filter
-import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 

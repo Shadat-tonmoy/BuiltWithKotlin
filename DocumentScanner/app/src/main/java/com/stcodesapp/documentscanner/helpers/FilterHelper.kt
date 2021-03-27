@@ -7,7 +7,7 @@ import com.google.gson.Gson
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.models.*
 import com.stcodesapp.documentscanner.scanner.*
-import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemViewModel
+import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemViewModel
 
 class FilterHelper(private val context: Context)
 {
@@ -117,8 +117,8 @@ class FilterHelper(private val context: Context)
         when(filterType)
         {
             FilterType.GRAY_SCALE -> getGrayscaleImage(srcBitmap,dstBitmap)
-            FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.BRIGHTEN_FILTER_VALUE)
-            FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, CropImageSingleItemViewModel.LIGHTEN_FILTER_VALUE)
+            FilterType.BRIGHTEN -> getBrightenImage(srcBitmap,dstBitmap, ImageEditItemViewModel.BRIGHTEN_FILTER_VALUE)
+            FilterType.LIGHTEN -> getLightenImage(srcBitmap,dstBitmap, ImageEditItemViewModel.LIGHTEN_FILTER_VALUE)
             else -> return srcBitmap
         }
         return dstBitmap

@@ -1,11 +1,10 @@
-package com.stcodesapp.documentscanner.ui.imageCrop
+package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.content.Intent
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.google.gson.Gson
 import com.stcodesapp.documentscanner.DocumentScannerApp
 import com.stcodesapp.documentscanner.base.BaseViewModel
@@ -17,15 +16,12 @@ import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.FileHelper
 import com.stcodesapp.documentscanner.models.*
-import com.stcodesapp.documentscanner.scanner.getBrightenImage
-import com.stcodesapp.documentscanner.scanner.getGrayscaleImage
-import com.stcodesapp.documentscanner.scanner.getLightenImage
 import com.stcodesapp.documentscanner.tasks.ImageToPdfTask
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
+class ImageEditViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
 
     companion object{
@@ -156,8 +152,8 @@ class CropImageViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         {
             FilterType.GRAY_SCALE -> ""
             //FilterType.BLACK_AND_WHITE -> getBlackAndWhiteImage(srcBitmap,dstBitmap)
-            FilterType.BRIGHTEN -> Gson().toJson(BrightenFilter(CropImageSingleItemViewModel.BRIGHTEN_FILTER_VALUE))
-            FilterType.LIGHTEN -> Gson().toJson(LightenFilter(CropImageSingleItemViewModel.LIGHTEN_FILTER_VALUE))
+            FilterType.BRIGHTEN -> Gson().toJson(BrightenFilter(ImageEditItemViewModel.BRIGHTEN_FILTER_VALUE))
+            FilterType.LIGHTEN -> Gson().toJson(LightenFilter(ImageEditItemViewModel.LIGHTEN_FILTER_VALUE))
             else -> return ""
         }
         return ""

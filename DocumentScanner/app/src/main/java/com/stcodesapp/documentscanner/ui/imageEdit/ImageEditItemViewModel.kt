@@ -1,4 +1,4 @@
-package com.stcodesapp.documentscanner.ui.imageCrop
+package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.graphics.Bitmap
 import android.net.Uri
@@ -17,13 +17,12 @@ import com.stcodesapp.documentscanner.database.managers.ImageManager
 import com.stcodesapp.documentscanner.helpers.*
 import com.stcodesapp.documentscanner.models.*
 import com.stcodesapp.documentscanner.scanner.*
-import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
 import kotlinx.coroutines.launch
 import java.io.File
 import javax.inject.Inject
 
-class CropImageSingleItemViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
+class ImageEditItemViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
     companion object{
         const val BRIGHTEN_FILTER_VALUE = 15

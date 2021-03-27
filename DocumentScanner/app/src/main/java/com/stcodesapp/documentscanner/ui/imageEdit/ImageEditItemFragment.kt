@@ -1,4 +1,4 @@
-package com.stcodesapp.documentscanner.ui.imageCrop
+package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -16,29 +16,27 @@ import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_H
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.A4_PAPER_WIDTH
 import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
-import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.models.CustomFilter
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.models.PaperEffectFilter
-import com.stcodesapp.documentscanner.models.getFilterTypeFromName
 import com.stcodesapp.documentscanner.scanner.getPaperEffectImage
 import com.stcodesapp.documentscanner.scanner.getWarpedImage
 import com.stcodesapp.documentscanner.scanner.getCustomBrightnessAndContrastImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import com.theartofdev.edmodo.cropper.Polygon
-import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
+import kotlinx.android.synthetic.main.image_edit_item_fragment.*
 import java.io.File
 import javax.inject.Inject
 
-class CropImageSingleItemFragment : BaseFragment() {
+class ImageEditItemFragment : BaseFragment() {
 
     companion object {
         private const val TAG = "CropImageSingleItemFrag"
-        fun newInstance(image : Image, imagePosition : Int) : CropImageSingleItemFragment
+        fun newInstance(image : Image, imagePosition : Int) : ImageEditItemFragment
         {
-            val fragment = CropImageSingleItemFragment()
+            val fragment = ImageEditItemFragment()
             val args = Bundle()
             args.putSerializable(Tags.SERIALIZED_IMAGE,image)
             args.putInt(Tags.IMAGE_POSITION,imagePosition)
@@ -55,7 +53,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         fun onImageBitmapLoaded(imageBitmap: Bitmap)
     }
 
-    @Inject lateinit var viewModel: CropImageSingleItemViewModel
+    @Inject lateinit var viewModel: ImageEditItemViewModel
     var listener : Listener? = null
     var imageLoadListener : ImageLoadListener? = null
 
@@ -66,7 +64,7 @@ class CropImageSingleItemFragment : BaseFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
-        return inflater.inflate(R.layout.crop_image_single_item_fragment, container, false)
+        return inflater.inflate(R.layout.image_edit_item_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?)
@@ -86,8 +84,6 @@ class CropImageSingleItemFragment : BaseFragment() {
             cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
                 setSavedValue(serializedImage)
-                imageLoadListener?.onImageBitmapLoaded(cropImageView.bitmap)
-
             }
 
             cropImageView.setOnCropWindowChangedListener {
@@ -102,8 +98,8 @@ class CropImageSingleItemFragment : BaseFragment() {
     {
         Log.e(TAG, "setSavedValue: called")
         setSavedCropArea(serializedImage)
-        setSavedRotation()
         setSavedFilter(serializedImage)
+        setSavedRotation()
         //applySavedCustomFilter(serializedImage)
         //applySavedPaperEffect(serializedImage)
     }
@@ -200,6 +196,7 @@ class CropImageSingleItemFragment : BaseFragment() {
         viewModel.applyFilterToCurrentImage(filter).observe(viewLifecycleOwner,
             Observer {
                 cropImageView.setImageBitmap(it,false)
+                setSavedRotation()
             })
     }
 
@@ -240,9 +237,15 @@ class CropImageSingleItemFragment : BaseFragment() {
         viewModel.updateImageCroppedFlag(flag)
     }
 
+    fun isImageCropped() : Boolean
+    {
+        return viewModel.chosenImage?.isCropped == true
+    }
+
     private fun setSavedRotation()
     {
         val savedRotationAngle = viewModel.chosenImage?.rotationAngle?.toInt()
+        Log.e(TAG, "setSavedRotation: savedAngle : $savedRotationAngle")
         if(savedRotationAngle != null && savedRotationAngle > 0)
         {
              cropImageView.rotateImage(savedRotationAngle)

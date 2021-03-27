@@ -1,15 +1,11 @@
 package com.stcodesapp.documentscanner.ui.filterOption
 
 import android.content.Context
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
@@ -18,10 +14,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.FilterHelper
 import com.stcodesapp.documentscanner.models.Filter
 import com.stcodesapp.documentscanner.ui.adapters.FilterListAdapter
-import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
-import kotlinx.android.synthetic.main.crop_image_single_item_fragment.*
 import kotlinx.android.synthetic.main.filter_option_fragment.*
-import java.io.File
 import javax.inject.Inject
 
 class FilterOptionFragment : BaseFragment(), FilterListAdapter.Listener {

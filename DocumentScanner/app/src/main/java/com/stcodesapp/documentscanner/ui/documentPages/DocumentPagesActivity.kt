@@ -25,7 +25,7 @@ import com.stcodesapp.documentscanner.ui.dialogs.DocumentNameDialog
 import com.stcodesapp.documentscanner.ui.dialogs.ImageToPDFNameDialog
 import com.stcodesapp.documentscanner.ui.helpers.DialogHelper
 import com.stcodesapp.documentscanner.ui.helpers.showToast
-import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
+import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditActivity
 import kotlinx.android.synthetic.main.app_toolbar.*
 import kotlinx.android.synthetic.main.app_toolbar.view.*
 import kotlinx.android.synthetic.main.document_pages_layout.*
@@ -215,7 +215,7 @@ class DocumentPagesActivity : BaseActivity()
 
     private fun onDocumentPageClicked(documentPage : Image, position : Int)
     {
-        val intent = Intent(this,ImageCropActivity::class.java)
+        val intent = Intent(this,ImageEditActivity::class.java)
         intent.putExtra(Tags.IMAGE_PATH,documentPage.path)
         intent.putExtra(Tags.IMAGE_ID,documentPage.id)
         intent.putExtra(Tags.DOCUMENT_ID,documentPage.docId)

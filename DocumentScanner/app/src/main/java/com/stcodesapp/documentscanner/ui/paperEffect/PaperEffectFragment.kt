@@ -1,9 +1,7 @@
 package com.stcodesapp.documentscanner.ui.paperEffect
 
 import android.content.Context
-import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,8 +9,6 @@ import android.widget.SeekBar
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseFragment
 import com.stcodesapp.documentscanner.ui.helpers.ActivityNavigator
-import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
-import com.stcodesapp.documentscanner.ui.more.MoreViewModel
 import kotlinx.android.synthetic.main.paper_effect_fragment.*
 import javax.inject.Inject
 

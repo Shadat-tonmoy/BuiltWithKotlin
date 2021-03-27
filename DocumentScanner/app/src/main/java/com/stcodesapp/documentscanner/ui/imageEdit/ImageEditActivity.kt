@@ -1,4 +1,4 @@
-package com.stcodesapp.documentscanner.ui.imageCrop
+package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.graphics.Bitmap
 import android.os.Bundle
@@ -19,10 +19,10 @@ import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.helpers.*
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
 import com.stcodesapp.documentscanner.ui.paperEffect.PaperEffectFragment
-import kotlinx.android.synthetic.main.activity_image_crop.*
+import kotlinx.android.synthetic.main.activity_image_edit.*
 import javax.inject.Inject
 
-class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
+class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
 {
     companion object{
         private const val TAG = "ImageCropActivity"
@@ -31,7 +31,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    @Inject lateinit var viewModel : CropImageViewModel
+    @Inject lateinit var editViewModel : ImageEditViewModel
     @Inject lateinit var activityNavigator: ActivityNavigator
     @Inject lateinit var fragmentNavigator: FragmentNavigator
     private lateinit var viewPagerAdapter: ImageViewPagerAdapter
@@ -46,11 +46,11 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         activityComponent.inject(this)
 
-        setContentView(R.layout.activity_image_crop)
+        setContentView(R.layout.activity_image_edit)
 
         initClickListener()
 
-        viewModel.bindValueFromIntent(intent)
+        editViewModel.bindValueFromIntent(intent)
 
         viewPagerAdapter = ImageViewPagerAdapter(this,imageLoadListener)
 
@@ -69,7 +69,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun fetchDocumentPages()
     {
-        viewModel.fetchDocumentPages().observe(this, documentPagesObserver)
+        editViewModel.fetchDocumentPages().observe(this, documentPagesObserver)
     }
 
     private val documentPagesObserver = Observer<List<Image>> {
@@ -86,7 +86,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun deleteDocAndExit()
     {
-        viewModel.deleteDoc().observe(this, Observer {
+        editViewModel.deleteDoc().observe(this, Observer {
             if(it > 0) finish()
         })
     }
@@ -106,13 +106,13 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
 
     private fun initClickListener()
     {
-        cropButton.setOnClickListener {
+        /*cropButton.setOnClickListener {
             cropCurrentImage()
         }
 
         rotateButton.setOnClickListener {
             rotateCurrentImage()
-        }
+        }*/
 
         deleteButton.setOnClickListener {
             showDeleteImageWarning()
@@ -146,7 +146,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
             val imageAtPosition = viewPagerAdapter.getDocumentPageAt(chosenImagePosition)
             if(imageAtPosition != null)
             {
-                viewModel.deleteImage(imageAtPosition).observe(this, Observer {
+                editViewModel.deleteImage(imageAtPosition).observe(this, Observer {
                     if(it != null && it > 0)
                     {
                         showToast("Image is removed!")
@@ -160,7 +160,7 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
             currentFragment.rotateImage()
         }
@@ -170,9 +170,16 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
-            currentFragment.cropImage()
+            if(currentFragment.isImageCropped())
+            {
+                showToast("Will show re-crop option")
+            }
+            else
+            {
+                currentFragment.cropImage()
+            }
         }
     }
 
@@ -180,15 +187,15 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
-            if(viewModel.originalImageBitmap != null)
+            if(editViewModel.originalImageBitmap != null)
             {
-                currentFragment.applyPaperEffect(blockSize,c,viewModel.originalImageBitmap!!)
+                currentFragment.applyPaperEffect(blockSize,c,editViewModel.originalImageBitmap!!)
                 val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
                 if(currentImage != null)
                 {
-                    viewModel.savePaperEffectFilterInfo(currentImage, PaperEffectFilter(blockSize,c))
+                    editViewModel.savePaperEffectFilterInfo(currentImage, PaperEffectFilter(blockSize,c))
                 }
             }
         }
@@ -198,15 +205,15 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
-            if(viewModel.originalImageBitmap != null)
+            if(editViewModel.originalImageBitmap != null)
             {
-                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,viewModel.originalImageBitmap)
+                currentFragment.applyBrightnessAndContrast(brightnessValue,contrastValue,editViewModel.originalImageBitmap)
                 val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
                 if(currentImage != null)
                 {
-                    viewModel.saveCustomImageFilterInfo(currentImage, CustomFilter(brightnessValue,contrastValue))
+                    editViewModel.saveCustomImageFilterInfo(currentImage, CustomFilter(brightnessValue,contrastValue))
                 }
             }
         }
@@ -239,13 +246,13 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
             currentFragment.applyFilter(filter)
             val currentImage = viewPagerAdapter.getDocumentPageAt(currentPosition)
             if(currentImage != null)
             {
-                viewModel.saveCurrentImageFilterInfo(currentImage, filter)
+                editViewModel.saveCurrentImageFilterInfo(currentImage, filter)
             }
 
         }
@@ -255,10 +262,10 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
     {
         val currentPosition = viewPager.currentItem
         val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
-        if(currentFragment != null && currentFragment is CropImageSingleItemFragment)
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
         {
             Log.e(TAG, "updateCurrentImage: called")
-            viewModel.originalImageBitmap = currentFragment.getImageBitmap()
+            editViewModel.originalImageBitmap = currentFragment.getImageBitmap()
         }
     }
 
@@ -297,11 +304,11 @@ class ImageCropActivity : BaseActivity(), FragmentFrameWrapper
         }
     }
 
-    private val imageLoadListener = object : CropImageSingleItemFragment.ImageLoadListener{
+    private val imageLoadListener = object : ImageEditItemFragment.ImageLoadListener{
         override fun onImageBitmapLoaded(imageBitmap: Bitmap)
         {
             Log.e(TAG, "onImageBitmapLoaded: setting")
-            viewModel.originalImageBitmap = imageBitmap
+            editViewModel.originalImageBitmap = imageBitmap
         }
 
     }

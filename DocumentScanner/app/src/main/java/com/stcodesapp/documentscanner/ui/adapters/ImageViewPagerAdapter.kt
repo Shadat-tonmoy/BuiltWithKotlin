@@ -7,10 +7,10 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.stcodesapp.documentscanner.database.entities.Image
-import com.stcodesapp.documentscanner.ui.imageCrop.CropImageSingleItemFragment
+import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemFragment
 import java.lang.Exception
 
-class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadListener: CropImageSingleItemFragment.ImageLoadListener) : FragmentStateAdapter(fragmentActivity)
+class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadListener: ImageEditItemFragment.ImageLoadListener) : FragmentStateAdapter(fragmentActivity)
 {
 
     companion object{
@@ -23,8 +23,8 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadLis
     override fun createFragment(position: Int): Fragment
     {
         val currentDocPage = mDiffer.currentList[position]
-        val fragment = CropImageSingleItemFragment.newInstance(currentDocPage,position)
-        fragment.listener = object  : CropImageSingleItemFragment.Listener{ override fun onItemDeleted(position: Int) { notifyItemRemoved(position) } }
+        val fragment = ImageEditItemFragment.newInstance(currentDocPage,position)
+        fragment.listener = object  : ImageEditItemFragment.Listener{ override fun onItemDeleted(position: Int) { notifyItemRemoved(position) } }
         fragment.imageLoadListener = imageLoadListener
         return fragment
     }
