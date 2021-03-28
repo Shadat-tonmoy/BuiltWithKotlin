@@ -121,7 +121,9 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         }
 
         filterButton.setOnClickListener {
-            showFilterFragment()
+            //showFilterFragment()
+            cropCurrentImage()
+
         }
 
         paperEffectButton.setOnClickListener {
@@ -234,7 +236,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         val currentImage = getCurrentImage()
         if(currentImage != null)
         {
-            activityNavigator.openImageReCropScreenForSingleImage(currentImage.id, currentImage.docId)
+            activityNavigator.openImageReCropScreenForSingleImage(currentImage.id, currentImage.docId,currentImage)
         }
     }
 
@@ -312,6 +314,23 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         {
             imagePositionChip.visibility = View.VISIBLE
             reCropButton.visibility = if(isCurrentImageCropped())  View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun cropCurrentImage()
+    {
+        val currentPosition = viewPager.currentItem
+        val currentFragment = supportFragmentManager.findFragmentByTag("f$currentPosition")
+        if(currentFragment != null && currentFragment is ImageEditItemFragment)
+        {
+            if(currentFragment.isImageCropped())
+            {
+                showToast("Will show re-crop option")
+            }
+            else
+            {
+                currentFragment.cropImage()
+            }
         }
     }
 

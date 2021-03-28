@@ -1,38 +1,124 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
+import androidx.viewpager2.widget.ViewPager2
 import com.stcodesapp.documentscanner.R
 import com.stcodesapp.documentscanner.base.BaseActivity
+import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
+import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
+import com.stcodesapp.documentscanner.helpers.isValidPolygon
+import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
+import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemFragment
+import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_image_crop.*
 import kotlinx.android.synthetic.main.image_edit_item_fragment.*
-import java.io.File
 import javax.inject.Inject
 
 class ImageCropActivity : BaseActivity()
 {
 
+    companion object{
+        private const val TAG = "ImageCropActivity"
+    }
+
     @Inject lateinit var viewModel: ImageCropViewModel
+    private lateinit var viewPagerAdapter: ImageViewPagerAdapter
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
-        activityComponent.inject(this)
         init()
 
     }
 
     private fun init()
     {
+        activityComponent.inject(this)
+
         setContentView(R.layout.activity_image_crop)
-        initClickListener()
+
         viewModel.bindValueFromIntent(intent)
-        viewModel.fetchChosenImageToReCrop().observe(this,chosenImageObserver)
+
+        initUI()
+
+        viewPagerAdapter = ImageViewPagerAdapter(this,imageLoadListener,true)
+
+        viewPager.adapter = viewPagerAdapter
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback()
+        {
+            override fun onPageSelected(position: Int)
+            {
+                super.onPageSelected(position)
+                imagePositionChip.text = "${position+1}/${viewPagerAdapter.itemCount}"
+            }
+        })
+
+        fetchSingleImage()
+    }
+
+    private fun initUI()
+    {
+        initClickListener()
+
+        /*cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
+            if(viewModel.currentImage != null) setSavedValue(viewModel.currentImage!!)
+        }*/
     }
 
     private fun initClickListener()
     {
 
+    }
+
+    private fun setSavedValue(image: Image)
+    {
+        setSavedCropArea(image)
+
+    }
+
+    private fun setSavedCropArea(image: Image)
+    {
+        val savedCropArea = image.cropArea
+        Log.e(TAG, "setSavedCropArea: savedCropArea : $savedCropArea")
+        if (!savedCropArea.isNullOrEmpty())
+        {
+            val polygon = getPolygonFromCropAreaJson(savedCropArea)
+            if(isValidPolygon(polygon))
+            {
+                cropImageView.cropPolygon = polygon
+            }
+        }
+        cropImageView.guidelines = CropImageView.Guidelines.OFF
+    }
+
+    private fun fetchDocumentPages()
+    {
+        viewModel.fetchDocumentPages().observe(this, documentPagesObserver)
+    }
+
+    private fun fetchSingleImage()
+    {
+        viewModel.fetchChosenImageToReCrop().observe(this, chosenImageObserver)
+    }
+
+    private fun setPagesOnUI(it: List<Image>)
+    {
+        viewPagerAdapter.submitList(it)
+        val selectedPosition = intent.getIntExtra(Tags.IMAGE_POSITION, -1)
+        if (selectedPosition > 0)
+        {
+            viewPager.doOnLayout {
+                viewPager.setCurrentItem(selectedPosition, false)
+                intent.putExtra(Tags.IMAGE_POSITION, -1)
+            }
+        }
     }
 
 
@@ -68,7 +154,21 @@ class ImageCropActivity : BaseActivity()
     private val chosenImageObserver = Observer<Image?> {
         if(it != null)
         {
-            cropImageView.setImageUriAsync(Uri.fromFile(File(it.path)))
+            setPagesOnUI(listOf(it))
+
         }
     }
+
+    private val documentPagesObserver = Observer<List<Image>> {
+        setPagesOnUI(it)
+
+    }
+
+    private val imageLoadListener = object : ImageEditItemFragment.ImageLoadListener{
+        override fun onImageBitmapLoaded(imageBitmap: Bitmap)
+        {
+            imagePositionChip.visibility = View.VISIBLE
+        }
+    }
+
 }

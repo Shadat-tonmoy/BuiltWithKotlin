@@ -2392,7 +2392,7 @@ public class CropImageView extends FrameLayout {
     return polygon;
   }
 
-  public Polygon getCropPolygonByRation()
+  public Polygon getCropPolygonByRatio()
   {
     Polygon cropPolygon = mCropOverlayView.getCropPolygon();
     Polygon polygon = new Polygon(cropPolygon.topLeftX, cropPolygon.topLeftY, cropPolygon.topRightX, cropPolygon.topRightY, cropPolygon.bottomLeftX, cropPolygon.bottomLeftY, cropPolygon.bottomRightX, cropPolygon.bottomRightY, cropPolygon.xRatio, cropPolygon.yRatio);

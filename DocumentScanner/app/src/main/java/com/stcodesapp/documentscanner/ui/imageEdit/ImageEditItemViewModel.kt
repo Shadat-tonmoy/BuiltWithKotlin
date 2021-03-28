@@ -2,6 +2,7 @@ package com.stcodesapp.documentscanner.ui.imageEdit
 
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,6 +12,7 @@ import com.stcodesapp.documentscanner.base.BaseViewModel
 import com.stcodesapp.documentscanner.constants.ConstValues
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.MIN_IMAGE_DIMEN
 import com.stcodesapp.documentscanner.constants.ConstValues.Companion.THUMB_SIZE
+import com.stcodesapp.documentscanner.constants.Tags
 import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.database.managers.DocumentManager
 import com.stcodesapp.documentscanner.database.managers.ImageManager
@@ -68,14 +70,18 @@ class ImageEditItemViewModel @Inject constructor(val app: DocumentScannerApp) : 
         return liveData
     }
 
-    fun updateImageCropPolygon(cropPolygon: Polygon) : LiveData<Long>
+    fun updateImageCropPolygon(cropPolygonByRatio: Polygon, originalCropPolygon : Polygon) : LiveData<Long>
     {
         val liveData = MutableLiveData<Long>()
         ioCoroutine.launch {
             if(chosenImage != null)
             {
-                val cropAreaJson = getCropAreaJsonFromPolygon(cropPolygon)
-                chosenImage!!.apply { cropArea = cropAreaJson }
+                val cropAreaByRatioJson = getCropAreaJsonFromPolygon(cropPolygonByRatio)
+                val originalCropAreaJson = getCropAreaJsonFromPolygon(originalCropPolygon)
+                chosenImage!!.apply {
+                    cropArea = cropAreaByRatioJson
+                    originalCropArea = originalCropAreaJson
+                }
                 val updatedRow = imageManager.updateImage(chosenImage!!)
                 liveData.postValue(updatedRow)
             }
@@ -244,7 +250,20 @@ class ImageEditItemViewModel @Inject constructor(val app: DocumentScannerApp) : 
             }
         }
         return liveData
+   }
 
+    fun bindValueFromArgument(arguments : Bundle?)
+    {
+        if(arguments != null)
+        {
+            val serializedImage = arguments.getSerializable(Tags.SERIALIZED_IMAGE) as Image?
+            if(serializedImage != null)
+            {
+                chosenImage = serializedImage
+                chosenImageId = serializedImage.id
+            }
+            chosenImagePosition = arguments.getInt(Tags.IMAGE_POSITION)
+        }
 
     }
 

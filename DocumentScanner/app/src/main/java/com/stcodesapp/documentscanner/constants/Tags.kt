@@ -18,5 +18,6 @@ class Tags
         const val SERIALIZED_IMAGE = "serialized_image"
         const val IMAGE_POSITION = "image_position"
         const val SINGLE_IMAGE = "single_image"
+        const val SHOW_ORIGINAL_IMAGE = "show_original_image"
     }
 }

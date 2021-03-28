@@ -7,6 +7,7 @@ import com.stcodesapp.documentscanner.ui.documentPages.DocumentPagesActivity
 import com.stcodesapp.documentscanner.ui.filterOption.FilterOptionFragment
 import com.stcodesapp.documentscanner.ui.home.HomeFragment
 import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropActivity
+import com.stcodesapp.documentscanner.ui.imageCrop.ImageCropItemFragment
 import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemFragment
 import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditActivity
 import com.stcodesapp.documentscanner.ui.imageEffect.ImageEffectFragment
@@ -29,6 +30,7 @@ interface ActivityComponent
     fun inject(imageEffectFragment: ImageEffectFragment)
     fun inject(filterOptionFragment: FilterOptionFragment)
     fun inject(imageCropActivity: ImageCropActivity)
+    fun inject(imageCropItemFragment: ImageCropItemFragment)
 
 
 }

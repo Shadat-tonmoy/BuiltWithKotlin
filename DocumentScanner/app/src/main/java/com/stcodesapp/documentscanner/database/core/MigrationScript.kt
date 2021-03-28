@@ -27,4 +27,10 @@ val MIGRATION_8_9 = object  : Migration(8,9){
     }
 }
 
-val migrationScripts = arrayOf(MIGRATION_1_2, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9)
+val MIGRATION_9_10 = object  : Migration(9,10){
+    override fun migrate(database: SupportSQLiteDatabase) {
+        database.execSQL("ALTER TABLE image ADD COLUMN originalCropArea TEXT NOT NULL DEFAULT ''")
+    }
+}
+
+val migrationScripts = arrayOf(MIGRATION_1_2, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)

@@ -29,6 +29,7 @@ class ImageCropViewModel @Inject constructor(val app: DocumentScannerApp) : Base
 
     private var documentId : Long = 0
     private var imageId : Long = 0
+    var currentImage : Image? = null
 
     fun bindValueFromIntent(intent: Intent)
     {
@@ -41,6 +42,7 @@ class ImageCropViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         val liveData = MutableLiveData<Image?>()
         ioCoroutine.launch {
             val imageWithId = imageManager.getImageById(imageId)
+            currentImage = imageWithId
             liveData.postValue(imageWithId)
         }
         return liveData

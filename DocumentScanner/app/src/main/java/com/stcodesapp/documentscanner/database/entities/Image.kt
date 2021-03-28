@@ -12,6 +12,7 @@ data class Image(
     var docId : Long,
     var rotationAngle : Double = 0.0,
     var cropArea: String? = null,
+    var originalCropArea: String = "",
     var croppingRatio : Double = 1.0,
     var isCropped : Boolean = false,
     var filterName : String = "",

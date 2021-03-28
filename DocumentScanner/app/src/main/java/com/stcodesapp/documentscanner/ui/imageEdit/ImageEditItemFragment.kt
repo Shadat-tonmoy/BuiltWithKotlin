@@ -34,12 +34,13 @@ class ImageEditItemFragment : BaseFragment() {
 
     companion object {
         private const val TAG = "CropImageSingleItemFrag"
-        fun newInstance(image : Image, imagePosition : Int) : ImageEditItemFragment
+        fun newInstance(image : Image, imagePosition : Int, showOriginalImage : Boolean) : ImageEditItemFragment
         {
             val fragment = ImageEditItemFragment()
             val args = Bundle()
             args.putSerializable(Tags.SERIALIZED_IMAGE,image)
             args.putInt(Tags.IMAGE_POSITION,imagePosition)
+            args.putBoolean(Tags.SHOW_ORIGINAL_IMAGE,showOriginalImage)
             fragment.arguments = args
             return fragment
         }
@@ -76,23 +77,17 @@ class ImageEditItemFragment : BaseFragment() {
 
     private fun initUI()
     {
-        val serializedImage = arguments?.getSerializable(Tags.SERIALIZED_IMAGE) as Image?
-        if(serializedImage != null)
+        viewModel.bindValueFromArgument(arguments)
+        val chosenImage = viewModel.chosenImage
+        if(chosenImage != null)
         {
-            viewModel.chosenImage = serializedImage
-            viewModel.chosenImageId = serializedImage.id
-            cropImageView.setImageUriAsync(Uri.fromFile(File(serializedImage.path)))
+            cropImageView.setImageUriAsync(Uri.fromFile(File(chosenImage.path)))
             cropImageView.setOnSetImageUriCompleteListener { view, uri, error ->
-                setSavedValue(serializedImage)
-                imageLoadListener?.onImageBitmapLoaded(view.bitmap)
-            }
+                setSavedValue(chosenImage)
+                imageLoadListener?.onImageBitmapLoaded(view.bitmap) }
 
-            cropImageView.setOnCropWindowChangedListener {
-                saveUpdatedCropArea()
-            }
+            //cropImageView.setOnCropWindowChangedListener { saveUpdatedCropArea() }
         }
-        val imagePosition = arguments?.getInt(Tags.IMAGE_POSITION)
-        viewModel.chosenImagePosition = imagePosition ?: -1
     }
 
     private fun setSavedValue(serializedImage: Image)
@@ -103,6 +98,7 @@ class ImageEditItemFragment : BaseFragment() {
         setSavedRotation()
         //applySavedCustomFilter(serializedImage)
         //applySavedPaperEffect(serializedImage)
+
     }
 
     private fun setSavedCropArea(serializedImage: Image)
@@ -111,6 +107,7 @@ class ImageEditItemFragment : BaseFragment() {
         if (!savedCropArea.isNullOrEmpty())
         {
             val polygon = getPolygonFromCropAreaJson(savedCropArea)
+            Log.e(TAG, "setSavedCropArea: savedCropArea : $savedCropArea")
             if(isValidPolygon(polygon))
             {
                 cropImageView.cropPolygon = polygon
@@ -162,17 +159,22 @@ class ImageEditItemFragment : BaseFragment() {
         }
     }
 
-    fun saveUpdatedCropArea()
+    private fun saveUpdatedCropArea()
     {
         messageTextView.visibility = View.VISIBLE
-        viewModel.updateImageCropPolygon(getCropPolygon()).observe(viewLifecycleOwner, Observer {
+        viewModel.updateImageCropPolygon(getCropPolygonByRatio(),getOriginalCropPolygon()).observe(viewLifecycleOwner, Observer {
             messageTextView.visibility = View.GONE
         })
     }
 
-    fun getCropPolygon() : Polygon
+    private fun getCropPolygonByRatio() : Polygon
     {
-        return cropImageView.cropPolygonByRation
+        return cropImageView.cropPolygonByRatio
+    }
+
+    private fun getOriginalCropPolygon() : Polygon
+    {
+        return cropImageView.cropPolygon
     }
 
     fun rotateImage()
@@ -185,7 +187,7 @@ class ImageEditItemFragment : BaseFragment() {
     {
         val srcBitmap = cropImageView.bitmap
         val dstBitmap = Bitmap.createBitmap(A4_PAPER_WIDTH,A4_PAPER_HEIGHT, Bitmap.Config.ARGB_8888)
-        getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRation)
+        getWarpedImage(srcBitmap, dstBitmap,cropImageView.cropPolygonByRatio)
         cropImageView.setImageBitmap(dstBitmap,false)
         viewModel.saveImageCropData(dstBitmap)
         cropImageView.isShowCropOverlay = false
