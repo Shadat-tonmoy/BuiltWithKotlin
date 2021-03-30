@@ -33,7 +33,7 @@ import javax.inject.Inject
 class ImageEditItemFragment : BaseFragment() {
 
     companion object {
-        private const val TAG = "CropImageSingleItemFrag"
+        private const val TAG = "ImageEditItemFragment"
         fun newInstance(image : Image, imagePosition : Int, showOriginalImage : Boolean) : ImageEditItemFragment
         {
             val fragment = ImageEditItemFragment()

@@ -36,8 +36,6 @@ class ImageEditItemViewModel @Inject constructor(val app: DocumentScannerApp) : 
     var chosenImageId : Long = -1
     var chosenImagePosition : Int = -1
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageHelper: ImageHelper
     @Inject lateinit var fileHelper: FileHelper
     @Inject lateinit var filterHelper: FilterHelper

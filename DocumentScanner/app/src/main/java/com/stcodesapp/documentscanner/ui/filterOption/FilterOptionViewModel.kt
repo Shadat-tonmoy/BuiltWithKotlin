@@ -22,8 +22,6 @@ class FilterOptionViewModel  @Inject constructor(val app: DocumentScannerApp) : 
         private const val TAG = "FilterOptionViewModel"
     }
 
-    @Inject lateinit var imageManager: ImageManager
-    @Inject lateinit var documentManager: DocumentManager
     @Inject lateinit var imageHelper: ImageHelper
     @Inject lateinit var fileHelper: FileHelper
     @Inject lateinit var filterHelper: FilterHelper

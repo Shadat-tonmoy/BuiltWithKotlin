@@ -27,8 +27,6 @@ import javax.inject.Inject
 
 class HomeViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
-    @Inject lateinit var documentManager : DocumentManager
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var filterHelper: FilterHelper
     @Inject lateinit var fileHelper: FileHelper
     @Inject lateinit var imageHelper: ImageHelper

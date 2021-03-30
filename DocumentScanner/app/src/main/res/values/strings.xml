@@ -55,4 +55,5 @@
     <string name="edit">Edit</string>
     <string name="document_name">Document Name</string>
     <string name="enrich">Enrich</string>
+    <string name="reset">Reset</string>
 </resources>

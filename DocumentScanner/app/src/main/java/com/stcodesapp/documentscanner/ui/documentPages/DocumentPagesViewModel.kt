@@ -26,9 +26,6 @@ class DocumentPagesViewModel @Inject constructor(private val app: DocumentScanne
         private const val TAG = "DocumentPagesViewModel"
     }
 
-    @Inject lateinit var appDB : AppDatabase
-    @Inject lateinit var documentManager: DocumentManager
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
     @Inject lateinit var fileHelper: FileHelper
 

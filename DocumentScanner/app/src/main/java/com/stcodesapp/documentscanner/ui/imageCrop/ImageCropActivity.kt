@@ -14,6 +14,7 @@ import com.stcodesapp.documentscanner.database.entities.Image
 import com.stcodesapp.documentscanner.helpers.getPolygonFromCropAreaJson
 import com.stcodesapp.documentscanner.helpers.isValidPolygon
 import com.stcodesapp.documentscanner.ui.adapters.ImageViewPagerAdapter
+import com.stcodesapp.documentscanner.ui.helpers.showToast
 import com.stcodesapp.documentscanner.ui.imageEdit.ImageEditItemFragment
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_image_crop.*
@@ -60,7 +61,7 @@ class ImageCropActivity : BaseActivity()
             }
         })
 
-        fetchSingleImage()
+        fetchImages()
     }
 
     private fun initUI()
@@ -74,8 +75,39 @@ class ImageCropActivity : BaseActivity()
 
     private fun initClickListener()
     {
+        rotateLeftButton.setOnClickListener { rotateLeft() }
+        rotateRightButton.setOnClickListener { rotateRight() }
+        cropButton.setOnClickListener { cropImage() }
+        doneButton.setOnClickListener { saveAndExit() }
+        resetButton.setOnClickListener { reset() }
 
     }
+
+    private fun rotateRight()
+    {
+        showToast("Rotate Right")
+    }
+
+    private fun rotateLeft()
+    {
+        showToast("Rotate Left")
+    }
+
+    private fun cropImage()
+    {
+        showToast("Crop Image")
+    }
+
+    private fun saveAndExit()
+    {
+        showToast("Save and exit")
+    }
+
+    private fun reset()
+    {
+        showToast("Reset")
+    }
+
 
     private fun setSavedValue(image: Image)
     {
@@ -96,6 +128,16 @@ class ImageCropActivity : BaseActivity()
             }
         }
         cropImageView.guidelines = CropImageView.Guidelines.OFF
+    }
+
+    private fun fetchImages()
+    {
+        if(viewModel.imageId > 0)
+        {
+            fetchSingleImage()
+        }
+        else if(viewModel.documentId > 0) fetchDocumentPages()
+
     }
 
     private fun fetchDocumentPages()

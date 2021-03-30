@@ -121,9 +121,7 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         }
 
         filterButton.setOnClickListener {
-            //showFilterFragment()
-            cropCurrentImage()
-
+            showFilterFragment()
         }
 
         paperEffectButton.setOnClickListener {
@@ -236,7 +234,8 @@ class ImageEditActivity : BaseActivity(), FragmentFrameWrapper
         val currentImage = getCurrentImage()
         if(currentImage != null)
         {
-            activityNavigator.openImageReCropScreenForSingleImage(currentImage.id, currentImage.docId,currentImage)
+            Log.e(TAG, "openImageCropActivity: sendingImage : $currentImage, id : ${currentImage.id}")
+            activityNavigator.openImageReCropScreen(currentImage.id,singleImage = true)
         }
     }
 

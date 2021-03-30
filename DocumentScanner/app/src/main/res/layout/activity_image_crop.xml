@@ -58,7 +58,32 @@
             android:drawableTop="@drawable/crop_white_24"
             android:text="@string/crop" />
 
+        <ImageView
+            android:id="@+id/doneButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/done_white_24"
+            android:background="@color/colorPrimary"
+            android:layout_marginEnd="@dimen/dimen_16"
+            android:paddingHorizontal="@dimen/dimen_16"
+            android:paddingVertical="@dimen/dimen_4"
+            android:layout_gravity="center"/>
+
     </LinearLayout>
+
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/resetButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/dimen_32"
+        android:backgroundTint="@color/colorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+        android:textColor="@color/white"
+        android:text="@string/reset"
+        android:elevation="@dimen/dimen_8"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 

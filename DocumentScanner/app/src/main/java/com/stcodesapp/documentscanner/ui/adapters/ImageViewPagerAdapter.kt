@@ -24,6 +24,7 @@ class ImageViewPagerAdapter(fragmentActivity: FragmentActivity, val imageLoadLis
     override fun createFragment(position: Int): Fragment
     {
         val currentDocPage = mDiffer.currentList[position]
+        Log.e(TAG, "createFragment: showOriginalImage : $showOriginalImage")
         return if(showOriginalImage)
         {
             val fragment = ImageCropItemFragment.newInstance(currentDocPage, position, showOriginalImage)

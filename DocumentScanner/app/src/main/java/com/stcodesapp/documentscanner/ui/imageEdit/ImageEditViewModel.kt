@@ -28,9 +28,6 @@ class ImageEditViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         private const val TAG = "CropImageViewModel"
     }
 
-    @Inject lateinit var appDB : AppDatabase
-    @Inject lateinit var documentManager: DocumentManager
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
     @Inject lateinit var fileHelper: FileHelper
 

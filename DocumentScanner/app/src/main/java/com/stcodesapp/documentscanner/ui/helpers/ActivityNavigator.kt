@@ -38,13 +38,12 @@ class ActivityNavigator(private val activity:Activity)
         activity.startActivityForResult(intent,RequestCode.OPEN_DOCUMENT_PAGES_SCREEN)
     }
 
-    fun openImageReCropScreenForSingleImage(imageId: Long, docId : Long,image : Image)
+    fun openImageReCropScreen(imageId: Long, docId : Long = -1L, singleImage : Boolean)
     {
         val intent = Intent(activity, ImageCropActivity::class.java)
-        intent.putExtra(Tags.DOCUMENT_ID,docId)
         intent.putExtra(Tags.IMAGE_ID,imageId)
-        intent.putExtra(Tags.SINGLE_IMAGE,true)
-        intent.putExtra(Tags.SERIALIZED_IMAGE,image)
+        intent.putExtra(Tags.DOCUMENT_ID,docId)
+        intent.putExtra(Tags.SINGLE_IMAGE,singleImage)
         activity.startActivityForResult(intent,RequestCode.OPEN_IMAGE_RE_CROP_SCREEN)
     }
 

@@ -19,9 +19,6 @@ import javax.inject.Inject
 
 class MainViewModel @Inject constructor(val app: DocumentScannerApp) : BaseViewModel(app)
 {
-    @Inject lateinit var documentManager : DocumentManager
-    @Inject lateinit var imageManager: ImageManager
-
     companion object{
         private const val TAG = "MainViewModel"
     }

@@ -1,6 +1,7 @@
 package com.stcodesapp.documentscanner.ui.imageCrop
 
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.stcodesapp.documentscanner.DocumentScannerApp
@@ -21,20 +22,17 @@ class ImageCropViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         private const val TAG = "ImageCropViewModel"
     }
 
-    @Inject lateinit var appDB : AppDatabase
-    @Inject lateinit var documentManager: DocumentManager
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var imageToPdfTask: ImageToPdfTask
     @Inject lateinit var fileHelper: FileHelper
 
-    private var documentId : Long = 0
-    private var imageId : Long = 0
+    var documentId : Long = -1
+    var imageId : Long = -1
     var currentImage : Image? = null
 
     fun bindValueFromIntent(intent: Intent)
     {
-        if(intent.hasExtra(Tags.DOCUMENT_ID)) documentId = intent.getLongExtra(Tags.DOCUMENT_ID,0L)
-        if(intent.hasExtra(Tags.IMAGE_ID)) imageId = intent.getLongExtra(Tags.IMAGE_ID,0L)
+        if(intent.hasExtra(Tags.DOCUMENT_ID)) documentId = intent.getLongExtra(Tags.DOCUMENT_ID,-1L)
+        if(intent.hasExtra(Tags.IMAGE_ID)) imageId = intent.getLongExtra(Tags.IMAGE_ID,-1L)
     }
 
     fun fetchChosenImageToReCrop() : LiveData<Image?>
@@ -43,6 +41,7 @@ class ImageCropViewModel @Inject constructor(val app: DocumentScannerApp) : Base
         ioCoroutine.launch {
             val imageWithId = imageManager.getImageById(imageId)
             currentImage = imageWithId
+            Log.e(TAG, "fetchChosenImageToReCrop: id : $imageId, image : $imageWithId")
             liveData.postValue(imageWithId)
         }
         return liveData

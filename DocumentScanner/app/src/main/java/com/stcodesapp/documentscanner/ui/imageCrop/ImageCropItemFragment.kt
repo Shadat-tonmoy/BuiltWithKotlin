@@ -64,9 +64,7 @@ class ImageCropItemFragment : BaseFragment() {
                 setSavedValue(chosenImage)
             }
 
-            /*cropImageView.setOnCropWindowChangedListener {
-                saveUpdatedCropArea()
-            }*/
+            cropImageView.setOnCropWindowChangedListener { saveUpdatedCropArea() }
         }
     }
 
@@ -91,14 +89,19 @@ class ImageCropItemFragment : BaseFragment() {
             Log.e(TAG, "setSavedCropArea: savedCropArea : $savedCropArea")
             if(isValidPolygon(polygon))
             {
+                Log.e(TAG, "setSavedCropArea: savedCropArea : valid polygon")
                 cropImageView.cropPolygon = polygon
             }
         }
         cropImageView.guidelines = CropImageView.Guidelines.OFF
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    private fun saveUpdatedCropArea()
+    {
+        messageTextView.visibility = View.VISIBLE
+        /*viewModel.updateImageCropPolygon(getCropPolygonByRatio(),getOriginalCropPolygon()).observe(viewLifecycleOwner, Observer {
+            messageTextView.visibility = View.GONE
+        })*/
     }
 
 }
